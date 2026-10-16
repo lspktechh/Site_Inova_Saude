@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "../styles/globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { MobileQuickBar } from "@/components/MobileQuickBar";
 
 export const metadata: Metadata = {
   title: "INOVA SAÚDE 2026 · Inscrições e Credenciamento",
@@ -26,7 +27,8 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen flex flex-col antialiased">
         <Header />
-        <main className="flex-1 flex flex-col">{children}</main>
+        <main className="flex-1 flex flex-col pb-16 md:pb-0">{children}</main>
+        <MobileQuickBar />
         <Footer />
       </body>
     </html>

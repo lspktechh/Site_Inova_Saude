@@ -1,0 +1,88 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { Clock } from "lucide-react";
+
+export function HeroCountdown() {
+  const [timeLeft, setTimeLeft] = useState<{
+    dias: number;
+    horas: number;
+    minutos: number;
+    segundos: number;
+  }>({ dias: 7, horas: 12, minutos: 40, segundos: 0 });
+
+  useEffect(() => {
+    // Data limite: 23 de Outubro de 2026 às 23:59:59
+    const targetDate = new Date("2026-10-23T23:59:59-03:00").getTime();
+
+    const updateCountdown = () => {
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+
+      if (difference <= 0) {
+        setTimeLeft({ dias: 0, horas: 0, minutos: 0, segundos: 0 });
+        return;
+      }
+
+      const dias = Math.floor(difference / (1000 * 60 * 60 * 24));
+      const horas = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutos = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+      const segundos = Math.floor((difference % (1000 * 60)) / 1000);
+
+      setTimeLeft({ dias, horas, minutos, segundos });
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="bg-black/40 border border-white/20 rounded-2xl p-5 sm:p-7 backdrop-blur-md shadow-2xl relative overflow-hidden group">
+      {/* Linha decorativa no topo com as cores do ecohub */}
+      <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[var(--e1)] via-[var(--e3)] to-[var(--e6)]" />
+
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
+          <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
+            Encerramento das Inscrições
+          </span>
+        </div>
+        <Clock size={16} className="text-[var(--acento)]" />
+      </div>
+
+      {/* Grade do contador regressivo */}
+      <div className="grid grid-cols-4 gap-2 text-center py-2">
+        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
+          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-[var(--acento)] block">
+            {String(timeLeft.dias).padStart(2, "0")}
+          </span>
+          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">dias</span>
+        </div>
+        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
+          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-white block">
+            {String(timeLeft.horas).padStart(2, "0")}
+          </span>
+          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">horas</span>
+        </div>
+        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
+          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-white block">
+            {String(timeLeft.minutos).padStart(2, "0")}
+          </span>
+          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">min</span>
+        </div>
+        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
+          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-[var(--acao)] block">
+            {String(timeLeft.segundos).padStart(2, "0")}
+          </span>
+          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">seg</span>
+        </div>
+      </div>
+
+      <p className="text-xs text-white/75 mt-4 leading-relaxed">
+        Prazo improrrogável pelo <strong>Art. 11 do Edital nº 4/2026</strong>. Inscrições com vagas limitadas para a oficina presencial.
+      </p>
+    </div>
+  );
+}

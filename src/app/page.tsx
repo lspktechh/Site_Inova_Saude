@@ -1,117 +1,179 @@
 import Link from "next/link";
 import { edicao, formulario } from "@/lib/config";
-import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
+import { HeroCountdown } from "@/components/HeroCountdown";
 
 export default function HomePage() {
   const trilhas = (formulario.etapas[0] as any).opcoes || [];
-  const eixos = edicao.eixos_tematicos;
+  const eixos = [
+    {
+      nome: "Infraestrutura em Saúde Digital",
+      icone: Cpu,
+      cor: "var(--e4)",
+      impacto: "Prontuários interoperáveis, segurança de dados clínicos e redução de filas de atendimento.",
+      dorExemplo: "Médicos e enfermeiros preenchendo o mesmo dado cadastral em 3 sistemas desconectados.",
+    },
+    {
+      nome: "Saúde Mental e Bem-Estar",
+      icone: Activity,
+      cor: "var(--e1)",
+      impacto: "Prevenção de burnout em plantonistas, acolhimento precoce e suporte psicológico comunitário.",
+      dorExemplo: "Altos índices de exaustão e sobrecarga emocional em equipes de enfermagem na UTI.",
+    },
+    {
+      nome: "Logística e Gestão de Serviços de Saúde",
+      icone: Stethoscope,
+      cor: "var(--e5)",
+      impacto: "Giro de leitos ágil, rastreamento de medicamentos e eliminação de desperdício hospitalar.",
+      dorExemplo: "Demora de até 40 min para higienizar o leito após a alta hospitalar.",
+    },
+    {
+      nome: "Capacitação e Formação Profissional",
+      icone: Compass,
+      cor: "var(--e2)",
+      impacto: "Simulação realística, materiais interativos e atualização rápida em protocolos clínicos.",
+      dorExemplo: "Insegurança de alunos recém-formados na calibração de ventiladores mecânicos.",
+    },
+    {
+      nome: "Sustentabilidade e Responsabilidade Digital",
+      icone: ShieldCheck,
+      cor: "var(--e6)",
+      impacto: "Redução de descartáveis plásticos na rotina hospitalar e uso ético de tecnologias verdes.",
+      dorExemplo: "Tonéis de resíduos descartáveis que poderiam ter adaptadores duráveis e esterilizáveis.",
+    },
+  ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pb-16">
-      {/* Hero Section */}
-      <section className="bg-[var(--marca-fundo)] text-white py-14 sm:py-20 border-b border-[rgba(255,255,255,0.1)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-          <div className="lg:col-span-8 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[rgba(255,255,255,0.1)] border border-[rgba(255,255,255,0.2)] text-xs font-mono tracking-wider text-[var(--acento)]">
-              <span>{edicao.edicao.numero}ª edição · {edicao.edicao.cidade}</span>
+    <div className="space-y-16 sm:space-y-24 pb-20">
+      {/* ──── HERO SECTION COM AMBIENTE CLÍNICO-DIGITAL ──── */}
+      <section className="relative overflow-hidden glass-hero text-white py-16 sm:py-24 border-b border-white/10">
+        {/* Onda ECG estilizada no fundo */}
+        <div className="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center overflow-hidden">
+          <svg
+            className="w-full h-48 stroke-[var(--acao)]"
+            viewBox="0 0 1200 150"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0,75 L300,75 L320,30 L340,110 L360,20 L380,95 L400,75 L700,75 L720,25 L740,120 L760,15 L780,100 L800,75 L1200,75"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="animate-ecg"
+            />
+          </svg>
+        </div>
+
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+          <div className="lg:col-span-7 space-y-6">
+            {/* Badge de status vivo com pulso */}
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-mono tracking-wider backdrop-blur-md">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--acao)] animate-heartbeat shadow-[0_0_8px_var(--acao)]" />
+              <span className="text-[var(--acento)] font-bold">2ª edição · Londrina</span>
+              <span className="text-white/60">|</span>
+              <span className="text-white/90">Inscrições Abertas</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1]">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-balance">
               Transforme uma dor real da saúde em{" "}
-              <em className="not-italic text-[var(--acento)]">solução</em>.
+              <span className="shimmer-text">solução</span>.
             </h1>
 
-            <p className="text-lg sm:text-xl text-[rgba(255,255,255,0.85)] max-w-2xl leading-relaxed">
-              Equipes de 3 a 6 pessoas, de qualquer curso. Você traz o problema que viu acontecer; a gente ajuda a transformar em projeto até o Pitch Final.
+            <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed">
+              Equipes de 3 a 6 pessoas, de qualquer curso. Você traz o problema que viu acontecer no hospital, UBS ou clínica; a gente ajuda a transformar em projeto até o Pitch Final.
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 pt-2">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
               <Link
                 href="/inscricao"
-                className="inline-flex items-center gap-2 bg-[var(--acento)] text-[#1e1708] font-bold text-base px-6 py-3.5 rounded-lg shadow-md hover:brightness-105 transition-all"
+                className="inline-flex items-center justify-center gap-2.5 bg-[var(--acento)] text-[#1e1708] font-bold text-base px-7 py-4 rounded-xl shadow-lg hover:brightness-105 active:scale-95 transition-all text-center"
               >
-                <span>Inscrever minha equipe</span>
+                <span>Inscrever Minha Equipe</span>
                 <ArrowRight size={18} />
               </Link>
               <Link
                 href="/banco-de-talentos"
-                className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-base px-6 py-3.5 rounded-lg border border-white/20 transition-all"
+                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-base px-6 py-4 rounded-xl border border-white/20 transition-all text-center"
               >
                 <span>Banco de Talentos</span>
                 <Users size={18} />
               </Link>
             </div>
 
-            {/* Pílulas de datas */}
-            <div className="flex flex-wrap gap-2.5 pt-4">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono border border-white/25 bg-black/20 text-white/90">
+            {/* Pílulas de datas com ícones */}
+            <div className="flex flex-wrap gap-2 pt-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Oficina 31/10</span>
+                <span>Oficina Presencial: 31/10</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono border border-white/25 bg-black/20 text-white/90">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Classificação 03/11</span>
+                <span>Classificação: 03/11</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-mono border border-white/25 bg-black/20 text-white/90">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Award size={13} className="text-[var(--acento)]" />
-                <span>Pitch Final 05/11</span>
+                <span>Pitch Final: 05/11</span>
               </div>
             </div>
           </div>
 
-          {/* Card de Prazo */}
-          <div className="lg:col-span-4 bg-black/30 border border-white/20 rounded-2xl p-6 sm:p-8 backdrop-blur-xs space-y-4 shadow-xl">
-            <span className="font-mono text-xs uppercase tracking-widest text-white/70 block">
-              Inscrições encerram em
-            </span>
-            <div className="text-5xl sm:text-6xl font-black text-[var(--acento)] font-display tracking-tight">
-              23/10
-            </div>
-            <p className="text-sm text-white/80 leading-relaxed">
-              Aberto a estudantes de graduação e pós de todos os cursos, docentes, comunidade externa e profissionais de saúde.
-            </p>
-            <div className="pt-2 border-t border-white/15 flex items-center gap-2 text-xs text-white/70">
-              <CheckCircle2 size={15} className="text-[var(--acao)]" />
-              <span>Inscrição gratuita e confirmada na hora</span>
-            </div>
+          {/* Card com o Timer Regressivo */}
+          <div className="lg:col-span-5">
+            <HeroCountdown />
           </div>
         </div>
       </section>
 
-      {/* Três Formas de Participar */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="space-y-3 mb-8">
-          <p className="font-mono text-xs uppercase tracking-widest text-[var(--fg-2)]">
-            Entrada no Evento
-          </p>
-          <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--fg)]">
-            Três formas de participar
+      {/* ──── TRÊS FORMAS DE PARTICIPAR (ESTILIZADAS E RESPONSIVAS) ──── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-[var(--marca)]" />
+            <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg-2)] font-bold">
+              Como Funciona a Entrada
+            </span>
+          </div>
+          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--fg)]">
+            Três caminhos de participação
           </h2>
-          <p className="text-[var(--fg-2)] max-w-2xl text-base">
-            Esta escolha é a primeira etapa do formulário e define a sua trilha. Ninguém fica de fora por não ter grupo ou ideia pronta.
+          <p className="text-sm sm:text-base text-[var(--fg-2)] max-w-2xl leading-relaxed">
+            O formulário é adaptativo: a trilha que você escolher renderiza apenas o que faz sentido para você.
+            Ninguém fica de fora por não ter grupo formado.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trilhas.map((trilha, idx) => {
+          {trilhas.map((trilha: any, idx: number) => {
             const isGroup = trilha.trilha === "equipe_com_ideia";
             const isIdeaOnly = trilha.trilha === "ideia_sem_equipe";
+
+            const accentColor = isGroup ? "var(--e5)" : isIdeaOnly ? "var(--e4)" : "var(--e1)";
+            const Icon = isGroup ? Users : isIdeaOnly ? Sparkles : UserPlus;
+
             return (
               <div
                 key={trilha.trilha}
-                className="bg-[var(--surf)] border border-[var(--borda)] rounded-xl p-6 flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group border-t-4 border-t-[var(--marca)]"
+                className="health-card p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group"
+                style={{ borderTop: `4px solid ${accentColor}` }}
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-[var(--marca-2)] bg-[var(--surf-2)] px-2.5 py-1 rounded-md">
-                      0{idx + 1}
+                    <span
+                      className="font-mono text-xs font-bold px-2.5 py-1 rounded-md"
+                      style={{ background: "var(--surf-2)", color: accentColor }}
+                    >
+                      Trilha 0{idx + 1}
                     </span>
-                    {isGroup && <Users size={20} className="text-[var(--marca-2)]" />}
-                    {isIdeaOnly && <Sparkles size={20} className="text-[var(--acao)]" />}
-                    {!isGroup && !isIdeaOnly && <UserPlus size={20} className="text-[var(--alerta)]" />}
+                    <div
+                      className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
+                      style={{ background: "var(--surf-2)" }}
+                    >
+                      <Icon size={20} style={{ color: accentColor }} />
+                    </div>
                   </div>
 
-                  <h3 className="text-xl font-bold text-[var(--fg)] group-hover:text-[var(--marca)] transition-colors">
+                  <h3 className="text-xl font-bold text-[var(--fg)] leading-snug group-hover:text-[var(--marca)] transition-colors">
                     {trilha.titulo}
                   </h3>
 
@@ -126,10 +188,11 @@ export default function HomePage() {
                   </span>
                   <Link
                     href={`/inscricao?trilha=${trilha.trilha}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-bold text-[var(--acao)] hover:underline"
+                    className="inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
+                    style={{ color: accentColor }}
                   >
                     <span>Começar</span>
-                    <ArrowRight size={14} />
+                    <ArrowRight size={15} />
                   </Link>
                 </div>
               </div>
@@ -138,117 +201,141 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Os Cinco Eixos Temáticos */}
-      <section className="bg-[var(--surf-2)] py-14 border-y border-[var(--borda)]">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
-          <div className="space-y-3">
-            <p className="font-mono text-xs uppercase tracking-widest text-[var(--fg-2)]">
-              Desafios Regionais
-            </p>
-            <h2 className="text-2xl sm:text-3xl font-bold text-[var(--fg)] tracking-tight">
-              Os 5 Eixos Temáticos
-            </h2>
-            <p className="text-[var(--fg-2)] max-w-2xl text-base">
-              Sua equipe pode atacar qualquer dor real dentro dessas áreas prioritárias da saúde e tecnologia.
-            </p>
-          </div>
+      {/* ──── OS 5 EIXOS TEMÁTICOS COM CONTEXTO REAL ──── */}
+      <section className="bg-[var(--surf-2)] py-16 border-y border-[var(--borda)]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div className="space-y-2">
+              <span className="font-mono text-xs uppercase tracking-widest text-[var(--marca)] font-bold">
+                Edital nº 4/2026 · Áreas Prioritárias
+              </span>
+              <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--fg)] tracking-tight">
+                Os 5 Eixos de Desafios da Saúde
+              </h2>
+              <p className="text-sm sm:text-base text-[var(--fg-2)] max-w-2xl leading-relaxed">
+                Você pode propor uma solução em qualquer um dos 5 eixos temáticos abaixo. Conheça as dores reais mapeadas no território.
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {eixos.map((eixo, i) => (
-              <div
-                key={eixo}
-                className="bg-[var(--surf)] border border-[var(--borda)] rounded-xl p-5 shadow-2xs hover:border-[var(--marca-2)] transition-colors"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div
-                    className="w-3 h-3 rounded-full shrink-0"
-                    style={{ background: `var(--e${(i % 6) + 1})` }}
-                  />
-                  <h4 className="font-bold text-base text-[var(--fg)]">{eixo}</h4>
-                </div>
-                <p className="text-xs text-[var(--fg-2)] pl-6">
-                  Dores reais em hospitais, UBSs, clínicas e na formação de profissionais da saúde.
-                </p>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-end">
             <Link
               href="/desafios"
-              className="inline-flex items-center gap-2 text-sm font-bold text-[var(--marca)] hover:underline"
+              className="inline-flex items-center gap-2 text-sm font-bold text-[var(--marca)] hover:underline whitespace-nowrap"
             >
-              <span>Ver exemplos de dores e desafios detalhados</span>
+              <span>Ver todos os desafios detalhados</span>
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {eixos.map((eixo, i) => {
+              const Icon = eixo.icone;
+              return (
+                <div
+                  key={eixo.nome}
+                  className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 shadow-xs hover:border-[var(--marca-2)] hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0"
+                        style={{ background: eixo.cor }}
+                      >
+                        <Icon size={20} />
+                      </div>
+                      <span className="font-mono text-xs font-bold text-[var(--fg-2)] uppercase">
+                        Eixo 0{i + 1}
+                      </span>
+                    </div>
+
+                    <h4 className="font-bold text-lg text-[var(--fg)] leading-snug">
+                      {eixo.nome}
+                    </h4>
+
+                    <p className="text-xs text-[var(--fg-2)] leading-relaxed">
+                      {eixo.impacto}
+                    </p>
+                  </div>
+
+                  <div className="pt-3 border-t border-[var(--borda)]/60">
+                    <span className="font-mono text-[10px] text-[var(--alerta)] font-semibold uppercase block mb-1">
+                      Dor Real Mapeada:
+                    </span>
+                    <p className="text-xs text-[var(--fg)] italic leading-tight">
+                      "{eixo.dorExemplo}"
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ──── METODOLOGIA DE DESIGN THINKING & CREDENCIAMENTO ──── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+        <div className="health-card p-7 sm:p-9 space-y-4 relative overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-[var(--acao)]/10 text-[var(--acao)] flex items-center justify-center">
+            <Sparkles size={22} />
+          </div>
+          <span className="font-mono text-xs uppercase tracking-wider text-[var(--acao)] font-bold block">
+            Pedagogia da Inovação
+          </span>
+          <h3 className="text-2xl font-bold text-[var(--fg)]">
+            Formulário que ensina enquanto você preenche
+          </h3>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+            Diferente de formulários comuns que pedem "descreva sua ideia" numa caixa de texto solta, o formulário do INOVA SAÚDE guia você com Design Thinking (Empatizar e Definir) e Lean Inception (É / Não é / Faz / Não faz), mostrando exemplos de "Assim funciona" e "Assim não" campo a campo.
+          </p>
+          <div className="pt-3 flex flex-wrap gap-2 text-xs font-mono text-[var(--fg)]">
+            <span className="bg-[var(--surf-2)] px-2.5 py-1 rounded-md border border-[var(--borda)]">💡 Rascunho salvo a cada campo</span>
+            <span className="bg-[var(--surf-2)] px-2.5 py-1 rounded-md border border-[var(--borda)]">⏱ ~18 minutos</span>
+          </div>
+        </div>
+
+        <div className="health-card p-7 sm:p-9 space-y-4 relative overflow-hidden">
+          <div className="w-10 h-10 rounded-xl bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center">
+            <CheckCircle2 size={22} />
+          </div>
+          <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca)] font-bold block">
+            Credenciamento Digital em Tempo Real
+          </span>
+          <h3 className="text-2xl font-bold text-[var(--fg)]">
+            QR Code Oficial & Controle de Presença
+          </h3>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+            Ao finalizar o envio, o participante é imediatamente cadastrado no sistema central de credenciamento. Cada membro recebe um voucher com QR Code de alta entropia para leitura nos terminais nos dias 31/10 (Oficina) e 05/11 (Pitch Final), garantindo a emissão do certificado oficial de 20 horas.
+          </p>
+          <div className="pt-3 flex items-center gap-3">
+            <Link
+              href="/inscricao"
+              className="text-sm font-bold text-[var(--acao)] hover:underline inline-flex items-center gap-1.5"
+            >
+              <span>Ir para o formulário de inscrição</span>
               <ArrowRight size={16} />
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Metodologia de Ensino & Credenciamento */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-4">
-          <span className="font-mono text-xs uppercase tracking-widest text-[var(--acao)] font-semibold">
-            Metodologia Integrada
-          </span>
-          <h3 className="text-2xl font-bold text-[var(--fg)]">
-            Design Thinking & Lean Inception na prática
-          </h3>
-          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            O formulário foi desenhado para ensinar você a estruturar uma boa ideia enquanto preenche.
-            Você passa pelas etapas de <strong>Empatizar</strong> (de quem é a dor), <strong>Definir</strong> (recorte do problema),
-            <strong>Idear</strong> (visão do produto) e <strong>Escopo</strong> (É / Não é / Faz / Não faz).
-          </p>
-          <div className="pt-2">
-            <span className="inline-block text-xs font-mono bg-[var(--surf-2)] text-[var(--fg-2)] px-3 py-1.5 rounded-lg border border-[var(--borda)]">
-              💡 Exemplos de "Assim funciona" e "Assim não" em cada campo
-            </span>
-          </div>
-        </div>
-
-        <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-4">
-          <span className="font-mono text-xs uppercase tracking-widest text-[var(--marca)] font-semibold">
-            Credenciamento Digital
-          </span>
-          <h3 className="text-2xl font-bold text-[var(--fg)]">
-            QR Code Oficial & Controle de Presença
-          </h3>
-          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            Todas as inscrições são vinculadas diretamente ao sistema central de credenciamento. Cada integrante
-            recebe um voucher digital exclusivo com QR Code para leitura rápida nos terminais da oficina e da banca final,
-            assegurando o registro oficial de presença e emissão do certificado.
-          </p>
-          <div className="pt-2 flex items-center gap-3">
-            <Link
-              href="/inscricao"
-              className="text-sm font-bold text-[var(--acao)] hover:underline inline-flex items-center gap-1"
-            >
-              <span>Fazer inscrição agora</span>
-              <ArrowRight size={15} />
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Faixa de Premiação */}
+      {/* ──── BANNER DE PREMIAÇÃO OFICIAL ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="bg-[var(--marca-fundo)] text-white rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-md">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-[var(--acento)] text-[#1e1708] flex items-center justify-center shrink-0">
-              <Award size={26} />
+        <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl border border-white/15 relative overflow-hidden">
+          <div className="flex items-center gap-5">
+            <div className="w-14 h-14 rounded-2xl bg-[var(--acento)] text-[#1e1708] flex items-center justify-center shrink-0 shadow-md">
+              <Award size={30} />
             </div>
-            <div>
-              <h4 className="text-lg font-bold text-white">Premiação para Finalistas</h4>
-              <p className="text-sm text-white/80 max-w-xl">
+            <div className="space-y-1">
+              <h4 className="text-xl sm:text-2xl font-extrabold text-white">Premiação para Equipes Finalistas</h4>
+              <p className="text-sm text-white/80 max-w-2xl leading-relaxed">
                 {edicao.premiacao.texto_site}
               </p>
             </div>
           </div>
           <Link
             href="/regulamento"
-            className="shrink-0 text-xs font-mono uppercase tracking-wider text-[var(--acento)] border border-[var(--acento)]/40 px-4 py-2 rounded-lg hover:bg-white/10 transition-colors"
+            className="shrink-0 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase tracking-wider px-5 py-3 rounded-xl border border-white/25 transition-all text-center"
           >
-            Ver Regulamento
+            Ver Rúbrica & Critérios
           </Link>
         </div>
       </section>

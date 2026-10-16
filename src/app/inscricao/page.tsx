@@ -32,6 +32,9 @@ import {
   ShieldAlert,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
+import { StepProgressNav } from "@/components/StepProgressNav";
+import { PrinterBedVisualizer } from "@/components/PrinterBedVisualizer";
+import { OfficialVoucher } from "@/components/OfficialVoucher";
 
 function InscriptionContent() {
   const searchParams = useSearchParams();
@@ -511,34 +514,16 @@ function InscriptionContent() {
 
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
-      {/* Barra de Progresso e Status do Rascunho */}
-      <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-xl p-4 sm:p-5 shadow-xs space-y-3">
-        <div className="flex flex-wrap items-center justify-between gap-2 text-xs font-mono uppercase tracking-wider text-[var(--fg-2)]">
-          <span>
-            {currentStep === 0
-              ? "Etapa 0 · Escolha de Trilha"
-              : currentStep === 9
-              ? "Confirmação & Credenciamento"
-              : `Etapa ${availableSteps.indexOf(currentStep)} de ${availableSteps.length - 2} · ${
-                  formulario.etapas.find((e: any) => e.n === currentStep)?.titulo || ""
-                }`}
-          </span>
-          <div className="flex items-center gap-1.5 text-[var(--acao)] font-semibold">
-            <Save size={13} />
-            <span>{draftSaved ? "rascunho salvo" : "salvando..."}</span>
-          </div>
-        </div>
-
-        {/* Linha de progresso */}
-        <div className="w-full bg-[var(--surf-2)] h-2 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-[var(--acao)] transition-all duration-300"
-            style={{
-              width: `${(availableSteps.indexOf(currentStep) / (availableSteps.length - 1)) * 100}%`,
-            }}
-          />
-        </div>
-      </div>
+      {/* Navegação de Etapas Inteligente e Responsiva */}
+      <StepProgressNav
+        currentStep={currentStep}
+        availableSteps={availableSteps}
+        onSelectStep={(s) => {
+          setCurrentStep(s);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
+        draftSaved={draftSaved}
+      />
 
       {/* Conteúdo da Etapa Atual */}
       <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-10 shadow-sm space-y-8">
@@ -1467,17 +1452,17 @@ function InscriptionContent() {
                     />
                   </div>
 
-                  {envelopeCheck.cabeNaMesa ? (
-                    <p className="text-xs text-[var(--ok)] font-medium flex items-center gap-1.5 pt-1">
-                      <CheckCircle size={14} />
-                      <span>Cabe na mesa de impressão ({envelopeCheck.limites.x}×{envelopeCheck.limites.y}×{envelopeCheck.limites.z} mm).</span>
-                    </p>
-                  ) : (
-                    <p className="text-xs text-[var(--alerta)] font-medium flex items-center gap-1.5 pt-1">
-                      <AlertTriangle size={14} />
-                      <span>Aviso: ultrapassa {envelopeCheck.violacoes.join(", ")}. Vai para conversa com a comissão sem travar.</span>
-                    </p>
-                  )}
+                  {/* Simulador Interativo da Mesa 3D */}
+                  <div className="pt-2">
+                    <PrinterBedVisualizer
+                      x={pecaEnvelope[0]}
+                      y={pecaEnvelope[1]}
+                      z={pecaEnvelope[2]}
+                      limitX={envelopeCheck.limites.x}
+                      limitY={envelopeCheck.limites.y}
+                      limitZ={envelopeCheck.limites.z}
+                    />
+                  </div>
                 </div>
 
                 {/* Requisitos e Sugestão Automática de Material */}
@@ -1594,66 +1579,16 @@ function InscriptionContent() {
             </div>
 
             {/* Voucher Oficial de Credenciamento com QR Code */}
-            <div className="bg-[var(--marca-fundo)] text-white rounded-2xl p-6 sm:p-8 space-y-6 shadow-xl border border-white/20">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-white/20 pb-4">
-                <div>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[var(--acento)]">
-                    Voucher de Credenciamento Oficial
-                  </span>
-                  <h3 className="text-2xl font-bold">{equipeNome || membros[0].nome}</h3>
-                  <p className="text-xs text-white/70">
-                    Líder: {membros[0].nome} · {membros[0].email}
-                  </p>
-                </div>
-                <div className="text-right">
-                  <span className="font-mono text-xs text-white/60 block">Status</span>
-                  <span className="text-sm font-bold text-[var(--acao)] bg-white/10 px-3 py-1 rounded-full border border-white/20">
-                    CONFIRMADO
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div className="md:col-span-4 flex flex-col items-center justify-center p-4 bg-white rounded-xl">
-                  <QRCodeSVG
-                    value={
-                      submissionResult?.qrToken ||
-                      `INOVA2026-CHECKIN-${submissionResult?.id || "DEMO"}`
-                    }
-                    size={150}
-                    level="H"
-                  />
-                  <span className="font-mono text-[10px] text-gray-700 mt-2 font-bold tracking-wider">
-                    {submissionResult?.qrToken || "TOKEN-CREDENCIAMENTO"}
-                  </span>
-                </div>
-
-                <div className="md:col-span-8 space-y-3 text-sm">
-                  <div className="grid grid-cols-2 gap-3 text-xs">
-                    <div>
-                      <span className="text-white/60 font-mono block">Oficina Presencial:</span>
-                      <strong className="text-white">31/10 às 09h30</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 font-mono block">Pitch Final:</span>
-                      <strong className="text-white">05/11 às 19h00</strong>
-                    </div>
-                    <div>
-                      <span className="text-white/60 font-mono block">Local:</span>
-                      <span className="text-white">Universidade Positivo - Londrina</span>
-                    </div>
-                    <div>
-                      <span className="text-white/60 font-mono block">Integrantes:</span>
-                      <span className="text-white">{membros.length} participante(s)</span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-white/80 leading-relaxed pt-2 border-t border-white/15">
-                    Apresente este QR Code impresso ou na tela do celular na entrada da oficina para o check-in rápido no terminal.
-                  </p>
-                </div>
-              </div>
-            </div>
+            <OfficialVoucher
+              teamName={equipeNome}
+              leaderName={membros[0]?.nome || "Líder"}
+              leaderEmail={membros[0]?.email || ""}
+              qrToken={submissionResult?.qrToken || `INOVA2026-CHECKIN-${submissionResult?.id || "DEMO"}`}
+              membersCount={membros.length}
+              membersList={membros}
+              submissionId={submissionResult?.id || "DEMO"}
+              onDownloadJson={handleDownloadFicha}
+            />
 
             {/* Ficha de Protótipo Gerada (JSON Legível) */}
             <div className="space-y-3">
