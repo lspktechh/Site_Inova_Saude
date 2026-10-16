@@ -17,12 +17,9 @@ export function MobileQuickBar() {
     >
       <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
         <div className="flex flex-col">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-[var(--acao)] animate-ping" />
-            <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--acao)]">
-              Inscrições Abertas
-            </span>
-          </div>
+          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[var(--acao)]">
+            Inscrições Abertas
+          </span>
           <span className="text-xs font-bold text-[var(--fg)]">
             Encerram em 23/10
           </span>

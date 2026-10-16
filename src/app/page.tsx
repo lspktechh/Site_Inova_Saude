@@ -71,7 +71,7 @@ export default function HomePage() {
             <div className="flex items-center gap-2.5 max-w-full flex-wrap text-xs sm:text-sm font-mono tracking-wider">
               <span className="text-[var(--acento)] font-bold">2ª edição · Londrina</span>
               <span className="text-white/40">|</span>
-              <span className="text-white/90 font-medium">Inscrições Abertas</span>
+              <span className="text-emerald-400 font-bold">Inscrições Abertas</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-balance">
