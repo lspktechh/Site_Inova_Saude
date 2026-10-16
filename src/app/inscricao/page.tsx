@@ -18,6 +18,7 @@ import {
 import { submitInscription, InscriptionPayload, InscriptionResponse } from "@/lib/api";
 import {
   CheckCircle,
+  CheckCircle2,
   AlertTriangle,
   ArrowRight,
   ArrowLeft,
@@ -30,6 +31,7 @@ import {
   Download,
   QrCode,
   ShieldAlert,
+  RotateCcw,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { StepProgressNav } from "@/components/StepProgressNav";
@@ -46,6 +48,10 @@ function InscriptionContent() {
   const [draftSaved, setDraftSaved] = useState<boolean>(true);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [submissionResult, setSubmissionResult] = useState<InscriptionResponse | null>(null);
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
+  const [lastSavedTime, setLastSavedTime] = useState<string>("");
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [showDraftBanner, setShowDraftBanner] = useState<boolean>(false);
 
   // Etapa 1: Equipe e Integrantes
   const [equipeNome, setEquipeNome] = useState<string>("Equipe Inovadora");
@@ -152,15 +158,87 @@ function InscriptionContent() {
   // Trava sanitária
   const [travaSanitaria, setTravaSanitaria] = useState<string[]>([]);
 
-  // Carregar rascunho do localStorage ao montar
+  // Função central para persistir todos os campos no localStorage
+  const saveDraftToStorage = () => {
+    try {
+      const draft = {
+        updatedAt: new Date().toISOString(),
+        currentStep,
+        trilha,
+        membros,
+        equipeNome,
+        quemVive,
+        oQuePerde,
+        comoSabe,
+        fraseDefinir,
+        frequencia,
+        comoResolvemHoje,
+        porQueNaoResolve,
+        eixoTematico,
+        fraseIdear,
+        nomeSolucao,
+        categoriaSolucao,
+        tresPassos,
+        escopoE,
+        escopoNaoE,
+        escopoFaz,
+        escopoNaoFaz,
+        comoSaberemos,
+        maiorDuvida,
+        abertaANovos,
+        aceites,
+        formasSelecionadas,
+        formaPrincipal,
+        softUsuario,
+        softTelas,
+        softDadoEntra,
+        softDadoSai,
+        softIntegracao,
+        softPlataforma,
+        softTomVisual,
+        pecaFuncao,
+        pecaEncaixaEm,
+        pecaMedidaEncaixe,
+        pecaFolga,
+        pecaEnvelope,
+        pecaRequisitos,
+        pecaMaterial,
+        pecaQuantidade,
+        pecaMontagem,
+        dispMedeAciona,
+        dispOndeFica,
+        dispAlimentacao,
+        dispDependeDe,
+        dispJaExiste,
+        servQuemExecuta,
+        servPassoAtual,
+        servOQueMuda,
+        servArtefato,
+        servQuemValida,
+        travaSanitaria,
+      };
+      localStorage.setItem("inova_form_draft", JSON.stringify(draft));
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+      setLastSavedTime(timeStr);
+      setDraftSaved(true);
+      return true;
+    } catch (e) {
+      console.warn("Erro ao salvar rascunho no localStorage:", e);
+      return false;
+    }
+  };
+
+  // Carregar rascunho do localStorage com segurança ao montar
   useEffect(() => {
     try {
       const saved = localStorage.getItem("inova_form_draft");
       if (saved) {
         const data = JSON.parse(saved);
         if (data.trilha) setTrilha(data.trilha);
-        if (data.membros) setMembros(data.membros);
+        if (typeof data.currentStep === "number") setCurrentStep(data.currentStep);
         if (data.equipeNome) setEquipeNome(data.equipeNome);
+        if (data.membros && Array.isArray(data.membros) && data.membros.length > 0) setMembros(data.membros);
         if (data.quemVive) setQuemVive(data.quemVive);
         if (data.oQuePerde) setOQuePerde(data.oQuePerde);
         if (data.comoSabe) setComoSabe(data.comoSabe);
@@ -169,7 +247,9 @@ function InscriptionContent() {
         if (data.comoResolvemHoje) setComoResolvemHoje(data.comoResolvemHoje);
         if (data.porQueNaoResolve) setPorQueNaoResolve(data.porQueNaoResolve);
         if (data.eixoTematico) setEixoTematico(data.eixoTematico);
+        if (data.fraseIdear) setFraseIdear(data.fraseIdear);
         if (data.nomeSolucao) setNomeSolucao(data.nomeSolucao);
+        if (data.categoriaSolucao) setCategoriaSolucao(data.categoriaSolucao);
         if (data.tresPassos) setTresPassos(data.tresPassos);
         if (data.escopoE) setEscopoE(data.escopoE);
         if (data.escopoNaoE) setEscopoNaoE(data.escopoNaoE);
@@ -177,54 +257,62 @@ function InscriptionContent() {
         if (data.escopoNaoFaz) setEscopoNaoFaz(data.escopoNaoFaz);
         if (data.comoSaberemos) setComoSaberemos(data.comoSaberemos);
         if (data.maiorDuvida) setMaiorDuvida(data.maiorDuvida);
+        if (typeof data.abertaANovos === "boolean") setAbertaANovos(data.abertaANovos);
+        if (data.aceites) setAceites(data.aceites);
         if (data.formasSelecionadas) setFormasSelecionadas(data.formasSelecionadas);
+        if (data.formaPrincipal) setFormaPrincipal(data.formaPrincipal);
+        if (data.softUsuario) setSoftUsuario(data.softUsuario);
+        if (data.softTelas) setSoftTelas(data.softTelas);
+        if (data.softDadoEntra) setSoftDadoEntra(data.softDadoEntra);
+        if (data.softDadoSai) setSoftDadoSai(data.softDadoSai);
+        if (data.softIntegracao) setSoftIntegracao(data.softIntegracao);
+        if (data.softPlataforma) setSoftPlataforma(data.softPlataforma);
+        if (data.softTomVisual) setSoftTomVisual(data.softTomVisual);
         if (data.pecaFuncao) setPecaFuncao(data.pecaFuncao);
+        if (data.pecaEncaixaEm) setPecaEncaixaEm(data.pecaEncaixaEm);
+        if (data.pecaMedidaEncaixe) setPecaMedidaEncaixe(data.pecaMedidaEncaixe);
+        if (data.pecaFolga) setPecaFolga(data.pecaFolga);
         if (data.pecaEnvelope) setPecaEnvelope(data.pecaEnvelope);
         if (data.pecaRequisitos) setPecaRequisitos(data.pecaRequisitos);
+        if (data.pecaMaterial) setPecaMaterial(data.pecaMaterial);
+        if (data.pecaQuantidade) setPecaQuantidade(data.pecaQuantidade);
+        if (typeof data.pecaMontagem === "boolean") setPecaMontagem(data.pecaMontagem);
+        if (data.dispMedeAciona) setDispMedeAciona(data.dispMedeAciona);
+        if (data.dispOndeFica) setDispOndeFica(data.dispOndeFica);
+        if (data.dispAlimentacao) setDispAlimentacao(data.dispAlimentacao);
+        if (data.dispDependeDe) setDispDependeDe(data.dispDependeDe);
+        if (data.dispJaExiste) setDispJaExiste(data.dispJaExiste);
+        if (data.servQuemExecuta) setServQuemExecuta(data.servQuemExecuta);
+        if (data.servPassoAtual) setServPassoAtual(data.servPassoAtual);
+        if (data.servOQueMuda) setServOQueMuda(data.servOQueMuda);
+        if (data.servArtefato) setServArtefato(data.servArtefato);
+        if (data.servQuemValida) setServQuemValida(data.servQuemValida);
+        if (data.travaSanitaria) setTravaSanitaria(data.travaSanitaria);
+
+        if (data.updatedAt) {
+          const date = new Date(data.updatedAt);
+          setLastSavedTime(date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit", second: "2-digit" }));
+        }
+        setShowDraftBanner(true);
       }
     } catch (e) {
       console.warn("Rascunho não carregado:", e);
+    } finally {
+      setIsLoaded(true);
     }
   }, []);
 
-  // Salvar rascunho no localStorage automaticamente
+  // Salvar rascunho automaticamente a cada alteração (debounced, após carga inicial)
   useEffect(() => {
+    if (!isLoaded) return;
     setDraftSaved(false);
     const timer = setTimeout(() => {
-      try {
-        const draft = {
-          trilha,
-          membros,
-          equipeNome,
-          quemVive,
-          oQuePerde,
-          comoSabe,
-          fraseDefinir,
-          frequencia,
-          comoResolvemHoje,
-          porQueNaoResolve,
-          eixoTematico,
-          nomeSolucao,
-          tresPassos,
-          escopoE,
-          escopoNaoE,
-          escopoFaz,
-          escopoNaoFaz,
-          comoSaberemos,
-          maiorDuvida,
-          formasSelecionadas,
-          pecaFuncao,
-          pecaEnvelope,
-          pecaRequisitos,
-        };
-        localStorage.setItem("inova_form_draft", JSON.stringify(draft));
-        setDraftSaved(true);
-      } catch (e) {
-        console.warn("Erro ao salvar rascunho:", e);
-      }
-    }, 600);
+      saveDraftToStorage();
+    }, 500);
     return () => clearTimeout(timer);
   }, [
+    isLoaded,
+    currentStep,
     trilha,
     membros,
     equipeNome,
@@ -236,7 +324,9 @@ function InscriptionContent() {
     comoResolvemHoje,
     porQueNaoResolve,
     eixoTematico,
+    fraseIdear,
     nomeSolucao,
+    categoriaSolucao,
     tresPassos,
     escopoE,
     escopoNaoE,
@@ -244,11 +334,55 @@ function InscriptionContent() {
     escopoNaoFaz,
     comoSaberemos,
     maiorDuvida,
+    abertaANovos,
+    aceites,
     formasSelecionadas,
+    formaPrincipal,
+    softUsuario,
+    softTelas,
+    softDadoEntra,
+    softDadoSai,
+    softIntegracao,
+    softPlataforma,
+    softTomVisual,
     pecaFuncao,
+    pecaEncaixaEm,
+    pecaMedidaEncaixe,
+    pecaFolga,
     pecaEnvelope,
     pecaRequisitos,
+    pecaMaterial,
+    pecaQuantidade,
+    pecaMontagem,
+    dispMedeAciona,
+    dispOndeFica,
+    dispAlimentacao,
+    dispDependeDe,
+    dispJaExiste,
+    servQuemExecuta,
+    servPassoAtual,
+    servOQueMuda,
+    servArtefato,
+    servQuemValida,
+    travaSanitaria,
   ]);
+
+  // Função para salvar rascunho manualmente com feedback imediato
+  const handleManualSaveDraft = () => {
+    const success = saveDraftToStorage();
+    if (success) {
+      setToastMessage("✓ Rascunho salvo no seu dispositivo com sucesso!");
+      setTimeout(() => setToastMessage(null), 3500);
+    }
+  };
+
+  // Função para descartar rascunho e recomeçar
+  const handleClearDraft = () => {
+    if (typeof window !== "undefined" && window.confirm("Deseja realmente limpar o rascunho e recomeçar a inscrição do zero?")) {
+      localStorage.removeItem("inova_form_draft");
+      window.location.reload();
+    }
+  };
 
   // Se a trilha for sem ideia, as etapas são apenas 0, 1, 2, 7 (aceites) e 9 (final)
   const availableSteps = useMemo(() => {
@@ -513,7 +647,50 @@ function InscriptionContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 relative">
+      {/* Toast Flutuante de Confirmação */}
+      {toastMessage && (
+        <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 bg-[var(--marca-fundo)] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-white/20 flex items-center gap-2.5 text-xs font-mono">
+          <CheckCircle2 size={16} className="text-emerald-400 shrink-0" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
+      {/* Banner de Rascunho Recuperado */}
+      {showDraftBanner && (
+        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-2xs">
+          <div className="flex items-center gap-2.5 text-emerald-800 dark:text-emerald-300">
+            <CheckCircle2 size={18} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
+            <div>
+              <span className="font-bold">Rascunho recuperado: </span>
+              <span>
+                Continuando de onde parou
+                {equipeNome ? ` (${equipeNome})` : ""}
+                {lastSavedTime ? ` · Salvo às ${lastSavedTime}` : ""}.
+              </span>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0 self-end sm:self-center">
+            <button
+              type="button"
+              onClick={() => setShowDraftBanner(false)}
+              className="text-[var(--fg-2)] hover:text-[var(--fg)] text-xs font-mono px-2 py-1 rounded cursor-pointer"
+            >
+              Dispensar
+            </button>
+            <button
+              type="button"
+              onClick={handleClearDraft}
+              className="inline-flex items-center gap-1 text-[var(--erro)] hover:underline text-xs font-mono px-2 py-1 cursor-pointer"
+              title="Limpar rascunho e começar novo formulário"
+            >
+              <RotateCcw size={12} />
+              <span>Limpar Rascunho</span>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Navegação de Etapas Inteligente e Responsiva */}
       <StepProgressNav
         currentStep={currentStep}
@@ -523,6 +700,8 @@ function InscriptionContent() {
           window.scrollTo({ top: 0, behavior: "smooth" });
         }}
         draftSaved={draftSaved}
+        onSaveDraft={handleManualSaveDraft}
+        lastSavedTime={lastSavedTime}
       />
 
       {/* Conteúdo da Etapa Atual */}
@@ -1628,28 +1807,39 @@ function InscriptionContent() {
           </div>
         )}
 
-        {/* Botões de Ação e Navegação */}
+        {/* Botões de Ação e Navegação com Salvamento Explícito */}
         {currentStep < 9 && (
-          <div className="flex items-center justify-between pt-6 border-t border-[var(--borda)]">
-            {currentStep > 0 ? (
+          <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-[var(--borda)]">
+            <div className="flex items-center gap-2">
+              {currentStep > 0 && (
+                <button
+                  type="button"
+                  onClick={handlePrev}
+                  className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl border border-[var(--borda)] text-sm font-medium text-[var(--fg-2)] hover:bg-[var(--surf-2)] transition-colors cursor-pointer"
+                >
+                  <ArrowLeft size={16} />
+                  <span>Voltar</span>
+                </button>
+              )}
+
+              {/* Botão Salvar Rascunho */}
               <button
                 type="button"
-                onClick={handlePrev}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[var(--borda)] text-sm font-medium text-[var(--fg-2)] hover:bg-[var(--surf-2)] transition-colors"
+                onClick={handleManualSaveDraft}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--surf)] hover:bg-[var(--surf-2)] text-xs font-mono font-bold text-[var(--fg)] transition-all shadow-2xs cursor-pointer active:scale-95"
+                title="Salvar rascunho no navegador agora"
               >
-                <ArrowLeft size={16} />
-                <span>Voltar</span>
+                <Save size={14} className={draftSaved ? "text-[var(--ok)]" : "text-[var(--alerta)]"} />
+                <span>{draftSaved ? (lastSavedTime ? `Salvo às ${lastSavedTime}` : "Rascunho Salvo") : "Salvar Rascunho"}</span>
               </button>
-            ) : (
-              <div />
-            )}
+            </div>
 
             {currentStep === availableSteps[availableSteps.length - 2] ? (
               <button
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-lg bg-[var(--acao)] hover:brightness-105 text-white font-bold text-base shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[var(--acao)] hover:brightness-105 text-white font-bold text-base shadow-md transition-all disabled:opacity-50 cursor-pointer"
               >
                 <span>{isSubmitting ? "Enviando Inscrição..." : "Finalizar Inscrição"}</span>
                 <CheckCircle size={18} />
@@ -1658,7 +1848,7 @@ function InscriptionContent() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
               >
                 <span>Avançar</span>
                 <ArrowRight size={16} />

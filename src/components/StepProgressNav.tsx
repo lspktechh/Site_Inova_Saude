@@ -1,12 +1,14 @@
 "use client";
 
-import { Check, Save } from "lucide-react";
+import { Check, Save, CheckCircle2 } from "lucide-react";
 
 interface StepProgressNavProps {
   currentStep: number;
   availableSteps: number[];
   onSelectStep: (step: number) => void;
   draftSaved: boolean;
+  onSaveDraft?: () => void;
+  lastSavedTime?: string;
 }
 
 const STEP_TITLES: Record<number, string> = {
@@ -27,6 +29,8 @@ export function StepProgressNav({
   availableSteps,
   onSelectStep,
   draftSaved,
+  onSaveDraft,
+  lastSavedTime,
 }: StepProgressNavProps) {
   const currentIndex = availableSteps.indexOf(currentStep);
   const totalSteps = availableSteps.length;
@@ -45,10 +49,29 @@ export function StepProgressNav({
           </span>
         </div>
 
-        <div className="flex items-center gap-1.5 font-mono text-[11px] text-[var(--ok)] font-medium">
-          <Save size={13} className={draftSaved ? "" : "animate-spin"} />
-          <span>{draftSaved ? "Rascunho salvo" : "Salvando..."}</span>
-        </div>
+        {/* Botão Interativo de Salvar Rascunho */}
+        <button
+          type="button"
+          onClick={onSaveDraft}
+          title="Clique para forçar salvamento do rascunho no seu navegador"
+          className={`flex items-center gap-1.5 font-mono text-[11px] px-3 py-1 rounded-full border transition-all cursor-pointer ${
+            draftSaved
+              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20"
+              : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 hover:bg-amber-500/20"
+          }`}
+        >
+          {draftSaved ? (
+            <>
+              <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400" />
+              <span>{lastSavedTime ? `Salvo às ${lastSavedTime}` : "Rascunho salvo"}</span>
+            </>
+          ) : (
+            <>
+              <Save size={13} className="animate-spin text-amber-600 dark:text-amber-400" />
+              <span>Salvando...</span>
+            </>
+          )}
+        </button>
       </div>
 
       {/* Progress Bar com gradiente suave */}
