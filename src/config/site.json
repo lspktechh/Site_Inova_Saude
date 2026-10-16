@@ -1,0 +1,20 @@
+{
+  "_comentario": "Textos curtos das paginas publicas (home e chamadas). Editar aqui, nunca no componente.",
+  "home": {
+    "como_funciona": {
+      "rotulo": "Da inscrição ao certificado",
+      "titulo": "Como funciona",
+      "passos": [
+        { "icone": "trilha", "titulo": "Escolha sua trilha", "texto": "Com ou sem equipe, com ou sem ideia." },
+        { "icone": "formulario", "titulo": "Preencha o formulário guiado", "texto": "Design Thinking e Lean Inception, com exemplos campo a campo. ~18 min, rascunho salvo." },
+        { "icone": "qrcode", "titulo": "Receba seu QR Code", "texto": "Cada membro ganha um voucher oficial de credenciamento." },
+        { "icone": "certificado", "titulo": "Check-in e certificado", "texto": "Leitura do QR na oficina e no Pitch Final garante o certificado de 20 horas." }
+      ]
+    }
+  },
+  "contagem": {
+    "titulo": "Inscrições encerram em",
+    "rodape": "Prazo improrrogável (Art. 11 do Edital nº 4/2026) · vagas limitadas na oficina",
+    "hora_encerramento": "23:59:59-03:00"
+  }
+}

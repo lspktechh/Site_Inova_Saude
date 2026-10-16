@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Clock } from "lucide-react";
+import { edicao, site, dataCurta } from "@/lib/config";
 
 export function HeroCountdown() {
   const [timeLeft, setTimeLeft] = useState<{
@@ -12,8 +12,9 @@ export function HeroCountdown() {
   }>({ dias: 7, horas: 12, minutos: 40, segundos: 0 });
 
   useEffect(() => {
-    // Data limite: 23 de Outubro de 2026 às 23:59:59
-    const targetDate = new Date("2026-10-23T23:59:59-03:00").getTime();
+    const targetDate = new Date(
+      `${edicao.datas.inscricoes.encerramento}T${site.contagem.hora_encerramento}`
+    ).getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -37,51 +38,55 @@ export function HeroCountdown() {
     return () => clearInterval(interval);
   }, []);
 
+  const unidades = [
+    { valor: timeLeft.dias, rotulo: "dias", destaque: true },
+    { valor: timeLeft.horas, rotulo: "horas" },
+    { valor: timeLeft.minutos, rotulo: "min" },
+    { valor: timeLeft.segundos, rotulo: "seg" },
+  ];
+
+  const { datas, rotulos } = edicao;
+  const marcos = [
+    { data: dataCurta(datas.inscricoes.encerramento), rotulo: "Fim das inscrições" },
+    { data: dataCurta(datas.oficina.data), rotulo: rotulos.oficina },
+    { data: dataCurta(datas.avaliacao_classificatoria.data), rotulo: "Classificação" },
+    { data: dataCurta(datas.pitch_final.data), rotulo: rotulos.evento_final },
+  ];
+
   return (
-    <div className="bg-black/40 border border-white/20 rounded-2xl p-5 sm:p-7 backdrop-blur-md shadow-2xl relative overflow-hidden group">
-      {/* Linha decorativa no topo com as cores do ecohub */}
+    <div className="bg-white/[0.06] border border-white/15 rounded-3xl p-6 sm:p-7 backdrop-blur-md shadow-2xl relative overflow-hidden">
       <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[var(--e1)] via-[var(--e3)] to-[var(--e6)]" />
 
-      <div className="flex items-center justify-between gap-2 mb-4">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
-            Encerramento das Inscrições
-          </span>
-        </div>
-        <Clock size={16} className="text-[var(--acento)]" />
+      <p className="text-sm font-semibold text-white/80 mb-4">{site.contagem.titulo}</p>
+
+      <div className="grid grid-cols-4 gap-2 text-center">
+        {unidades.map((u) => (
+          <div key={u.rotulo}>
+            <span
+              className={`text-3xl sm:text-5xl font-black font-mono block tabular-nums ${
+                u.destaque ? "text-[var(--acento)]" : "text-white"
+              }`}
+            >
+              {String(u.valor).padStart(2, "0")}
+            </span>
+            <span className="text-xs text-white/60">{u.rotulo}</span>
+          </div>
+        ))}
       </div>
 
-      {/* Grade do contador regressivo */}
-      <div className="grid grid-cols-4 gap-2 text-center py-2">
-        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
-          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-[var(--acento)] block">
-            {String(timeLeft.dias).padStart(2, "0")}
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">dias</span>
-        </div>
-        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
-          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-white block">
-            {String(timeLeft.horas).padStart(2, "0")}
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">horas</span>
-        </div>
-        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
-          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-white block">
-            {String(timeLeft.minutos).padStart(2, "0")}
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">min</span>
-        </div>
-        <div className="bg-white/10 rounded-xl p-2.5 sm:p-3 border border-white/10">
-          <span className="text-2xl sm:text-4xl font-extrabold font-mono text-[var(--acao)] block">
-            {String(timeLeft.segundos).padStart(2, "0")}
-          </span>
-          <span className="text-[10px] sm:text-xs font-mono uppercase text-white/70">seg</span>
-        </div>
-      </div>
+      {/* Linha do tempo compacta */}
+      <ol className="mt-7 pt-6 border-t border-white/10 grid grid-cols-4 gap-1 text-center">
+        {marcos.map((m, i) => (
+          <li key={m.data} className="flex flex-col items-center gap-1.5">
+            <span className={`w-2.5 h-2.5 rounded-full ${i === 0 ? "bg-[var(--acento)]" : "bg-white/30"}`} />
+            <span className="text-sm font-bold text-white">{m.data}</span>
+            <span className="text-[11px] leading-tight text-white/60">{m.rotulo}</span>
+          </li>
+        ))}
+      </ol>
 
-      <p className="text-xs text-white/75 mt-4 leading-relaxed">
-        Prazo improrrogável pelo <strong>Art. 11 do Edital nº 4/2026</strong>. Inscrições com vagas limitadas para a oficina presencial.
+      <p className="text-[11px] text-white/45 mt-5 text-center">
+        {site.contagem.rodape}
       </p>
     </div>
   );

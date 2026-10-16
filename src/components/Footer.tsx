@@ -8,9 +8,7 @@ export function Footer() {
     <footer className="bg-[var(--marca-fundo)] text-white mt-auto border-t border-[rgba(255,255,255,0.15)]">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-8">
         <div>
-          <p className="font-mono text-xs uppercase tracking-wider text-[rgba(255,255,255,0.7)] mb-4">
-            Realização e Apoio Institucional (Art. 11 · Edital nº 4/2026)
-          </p>
+          <p className="text-xs font-semibold text-white/60 mb-5">Realização e apoio</p>
           <div className="flex flex-wrap items-center gap-4 sm:gap-10">
             {/* Instituto Cruzeiro do Sul */}
             <img
@@ -45,14 +43,15 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-[rgba(255,255,255,0.2)] pt-6 space-y-3">
-          <p className="text-sm text-[rgba(255,255,255,0.88)] leading-relaxed max-w-4xl">
+        <div className="border-t border-white/10 pt-6 space-y-4">
+          <p className="text-xs text-white/60 leading-relaxed max-w-4xl">
             {marcas.frase_apoio}
           </p>
-          <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[rgba(255,255,255,0.65)] font-mono">
-            <span className="break-all">Contato: <a href={`mailto:${contato.email_evento}`} className="text-[var(--acento)] underline">{contato.email_evento}</a></span>
+          <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-white/70">
             <span>{contato.responsavel_comissao}</span>
-            <span className="text-[var(--acento)]">Art. 11 e 12 cumpridos</span>
+            <a href={`mailto:${contato.email_evento}`} className="text-[var(--acento)] hover:underline break-all">
+              {contato.email_evento}
+            </a>
           </div>
         </div>
       </div>

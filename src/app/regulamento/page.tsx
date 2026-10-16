@@ -1,11 +1,18 @@
 import Link from "next/link";
 import { avaliacao, formasPrototipo, edicao } from "@/lib/config";
-import { Scale, ShieldCheck, HelpCircle, ArrowRight, CheckCircle2, AlertOctagon } from "lucide-react";
+import { ShieldCheck, ArrowRight, AlertOctagon, ChevronDown, Plus } from "lucide-react";
 
 export default function RegulamentoPage() {
   const criterios = avaliacao.classificatoria.criterios;
   const idoneidade = avaliacao.idoneidade.regras;
   const descritores = avaliacao.classificatoria.descritores_padrao as Record<string, string>;
+  const pesoMaximo = Math.max(...criterios.map((c: any) => c.peso));
+  const coresLente: Record<string, string> = {
+    Desejabilidade: "var(--e4)",
+    Viabilidade: "var(--e5)",
+    Exequibilidade: "var(--e6)",
+    Equipe: "var(--e1)",
+  };
 
   const faqs = [
     {
@@ -35,144 +42,133 @@ export default function RegulamentoPage() {
   ];
 
   return (
-    <div className="w-full max-w-5xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-10 sm:space-y-14">
-      <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-semibold">
-          <Scale size={14} className="shrink-0" />
-          <span className="truncate">Normas & Critérios de Avaliação</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
-          Regulamento & Critérios
-        </h1>
-        <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Transparência total desde a inscrição: conheça como sua solução será avaliada pelas três lentes da
-          inovação, os requisitos de idoneidade da banca e tire suas dúvidas.
+    <div className="w-full max-w-4xl min-w-0 mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12 sm:space-y-16">
+      {/* ──── CABEÇALHO ──── */}
+      <div className="space-y-3 max-w-2xl">
+        <span className="rotulo">Normas & avaliação</span>
+        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">Regulamento</h1>
+        <p className="text-base text-[var(--fg-2)] leading-relaxed">
+          Como sua solução será avaliada, as regras de idoneidade da banca e as dúvidas mais comuns.
         </p>
       </div>
 
-      {/* Rúbrica Ponderada e Critérios */}
-      <section className="w-full max-w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-8 space-y-6 shadow-xs">
-        <div className="border-b border-[var(--borda)] pb-4 space-y-1">
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca-2)] font-bold">
-            {avaliacao.classificatoria.nome}
-          </span>
-          <h2 className="text-2xl font-bold text-[var(--fg)]">
-            As Três Lentes da Inovação (Nota Máxima: 50 pontos)
+      {/* ──── RÚBRICA ──── */}
+      <section className="space-y-6">
+        <div className="space-y-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--fg)]">
+            Três lentes da inovação
           </h2>
-          <p className="text-xs text-[var(--fg-2)]">
-            Metodologia consagrada pela IDEO. Cada proposta é avaliada por 2 pareceristas independentes.
+          <p className="text-sm text-[var(--fg-2)]">
+            {avaliacao.classificatoria.nome} · nota máxima {avaliacao.classificatoria.nota_maxima} pontos ·{" "}
+            {avaliacao.classificatoria.avaliadores_por_proposta} avaliadores independentes por proposta (método IDEO)
           </p>
         </div>
 
-        <div className="divide-y divide-[var(--borda)]">
-          {criterios.map((c) => (
-            <div key={c.id} className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--acao)] font-bold">
-                  {c.lente}
-                </span>
-                <h4 className="text-base font-bold text-[var(--fg)]">{c.rotulo}</h4>
+        <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-5 sm:p-7 space-y-5">
+          {criterios.map((c: any) => {
+            const cor = coresLente[c.lente] ?? "var(--marca)";
+            return (
+              <div key={c.id} className="space-y-2">
+                <div className="flex items-baseline justify-between gap-3">
+                  <div className="min-w-0">
+                    <span className="text-xs font-bold uppercase tracking-wide" style={{ color: cor }}>
+                      {c.lente}
+                    </span>
+                    <p className="text-sm sm:text-base font-semibold text-[var(--fg)] leading-snug">{c.rotulo}</p>
+                  </div>
+                  <span className="font-mono font-bold text-[var(--fg)] shrink-0">{c.peso}×</span>
+                </div>
+                <div className="h-2 rounded-full bg-[var(--surf-2)] overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${(c.peso / pesoMaximo) * 100}%`, background: cor }} />
+                </div>
               </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="text-xs font-mono text-[var(--fg-2)]">Peso</span>
-                <span className="font-mono text-base font-bold text-[var(--marca)] bg-[var(--surf-2)] px-3 py-1 rounded-lg">
-                  {c.peso}x
-                </span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Descritores da Escala */}
-        <div className="bg-[var(--surf-2)] p-5 rounded-xl space-y-3">
-          <h4 className="text-xs font-mono uppercase font-bold text-[var(--fg)]">
-            O que significa cada nota (Escala de 1 a 5):
-          </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 text-xs">
+        {/* Escala de 1 a 5 */}
+        <div className="space-y-3">
+          <h3 className="text-sm font-bold text-[var(--fg)]">O que significa cada nota</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
             {Object.entries(descritores).map(([nota, desc]) => (
-              <div key={nota} className="p-2.5 bg-white rounded-lg border border-[var(--borda)] space-y-1">
-                <span className="font-mono font-bold text-sm text-[var(--marca)] block">Nota {nota}</span>
-                <span className="text-[var(--fg-2)] leading-tight block">{desc}</span>
+              <div key={nota} className="flex sm:flex-col items-start gap-3 sm:gap-2 p-3 rounded-xl bg-[var(--surf)] border border-[var(--borda)]">
+                <span
+                  className="w-9 h-9 shrink-0 rounded-full flex items-center justify-center font-bold text-white"
+                  style={{ background: "var(--marca-2)", opacity: 0.45 + Number(nota) * 0.11 }}
+                >
+                  {nota}
+                </span>
+                <span className="text-xs text-[var(--fg-2)] leading-snug">{desc}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Os 7 Requisitos de Idoneidade */}
-      <section className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
-        <div className="border-b border-[var(--borda)] pb-4 space-y-1">
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--acao)] font-bold">
-            Garantia de Lisura
-          </span>
-          <h2 className="text-2xl font-bold text-[var(--fg)]">
-            Os 7 Requisitos de Idoneidade da Banca
-          </h2>
-          <p className="text-xs text-[var(--fg-2)]">
-            Regras de integridade embutidas no sistema para assegurar avaliação justa e impessoal.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {idoneidade.map((item, i) => (
-            <div key={item.id} className="p-4 bg-[var(--bg)] border border-[var(--borda)] rounded-xl space-y-1.5">
-              <span className="font-mono text-xs font-bold text-[var(--marca)]">0{i + 1}.</span>
-              <p className="text-xs text-[var(--fg)] font-medium leading-relaxed">{item.texto}</p>
-              <span className="text-[11px] font-mono text-[var(--fg-2)] block pt-1 border-t border-[var(--borda)]/50">
-                Implementação: {item.implementacao}
-              </span>
+      {/* ──── IDONEIDADE ──── */}
+      <section>
+        <details className="expansivel bg-[var(--surf)] border border-[var(--borda)] rounded-2xl">
+          <summary className="p-5 sm:p-6">
+            <div className="flex items-center gap-4">
+              <div className="w-11 h-11 rounded-xl bg-[var(--acao)]/10 text-[var(--acao)] flex items-center justify-center shrink-0">
+                <ShieldCheck size={22} />
+              </div>
+              <div>
+                <h2 className="text-lg sm:text-xl font-bold text-[var(--fg)]">
+                  Os {idoneidade.length} requisitos de idoneidade da banca
+                </h2>
+                <p className="text-sm text-[var(--fg-2)]">Regras de integridade embutidas no sistema.</p>
+              </div>
             </div>
-          ))}
+            <ChevronDown size={20} className="seta text-[var(--fg-2)]" />
+          </summary>
+          <ol className="px-5 sm:px-6 pb-6 space-y-4">
+            {idoneidade.map((item: any, i: number) => (
+              <li key={item.id} className="flex gap-3">
+                <span className="w-6 h-6 shrink-0 rounded-full bg-[var(--surf-2)] text-[var(--marca)] text-xs font-bold flex items-center justify-center">
+                  {i + 1}
+                </span>
+                <div className="space-y-0.5">
+                  <p className="text-sm text-[var(--fg)] leading-relaxed">{item.texto}</p>
+                  <p className="text-xs text-[var(--fg-2)]">Como: {item.implementacao}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </details>
+      </section>
+
+      {/* ──── HONESTIDADE SOBRE IA ──── */}
+      <section className="flex gap-4 p-5 sm:p-6 bg-[var(--alerta)]/10 rounded-2xl">
+        <AlertOctagon size={22} className="text-[var(--alerta)] shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <h2 className="font-bold text-[var(--fg)]">Honestidade sobre IA</h2>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">{formasPrototipo.regra_de_honestidade.texto}</p>
         </div>
       </section>
 
-      {/* Regra de Honestidade sobre IA */}
-      <section className="p-6 bg-[var(--alerta)]/10 border-l-4 border-[var(--alerta)] rounded-r-2xl space-y-3">
-        <div className="flex items-center gap-2">
-          <AlertOctagon size={20} className="text-[var(--alerta)]" />
-          <h3 className="font-bold text-base text-[var(--fg)]">
-            Cláusula de Honestidade Tecnológica sobre IA
-          </h3>
-        </div>
-        <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-          {formasPrototipo.regra_de_honestidade.texto}
-        </p>
-      </section>
-
-      {/* Perguntas Frequentes (FAQ) */}
-      <section className="space-y-6">
-        <div className="space-y-2">
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca)] font-bold">
-            Dúvidas Comuns
-          </span>
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--fg)]">
-            Perguntas Frequentes (FAQ)
-          </h2>
-        </div>
-
-        <div className="space-y-3">
-          {faqs.map((faq, i) => (
-            <div
-              key={i}
-              className="bg-[var(--surf)] border border-[var(--borda)] rounded-xl p-5 space-y-2 shadow-2xs"
-            >
-              <h4 className="text-base font-bold text-[var(--fg)] flex items-start gap-2">
-                <HelpCircle size={18} className="text-[var(--marca-2)] shrink-0 mt-0.5" />
+      {/* ──── FAQ ──── */}
+      <section className="space-y-5">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[var(--fg)]">Perguntas frequentes</h2>
+        <div className="divide-y divide-[var(--borda)] border-y border-[var(--borda)]">
+          {faqs.map((faq) => (
+            <details key={faq.p} className="expansivel group">
+              <summary className="py-4 font-semibold text-[var(--fg)]">
                 <span>{faq.p}</span>
-              </h4>
-              <p className="text-sm text-[var(--fg-2)] pl-6 leading-relaxed">{faq.r}</p>
-            </div>
+                <Plus size={18} className="shrink-0 text-[var(--fg-2)] transition-transform group-open:rotate-45" />
+              </summary>
+              <p className="pb-5 text-sm text-[var(--fg-2)] leading-relaxed">{faq.r}</p>
+            </details>
           ))}
         </div>
       </section>
 
-      <div className="text-center pt-4">
+      <div className="text-center">
         <Link
           href="/inscricao"
-          className="inline-flex items-center gap-2 bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white font-bold text-base px-8 py-3.5 rounded-xl shadow-md transition-all"
+          className="inline-flex items-center gap-2 bg-[var(--acao)] hover:bg-[var(--acao-hover)] text-white font-bold text-base px-8 py-3.5 rounded-xl shadow-md transition-all"
         >
-          <span>Concordo e quero inscrever minha equipe</span>
-          <ArrowRight size={18} />
+          Concordo e quero me inscrever <ArrowRight size={18} />
         </Link>
       </div>
     </div>
