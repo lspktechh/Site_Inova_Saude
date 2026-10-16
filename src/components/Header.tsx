@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { asset } from "@/lib/config";
 
 export function Header() {
   const pathname = usePathname();
@@ -23,34 +24,34 @@ export function Header() {
         {/* Marcas Oficiais */}
         <Link href="/" className="flex items-center gap-4 sm:gap-6 flex-wrap">
           <img
-            src="/logos/up_pos.png"
+            src={asset("/logos/up_pos.png")}
             alt="Universidade Positivo"
             className="h-8 sm:h-9 w-auto dark:hidden"
           />
           <img
-            src="/logos/up_neg.png"
+            src={asset("/logos/up_neg.png")}
             alt="Universidade Positivo"
             className="h-8 sm:h-9 w-auto hidden dark:block"
           />
 
           <img
-            src="/logos/eco_cor.png"
+            src={asset("/logos/eco_cor.png")}
             alt="ecohub ecossistema de inovação"
             className="h-7 sm:h-8 w-auto dark:hidden"
           />
           <img
-            src="/logos/eco_branco.png"
+            src={asset("/logos/eco_branco.png")}
             alt="ecohub ecossistema de inovação"
             className="h-7 sm:h-8 w-auto hidden dark:block"
           />
 
           <img
-            src="/logos/ics_pos.png"
+            src={asset("/logos/ics_pos.png")}
             alt="Instituto Cruzeiro do Sul"
             className="h-7 sm:h-8 w-auto dark:hidden"
           />
           <img
-            src="/logos/ics_neg.png"
+            src={asset("/logos/ics_neg.png")}
             alt="Instituto Cruzeiro do Sul"
             className="h-7 sm:h-8 w-auto hidden dark:block"
           />

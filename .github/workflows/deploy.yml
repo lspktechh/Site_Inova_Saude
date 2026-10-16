@@ -30,8 +30,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Determine Base Path
+        id: base_path
+        run: |
+          if [ -f public/CNAME ]; then
+            echo "path=" >> $GITHUB_OUTPUT
+            echo "Custom domain detected via public/CNAME: setting empty base path."
+          else
+            echo "path=/Site_Inova_Saude" >> $GITHUB_OUTPUT
+            echo "GitHub Pages default URL detected: setting base path to /Site_Inova_Saude."
+          fi
+
       - name: Build with Next.js export
         env:
+          BASE_PATH: ${{ steps.base_path.outputs.path }}
+          NEXT_PUBLIC_BASE_PATH: ${{ steps.base_path.outputs.path }}
           NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL || 'https://137-131-233-254.sslip.io' }}
         run: npm run build
 

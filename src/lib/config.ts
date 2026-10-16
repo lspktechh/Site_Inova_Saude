@@ -12,6 +12,17 @@ export const formasPrototipo = formasPrototipoJson as any;
 export const avaliacao = avaliacaoJson as any;
 export const fichaSchema = fichaSchemaJson as any;
 
+export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
+
+export function asset(path: string): string {
+  if (!path) return "";
+  if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) {
+    return path;
+  }
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return `${BASE_PATH}${cleanPath}`;
+}
+
 export type TrackId = "equipe_com_ideia" | "ideia_sem_equipe" | "sem_ideia";
 
 export interface TeamMember {
