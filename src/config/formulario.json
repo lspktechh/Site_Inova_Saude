@@ -1,0 +1,179 @@
+{
+  "_comentario": "As nove telas do formulario guiado, campo a campo, com toda a microcopy. Nenhum texto de ajuda, exemplo ou rotulo pode estar escrito no JSX. Trocar a microcopy em 2027 nao pode exigir deploy de codigo, so a troca deste arquivo.",
+  "_metodologia": "Etapas 3 e 4 seguem Design Thinking (Empatizar, Definir). Etapas 5 e 6 seguem Lean Inception (Visao do Produto, quadrante E / NAO E / FAZ / NAO FAZ). Etapa 8 e propria do evento.",
+
+  "trilhas": {
+    "equipe_com_ideia":  { "rotulo": "Tenho equipe e tenho ideia",  "etapas": [1,2,3,4,5,6,7,8], "banco_talentos": false },
+    "ideia_sem_equipe":  { "rotulo": "Tenho ideia, procuro equipe", "etapas": [1,2,3,4,5,6,7,8], "banco_talentos": true },
+    "sem_ideia":         { "rotulo": "Quero entrar numa equipe",    "etapas": [1,2],             "banco_talentos": true }
+  },
+
+  "_regra_trilha": "A trilha controla quais etapas sao RENDERIZADAS. Etapa nao renderizada nao vai para o payload. Nunca esconder campo com CSS.",
+
+  "etapas": [
+    {
+      "n": 0,
+      "titulo": "Como voce quer participar",
+      "tipo": "escolha_de_trilha",
+      "ajuda": "Tres cartoes grandes, um clique. E esta escolha que destrava quem acha que nao pode entrar.",
+      "opcoes": [
+        { "trilha": "equipe_com_ideia", "titulo": "Tenho equipe e tenho ideia", "descricao": "De 3 a 6 pessoas, com um problema que voces querem resolver.", "estimativa": "9 etapas, cerca de 18 min" },
+        { "trilha": "ideia_sem_equipe", "titulo": "Tenho ideia, procuro equipe", "descricao": "Preenche a ideia e aparece no Banco de Talentos, aberto a receber integrantes.", "estimativa": "9 etapas, cerca de 18 min" },
+        { "trilha": "sem_ideia", "titulo": "Quero entrar numa equipe", "descricao": "Sem ideia propria. Declara o que sabe fazer e se candidata as equipes com vaga.", "estimativa": "2 etapas, cerca de 3 min" }
+      ]
+    },
+
+    {
+      "n": 1,
+      "titulo": "Quem e voce",
+      "por_integrante": true,
+      "campos": [
+        { "id": "nome", "rotulo": "Nome completo", "tipo": "texto", "obrigatorio": true, "pessoal": true },
+        { "id": "email", "rotulo": "E-mail", "tipo": "email", "obrigatorio": true, "pessoal": true,
+          "ajuda": "Usamos para te mandar o link de retomada e os avisos do evento" },
+        { "id": "telefone", "rotulo": "Telefone ou WhatsApp", "tipo": "texto", "obrigatorio": true, "pessoal": true,
+          "ajuda": "So para avisos urgentes sobre a oficina e o Pitch Final" },
+        { "id": "vinculo", "rotulo": "Vinculo", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Aluno de graduacao", "Aluno de pos", "Docente", "Colaborador tecnico-administrativo", "Comunidade externa", "Profissional de saude"] },
+        { "id": "curso", "rotulo": "Curso ou instituicao", "tipo": "texto", "obrigatorio": true },
+        { "id": "disponibilidade", "rotulo": "Disponibilidade", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": ["Sabado 31/10 de manha, oficina", "Quinta 05/11 a noite, Pitch Final"],
+          "ajuda": "Se nao puder nos dois, fale com a gente antes de desistir",
+          "destaque_ajuda": true }
+      ]
+    },
+
+    {
+      "n": 2,
+      "titulo": "O que voce sabe fazer",
+      "por_integrante": true,
+      "intro": "Esta e a etapa que permite dividir tarefas dentro da equipe e fazer o pareamento no Banco de Talentos.",
+      "microcopy_topo": "Marque tudo que voce ja fez ou tem vontade de fazer. Nao precisa ser especialista. Equipe boa e equipe diferente, nao equipe toda igual.",
+      "campos": [
+        { "id": "competencias", "tipo": "selecao_multipla_agrupada", "obrigatorio": true, "fonte": "competencias.json" },
+        { "id": "papel", "rotulo": "Papel que pretendo assumir", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Coordenar a equipe", "Construir a solucao", "Pesquisar o problema", "Desenhar a experiencia", "Apresentar o pitch", "Ainda nao sei"],
+          "ajuda": "Pode mudar depois. Serve para a equipe saber quem faz o que desde o comeco" }
+      ],
+      "nota_de_projeto": "A opcao 'nunca fiz nada disso e quero aprender' nao e enfeite. E ela que faz o aluno do primeiro semestre e o profissional de saude sem perfil tecnico se inscreverem em vez de fechar a aba."
+    },
+
+    {
+      "n": 3,
+      "titulo": "EMPATIZAR, de quem e a dor",
+      "metodo": "Design Thinking",
+      "campos": [
+        { "id": "quem_vive", "rotulo": "Quem vive esse problema", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Descreva uma pessoa especifica, nao um grupo",
+          "exemplo_bom": "A enfermeira do plantao noturno da UBS do Jardim Leonor",
+          "exemplo_ruim": "Os pacientes do SUS" },
+        { "id": "o_que_perde", "rotulo": "O que essa pessoa perde ou sente", "tipo": "texto_longo", "linhas": 3, "obrigatorio": true,
+          "ajuda": "Tempo, dinheiro, saude, dignidade, paciencia. Seja concreto",
+          "exemplo_bom": "Ela refaz o mesmo cadastro tres vezes por turno e atrasa o atendimento",
+          "exemplo_ruim": "Ela fica insatisfeita com o sistema" },
+        { "id": "como_sabe", "rotulo": "Como voce sabe disso", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": ["Vivi na pele", "Conversei com quem vive", "Vi acontecer", "Li ou estudei", "Ouvi de um professor", "Ainda nao verifiquei"],
+          "opcao_destaque": "Ainda nao verifiquei",
+          "ajuda": "Marcar que ainda nao verificou nao tira ponto. Vamos ajudar voce a verificar na oficina. Mentir aqui atrapalha so voce" }
+      ]
+    },
+
+    {
+      "n": 4,
+      "titulo": "DEFINIR, qual e o problema exatamente",
+      "metodo": "Design Thinking",
+      "frase_com_lacunas": {
+        "_comentario": "Cada lacuna e um campo separado na tela, nao um textarea unico.",
+        "template": "{quem} precisa de {o_que} porque {por_que}, mas hoje {o_que_atrapalha}.",
+        "lacunas": ["quem", "o_que", "por_que", "o_que_atrapalha"]
+      },
+      "campos": [
+        { "id": "frequencia", "rotulo": "Com que frequencia acontece", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Varias vezes por dia", "Diariamente", "Semanalmente", "Mensalmente", "Em situacoes especificas"] },
+        { "id": "como_resolvem_hoje", "rotulo": "Como e resolvido hoje", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true,
+          "ajuda": "Todo problema real ja tem uma solucao ruim. Qual e a gambiarra atual? Papel, WhatsApp, planilha, memoria, nada?" },
+        { "id": "por_que_nao_resolve", "rotulo": "Por que isso nao resolve", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true },
+        { "id": "eixo", "rotulo": "Eixo tematico", "tipo": "selecao_unica", "obrigatorio": true, "fonte": "edicao.json#eixos_tematicos" }
+      ]
+    },
+
+    {
+      "n": 5,
+      "titulo": "IDEAR e a visao do produto",
+      "metodo": "Lean Inception",
+      "frase_com_lacunas": {
+        "template": "Para {quem} que {necessidade}, o {nome} e um {categoria} que {beneficio}. Diferente de {alternativa}, o nosso {diferencial}.",
+        "lacunas": ["quem", "necessidade", "nome", "categoria", "beneficio", "alternativa", "diferencial"]
+      },
+      "campos": [
+        { "id": "nome_solucao", "rotulo": "Nome provisorio da solucao", "tipo": "texto", "obrigatorio": true,
+          "ajuda": "Pode ser feio. Da para mudar ate o Pitch Final" },
+        { "id": "categoria", "rotulo": "Categoria", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Aplicativo", "Site ou sistema web", "Processo novo", "Programa de capacitacao", "Dispositivo fisico", "Campanha", "Outro"] },
+        { "id": "tres_passos", "rotulo": "Como funcionaria, em tres passos", "tipo": "lista_fixa", "itens": 3, "obrigatorio": true,
+          "ajuda": "Passo 1, passo 2, passo 3. Se nao couber em tres passos, a ideia ainda esta grande demais" }
+      ]
+    },
+
+    {
+      "n": 6,
+      "titulo": "E, NAO E, FAZ, NAO FAZ",
+      "metodo": "Lean Inception",
+      "microcopy_topo": "Dizer o que a solucao nao e e nao faz vale tanto quanto dizer o que ela e. E assim que se evita prometer o mundo e entregar nada.",
+      "campos": [
+        { "id": "e",       "rotulo": "E",       "tipo": "texto_curto", "obrigatorio": true, "ajuda": "A natureza da solucao", "exemplo_bom": "Um painel simples de ocupacao de leitos" },
+        { "id": "nao_e",   "rotulo": "NAO E",   "tipo": "texto_curto", "obrigatorio": true, "ajuda": "O que podem confundir com ela", "exemplo_bom": "Nao e um prontuario eletronico" },
+        { "id": "faz",     "rotulo": "FAZ",     "tipo": "lista_ate", "max": 3, "obrigatorio": true, "ajuda": "Ate tres coisas que ela faz", "exemplo_bom": "Avisa a higienizacao quando a alta e confirmada" },
+        { "id": "nao_faz", "rotulo": "NAO FAZ", "tipo": "lista_ate", "max": 3, "obrigatorio": true, "ajuda": "Ate tres coisas fora do escopo", "exemplo_bom": "Nao decide quem ocupa o leito" }
+      ]
+    },
+
+    {
+      "n": 7,
+      "titulo": "Fechamento",
+      "campos": [
+        { "id": "como_saberemos", "rotulo": "Como saberemos que deu certo", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Uma coisa observavel",
+          "exemplo_bom": "Reduzir em 30 minutos o tempo entre a alta e o leito liberado",
+          "exemplo_ruim": "Melhorar a gestao" },
+        { "id": "maior_duvida", "rotulo": "A maior duvida de voces", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true,
+          "ajuda": "Este campo nao desclassifica ninguem. Quem acha que sabe tudo geralmente nao validou nada. A oficina de 31/10 existe para atacar essa duvida",
+          "destaque_ajuda": true },
+        { "id": "aberta_a_novos", "rotulo": "Equipe aberta a novos integrantes", "tipo": "sim_nao", "obrigatorio": true,
+          "ajuda": "Se sim, sua equipe aparece no Banco de Talentos com as vagas restantes" },
+        { "id": "aceites", "rotulo": "Aceites", "tipo": "selecao_multipla", "obrigatorio": true, "todos_obrigatorios": true,
+          "opcoes": ["Li e aceito o regulamento", "Autorizo o uso de imagem", "Concordo com o tratamento de dados conforme a LGPD"] }
+      ]
+    },
+
+    {
+      "n": 8,
+      "titulo": "Que forma a solucao vai ter",
+      "intro": "Ate aqui o formulario capturou o problema. Aqui ele captura o objeto.",
+      "_regra": "Multipla escolha com uma forma marcada como principal. Marcar duas abre os dois conjuntos de campos, na ordem. Nao e excludente.",
+      "campos": [
+        { "id": "formas", "rotulo": "Que forma a solucao vai ter", "tipo": "selecao_multipla_com_principal", "obrigatorio": true, "fonte": "formas-prototipo.json" }
+      ],
+      "saida": "ficha_de_prototipo"
+    }
+  ],
+
+  "tela_final": {
+    "_comentario": "Nao termina em 'inscricao enviada'. Termina mostrando a ficha e o que acontece a seguir.",
+    "mostra": [
+      "A ficha de prototipo montada, em linguagem legivel, com botao de corrigir sem voltar etapa por etapa",
+      "O que acontece a seguir, com as datas",
+      "Link de retomada por e-mail, para editar ate 23/10",
+      "Se a forma for C ou D, ou se a trava sanitaria foi acionada, o agendamento da conversa de 20 minutos",
+      "Se a equipe tem menos de 6 pessoas e marcou aberta, o link da propria vaga no Banco de Talentos"
+    ]
+  },
+
+  "comportamento": {
+    "rascunho_automatico": "Salvar a cada campo preenchido, sem botao. O rotulo 'rascunho salvo' fica visivel na barra de progresso.",
+    "retomada": "Link por e-mail, sem senha, valido ate o encerramento das inscricoes.",
+    "nao_sei_nunca_bloqueia": "Toda selecao que tem a opcao 'nao sei' permite avancar com ela marcada. O campo entra na ficha marcado para a conversa com a comissao.",
+    "tempo_alvo_minutos": { "min": 12, "max": 18 },
+    "uma_etapa_por_tela": true
+  }
+}

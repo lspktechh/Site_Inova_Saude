@@ -1,0 +1,72 @@
+{
+  "_comentario": "Dois momentos, dois instrumentos. Misturar os dois e o erro classico: avaliador que da nota na oficina faz a equipe esconder as fraquezas, e e justamente a fraqueza que a mentoria precisa enxergar.",
+
+  "formativa": {
+    "data": "2026-10-31",
+    "nome": "Feedback Capture Grid",
+    "fonte": "d.school, Universidade de Stanford",
+    "gera_nota": false,
+    "quem_preenche": "mentor, na tela, por equipe",
+    "quadrantes": [
+      { "id": "fortes",    "simbolo": "+", "rotulo": "Pontos fortes", "ajuda": "O que ja funciona e deve ser mantido" },
+      { "id": "criticas",  "simbolo": "!", "rotulo": "Criticas",      "ajuda": "O que nao se sustenta como esta" },
+      { "id": "perguntas", "simbolo": "?", "rotulo": "Perguntas",     "ajuda": "O que a equipe ainda nao sabe responder" },
+      { "id": "ideias",    "simbolo": "*", "rotulo": "Ideias",        "ajuda": "Sugestoes concretas de caminho" }
+    ],
+    "entrega": {
+      "para_equipe": "os quatro quadrantes por e-mail no mesmo dia",
+      "prazo_reenvio_refinado": "2026-11-02"
+    }
+  },
+
+  "classificatoria": {
+    "data": "2026-11-03",
+    "nome": "Rubrica ponderada, tres lentes da inovacao",
+    "fonte": "tres lentes consagradas pela IDEO",
+    "avaliadores_por_proposta": 2,
+    "escala": { "min": 1, "max": 5 },
+    "nota_maxima": 50,
+    "criterios": [
+      { "id": "dor_real",       "lente": "Desejabilidade", "rotulo": "A dor e real e foi verificada com quem a vive", "peso": 2.5 },
+      { "id": "beneficiario",   "lente": "Desejabilidade", "rotulo": "Clareza de quem e o beneficiario",              "peso": 1.5 },
+      { "id": "sustentacao",    "lente": "Viabilidade",    "rotulo": "Faz sentido manter de pe depois do evento",     "peso": 1.5 },
+      { "id": "impacto",        "lente": "Viabilidade",    "rotulo": "Impacto potencial na rede de saude regional",   "peso": 1.5 },
+      { "id": "construtivel",   "lente": "Exequibilidade", "rotulo": "Da para construir com o que a equipe tem",      "peso": 1.5 },
+      { "id": "complementar",   "lente": "Equipe",         "rotulo": "Complementaridade e multidisciplinaridade",     "peso": 1.5 }
+    ],
+    "_regra_descritores": "Cada nivel da escala precisa estar descrito na tela, nao so numerado. O avaliador le o que significa 3 antes de marcar 3. E o que torna a nota comparavel entre avaliadores diferentes. Os descritores abaixo sao o ponto de partida e devem ser revisados pela comissao antes de publicar.",
+    "descritores_padrao": {
+      "1": "Nao atende. Nao ha evidencia no material enviado",
+      "2": "Atende pouco. A afirmacao existe mas nao se sustenta",
+      "3": "Atende de forma suficiente. Coerente, sem se destacar",
+      "4": "Atende bem. Ha evidencia concreta no material",
+      "5": "Atende de forma exemplar. Serve de referencia para as outras equipes"
+    },
+    "trl": {
+      "rotulo": "Nivel de maturidade tecnologica",
+      "norma": "ISO 16290",
+      "escala": { "min": 1, "max": 9 },
+      "entra_na_soma": false,
+      "para_que_serve": "Separar quem tem ideia no papel de quem tem prototipo rodando, e encaminhar os projetos a pre-incubacao depois. Ja usado pela Fundacao Araucaria e pela FINEP"
+    },
+    "classificam": 7
+  },
+
+  "idoneidade": {
+    "_comentario": "Os sete itens sao requisito funcional, nao recomendacao. Modulo sem eles nao pode ser aprovado.",
+    "regras": [
+      { "id": "rubrica_publicada", "texto": "Rubrica publicada no site antes da abertura das inscricoes. Quem se inscreve sabe como sera avaliado", "implementacao": "pagina publica, versionada" },
+      { "id": "dois_cegos", "texto": "Dois avaliadores independentes por proposta, sem ver a nota um do outro ate ambos enviarem", "implementacao": "a nota do par so e visivel apos o proprio envio" },
+      { "id": "terceiro_avaliador", "texto": "Divergencia acima de 1,5 ponto aciona um terceiro avaliador automaticamente", "implementacao": "gatilho no servidor, sem acao humana", "limiar": 1.5 },
+      { "id": "conflito_interesse", "texto": "Conflito de interesse declarado na tela. Quem mentorou a equipe, orienta algum integrante ou tem vinculo nao avalia, e o sistema redistribui", "implementacao": "declaracao obrigatoria antes de abrir a proposta" },
+      { "id": "justificativa_nota_baixa", "texto": "Justificativa escrita obrigatoria em qualquer criterio com nota 1 ou 2", "implementacao": "o envio e bloqueado sem o texto", "aplica_a_notas": [1, 2] },
+      { "id": "nota_travada", "texto": "Nota travada apos o envio. Reabrir exige registro de quem reabriu e por que", "implementacao": "log de auditoria imutavel" },
+      { "id": "ata_automatica", "texto": "Ata automatica com todas as notas por criterio, assinada pela banca", "implementacao": "exportacao em PDF ao fechar a avaliacao" }
+    ],
+    "devolutiva": {
+      "para_todas_as_equipes": true,
+      "inclusive_nao_classificadas": true,
+      "justificativa": "E o que faz a pessoa voltar no ano seguinte em vez de achar que foi escolha pessoal"
+    }
+  }
+}

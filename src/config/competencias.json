@@ -1,0 +1,73 @@
+{
+  "_comentario": "Etapa 2 do formulario. Preenchido por cada integrante, um por um, nas tres trilhas. Alimenta tres coisas: a divisao de tarefas dentro da equipe, o pareamento no Banco de Talentos e o campo falta_na_equipe da ficha de prototipo.",
+  "_regra_do_grupo_primeira_vez": "O grupo 'primeira_vez' tem uma unica opcao e fica sempre por ultimo, separado por uma linha. Sem ele, quem nao se acha tecnico fecha a aba.",
+
+  "grupos": [
+    { "id": "desenvolvimento", "rotulo": "Desenvolvimento", "opcoes": [
+      { "id": "frontend", "rotulo": "Front-end" },
+      { "id": "backend", "rotulo": "Back-end" },
+      { "id": "mobile", "rotulo": "Mobile" },
+      { "id": "banco_dados", "rotulo": "Banco de dados" },
+      { "id": "api", "rotulo": "Integracao e API" },
+      { "id": "infra", "rotulo": "Infraestrutura e nuvem" }
+    ]},
+    { "id": "dados_ia", "rotulo": "Dados e IA", "opcoes": [
+      { "id": "analise_dados", "rotulo": "Analise de dados" },
+      { "id": "ciencia_dados", "rotulo": "Ciencia de dados" },
+      { "id": "ia", "rotulo": "Inteligencia artificial" },
+      { "id": "automacao", "rotulo": "Automacao" }
+    ]},
+    { "id": "design", "rotulo": "Design", "opcoes": [
+      { "id": "ux", "rotulo": "UX e pesquisa com usuario" },
+      { "id": "ui", "rotulo": "UI e interface" },
+      { "id": "figma", "rotulo": "Prototipagem em Figma" },
+      { "id": "design_grafico", "rotulo": "Design grafico" }
+    ]},
+    { "id": "saude", "rotulo": "Saude", "opcoes": [
+      { "id": "enfermagem", "rotulo": "Enfermagem" },
+      { "id": "medicina", "rotulo": "Medicina" },
+      { "id": "odontologia", "rotulo": "Odontologia" },
+      { "id": "fisioterapia", "rotulo": "Fisioterapia" },
+      { "id": "psicologia", "rotulo": "Psicologia" },
+      { "id": "nutricao", "rotulo": "Nutricao" },
+      { "id": "biomedicina", "rotulo": "Biomedicina" },
+      { "id": "saude_coletiva", "rotulo": "Saude coletiva e gestao do SUS" }
+    ]},
+    { "id": "fabricacao", "rotulo": "Fabricacao e maker", "opcoes": [
+      { "id": "cad", "rotulo": "Modelagem 3D e CAD", "habilita": ["forma_b"] },
+      { "id": "operacao_impressora", "rotulo": "Operacao de impressora 3D", "habilita": ["forma_b"] },
+      { "id": "corte_laser", "rotulo": "Corte a laser e marcenaria", "habilita": ["forma_c"] },
+      { "id": "eletronica", "rotulo": "Eletronica e Arduino", "habilita": ["forma_c"] },
+      { "id": "costura", "rotulo": "Costura e materiais", "habilita": ["forma_c"] },
+      { "id": "prototipagem_fisica", "rotulo": "Prototipagem fisica" }
+    ]},
+    { "id": "negocios", "rotulo": "Negocios", "opcoes": [
+      { "id": "modelo_negocio", "rotulo": "Modelo de negocio" },
+      { "id": "gestao_projetos", "rotulo": "Gestao de projetos" },
+      { "id": "financas", "rotulo": "Financas" },
+      { "id": "marketing", "rotulo": "Marketing" }
+    ]},
+    { "id": "comunicacao", "rotulo": "Comunicacao", "opcoes": [
+      { "id": "pitch", "rotulo": "Falar em publico e pitch" },
+      { "id": "escrita", "rotulo": "Escrita e redacao" },
+      { "id": "video", "rotulo": "Video e edicao" },
+      { "id": "redes", "rotulo": "Redes sociais" }
+    ]},
+    { "id": "pesquisa", "rotulo": "Pesquisa", "opcoes": [
+      { "id": "entrevista", "rotulo": "Entrevista com usuario" },
+      { "id": "revisao_literatura", "rotulo": "Revisao de literatura" },
+      { "id": "escrita_cientifica", "rotulo": "Escrita cientifica" }
+    ]},
+    { "id": "primeira_vez", "rotulo": "Primeira vez", "separado": true, "opcoes": [
+      { "id": "quero_aprender", "rotulo": "Nunca fiz nada disso e quero aprender", "destaque": true }
+    ]}
+  ],
+
+  "competencias_exigidas_por_forma": {
+    "_comentario": "Usado para calcular falta_na_equipe na ficha de prototipo. Se a equipe escolheu a forma e ninguem marcou nenhuma das competencias listadas, o sistema aponta a lacuna no pareamento.",
+    "forma_a": ["frontend", "backend", "mobile", "figma", "ui"],
+    "forma_b": ["cad", "operacao_impressora"],
+    "forma_c": ["eletronica", "prototipagem_fisica", "corte_laser"],
+    "forma_d": ["escrita", "design_grafico", "entrevista"]
+  }
+}

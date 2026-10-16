@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  /* ---- institucionais ---- */
+  --marca: #0B4279;       /* Pantone 541 C - Cruzeiro do Sul */
+  --marca-2: #316195;     /* Pantone 653 C - Universidade Positivo */
+  --marca-fundo: #072F56; /* Escurecimento do 541 C para hero e rodapé */
+
+  /* ---- ecohub ---- */
+  --acento: #F8C412;      /* Apenas sobre fundo escuro */
+  --acao: #0B8161;        /* Botões e progresso (4,9:1 AA) */
+
+  /* Espectro ecohub */
+  --e1: #F8C412;
+  --e2: #B9CC0D;
+  --e3: #259E38;
+  --e4: #33A2A4;
+  --e5: #0B8161;
+  --e6: #5A3088;
+
+  /* ---- superfícies ---- */
+  --bg: #F2F5F8;
+  --surf: #FFFFFF;
+  --surf-2: #E4EAF1;
+  --fg: #111B26;
+  --fg-2: #4D5E70;
+  --borda: #CBD6E1;
+
+  /* ---- estado ---- */
+  --ok: #0B8161;
+  --alerta: #A55B06;
+  --erro: #B3301F;
+
+  /* ---- tipografia ---- */
+  --font-display: "Mulish", ui-sans-serif, system-ui, sans-serif;
+  --font-corpo: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --marca: #6FA3DC;
+    --marca-2: #8FBDE8;
+    --marca-fundo: #0A1B2B;
+    --acao: #2FB58C;
+    --bg: #07111B;
+    --surf: #0F1C29;
+    --surf-2: #17283A;
+    --fg: #E6EDF5;
+    --fg-2: #9FB3C6;
+    --borda: #26384B;
+    --ok: #2FB58C;
+    --alerta: #E0A45C;
+    --erro: #F0705C;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme="dark"] {
+  --marca: #6FA3DC;
+  --marca-2: #8FBDE8;
+  --marca-fundo: #0A1B2B;
+  --acao: #2FB58C;
+  --bg: #07111B;
+  --surf: #0F1C29;
+  --surf-2: #17283A;
+  --fg: #E6EDF5;
+  --fg-2: #9FB3C6;
+  --borda: #26384B;
+  --ok: #2FB58C;
+  --alerta: #E0A45C;
+  --erro: #F0705C;
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-corpo);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Faixa Arco-íris ecohub */
+.espectro-band {
+  display: flex;
+  height: 5px;
+  width: 100%;
+}
+.espectro-band i {
+  flex: 1;
+}
+
+/* Focus styles acessíveis */
+*:focus-visible {
+  outline: 2px solid var(--acao);
+  outline-offset: 2px;
+}

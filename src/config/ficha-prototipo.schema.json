@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inovasaude.up.edu.br/schema/ficha-prototipo-2026.json",
+  "title": "Ficha de prototipo",
+  "description": "Saida estruturada da etapa 8. E esta ficha, e nao o texto solto da inscricao, que alimenta a geracao do prototipo e que chega a mesa da comissao. Nao carrega dado pessoal: nome, e-mail e telefone ficam no outro arquivo de exportacao.",
+  "type": "object",
+  "required": ["edicao", "equipe_id", "formas", "funcao", "usuario", "dor", "trava_sanitaria", "status"],
+  "additionalProperties": false,
+  "properties": {
+    "edicao": { "type": "string", "examples": ["2026"] },
+    "equipe_id": { "type": "string", "description": "Identificador anonimo da equipe", "examples": ["014"] },
+    "formas": {
+      "type": "array", "minItems": 1,
+      "items": { "enum": ["forma_a", "forma_b", "forma_c", "forma_d"] },
+      "description": "Pode haver mais de uma. A primeira e a principal"
+    },
+    "funcao": { "type": "string", "description": "O que a solucao faz, em uma frase, comecando por verbo" },
+    "usuario": { "type": "string", "description": "Quem vive o problema, especifico" },
+    "dor": { "type": "string" },
+    "eixo": { "type": "string" },
+
+    "software": {
+      "type": "object", "description": "Presente quando forma_a foi escolhida",
+      "properties": {
+        "usuario_principal": { "type": "string" },
+        "telas": { "type": "array", "maxItems": 3, "items": {
+          "type": "object", "properties": { "nome": {"type":"string"}, "acao_principal": {"type":"string"} } } },
+        "dado_entra": { "type": "string" },
+        "dado_sai": { "type": "string" },
+        "integracao": { "type": ["string", "null"] },
+        "plataforma": { "type": "array", "items": { "type": "string" } },
+        "tom_visual": { "type": ["string", "null"] }
+      }
+    },
+
+    "peca_3d": {
+      "type": "object", "description": "Presente quando forma_b foi escolhida",
+      "properties": {
+        "encaixe": { "type": "object", "properties": {
+          "em": { "type": "string" },
+          "medida_mm": { "type": ["number", "null"] },
+          "folga_mm": { "type": ["number", "null"] } } },
+        "envelope_mm": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "number" },
+          "description": "comprimento, largura, altura" },
+        "cabe_na_mesa": { "type": "boolean" },
+        "requisitos": { "type": "array", "items": { "type": "string" } },
+        "material": { "type": ["string", "null"] },
+        "material_sugerido_por": { "type": ["string", "null"],
+          "description": "Qual requisito gerou a sugestao. Vai na ficha para a equipe saber por que" },
+        "quantidade": { "type": "integer", "minimum": 1 },
+        "montagem": { "type": "boolean" }
+      }
+    },
+
+    "dispositivo": {
+      "type": "object", "description": "Presente quando forma_c foi escolhida",
+      "properties": {
+        "mede_ou_aciona": { "type": "string" },
+        "onde_fica": { "type": "string" },
+        "alimentacao": { "type": "string" },
+        "depende_de": { "type": "array", "items": { "type": "string" } },
+        "ja_existe": { "type": "string" }
+      }
+    },
+
+    "servico": {
+      "type": "object", "description": "Presente quando forma_d foi escolhida",
+      "properties": {
+        "quem_executa_hoje": { "type": "string" },
+        "passo_a_passo_atual": { "type": "array", "items": { "type": "string" } },
+        "o_que_muda": { "type": "string" },
+        "artefato": { "type": "array", "items": { "type": "string" } },
+        "quem_valida": { "type": "string" }
+      }
+    },
+
+    "referencias": { "type": "array", "items": { "type": "string" },
+      "description": "Nomes dos arquivos enviados pela equipe" },
+
+    "contato_paciente": { "type": "boolean" },
+    "trava_sanitaria": {
+      "type": "object",
+      "required": ["acionada"],
+      "properties": {
+        "acionada": { "type": "boolean" },
+        "motivos": { "type": "array", "items": { "enum": ["ferida","mucosa","sangue","via_aerea","substitui_uso_unico"] } },
+        "restricao": { "enum": ["nenhuma", "maquete_de_demonstracao"] }
+      }
+    },
+
+    "competencias_equipe": { "type": "array", "items": { "type": "string" } },
+    "falta_na_equipe": { "type": "array", "items": { "type": "string" },
+      "description": "Calculado cruzando a etapa 2 com a etapa 8. Alimenta o Banco de Talentos e o pareamento de 24 a 30/10" },
+
+    "fila_comissao": { "type": "boolean",
+      "description": "Verdadeiro para forma C ou D, para trava sanitaria acionada, ou para envelope fora da mesa" },
+    "conversa_agendada": { "type": ["string", "null"], "format": "date-time" },
+
+    "geracao_ia": {
+      "type": "object",
+      "description": "Preenchido quando uma geracao e produzida a partir desta ficha",
+      "properties": {
+        "produzida_em": { "type": ["string", "null"], "format": "date-time" },
+        "ferramenta": { "type": ["string", "null"] },
+        "e_rascunho": { "const": true,
+          "description": "Sempre verdadeiro. Prototipo gerado por IA e rascunho e e identificado como tal" }
+      }
+    },
+
+    "status": { "enum": ["rascunho", "pronta_para_geracao", "em_triagem", "gerada", "arquivada"] }
+  },
+
+  "examples": [
+    {
+      "edicao": "2026",
+      "equipe_id": "014",
+      "formas": ["forma_b"],
+      "funcao": "prender frasco de soro na grade da cama sem fita",
+      "usuario": "enfermeira do plantao noturno, UBS Jardim Leonor",
+      "dor": "o frasco escorrega e a fita solta na troca de turno",
+      "eixo": "Logistica e Gestao de Servicos de Saude",
+      "peca_3d": {
+        "encaixe": { "em": "grade tubular", "medida_mm": 22, "folga_mm": 1 },
+        "envelope_mm": [90, 45, 60],
+        "cabe_na_mesa": true,
+        "requisitos": ["peso_ate_1kg", "limpeza_alcool"],
+        "material": "petg",
+        "material_sugerido_por": "limpeza_alcool",
+        "quantidade": 1,
+        "montagem": false
+      },
+      "referencias": ["foto_grade_cama.jpg"],
+      "contato_paciente": false,
+      "trava_sanitaria": { "acionada": false, "motivos": [], "restricao": "nenhuma" },
+      "competencias_equipe": ["cad", "enfermagem", "frontend"],
+      "falta_na_equipe": ["operacao_impressora"],
+      "fila_comissao": false,
+      "conversa_agendada": null,
+      "status": "pronta_para_geracao"
+    }
+  ]
+}

@@ -1,0 +1,159 @@
+{
+  "_comentario": "Etapa 8. Cada campo aqui existe porque alguem, humano ou modelo, precisa dele para produzir o prototipo. Campo que nao vira linha de briefing nao entra.",
+
+  "formas": [
+    {
+      "id": "forma_a",
+      "letra": "A",
+      "titulo": "Software",
+      "descricao": "App, site, painel, chatbot, automacao de rotina.",
+      "cor_token": "--e4",
+      "gera": "Briefing de tela pronto para ferramenta de geracao de interface, mais o esqueleto de dados.",
+      "fila_comissao": false,
+      "campos": [
+        { "id": "usuario_principal", "rotulo": "Quem vai usar e em que momento abre a tela", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Pessoa e momento. 'A enfermeira, no fim do plantao, antes de passar o turno'" },
+        { "id": "telas", "rotulo": "As tres telas essenciais", "tipo": "lista_fixa", "itens": 3, "obrigatorio": true,
+          "subcampos": [
+            { "id": "nome_tela", "rotulo": "Nome da tela", "tipo": "texto_curto" },
+            { "id": "acao_principal", "rotulo": "A acao principal dessa tela", "tipo": "texto_curto",
+              "ajuda": "Comece com um verbo. Se a tela nao tem uma acao principal, ela nao e essencial" }
+          ]},
+        { "id": "dado_entra", "rotulo": "Que dado entra", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true,
+          "ajuda": "De onde vem a informacao: a pessoa digita, outro sistema manda, um sensor le, ja esta cadastrada" },
+        { "id": "dado_sai", "rotulo": "Que dado sai", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true,
+          "ajuda": "O que o usuario ve, recebe ou exporta no final" },
+        { "id": "integracao", "rotulo": "Precisa conversar com algum sistema existente", "tipo": "texto_curto", "obrigatorio": false,
+          "ajuda": "Prontuario, agenda, planilha da secretaria, WhatsApp. Se nao precisa, deixe em branco" },
+        { "id": "plataforma", "rotulo": "Onde roda", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": ["Web no computador", "Celular", "Painel de parede ou TV", "Nao sei ainda"] },
+        { "id": "tom_visual", "rotulo": "Tom visual", "tipo": "selecao_unica", "obrigatorio": false,
+          "opcoes": ["Clinico e sobrio", "Acolhedor e humano", "Direto e operacional", "Nao sei, me ajudem a escolher"] }
+      ]
+    },
+
+    {
+      "id": "forma_b",
+      "letra": "B",
+      "titulo": "Peca fisica para impressao 3D",
+      "descricao": "Suporte, adaptador, organizador, dispositivo de apoio, encaixe.",
+      "cor_token": "--e3",
+      "gera": "Descricao parametrica completa para geracao de modelo por IA, com volume conferido contra a mesa da impressora.",
+      "fila_comissao": false,
+      "_tres_campos_que_decidem": ["medida_encaixe", "folga", "material"],
+      "campos": [
+        { "id": "funcao", "rotulo": "O que a peca faz, em uma frase", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Comece com um verbo. Isso vira a primeira linha do modelo",
+          "exemplo_bom": "Prende o frasco de soro na grade da cama sem precisar de fita",
+          "exemplo_ruim": "Um suporte melhor para o hospital",
+          "validacao": { "comeca_com_verbo": "sugestao" } },
+        { "id": "encaixa_em", "rotulo": "Em que ela encaixa", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Grade de cama, haste de soro, borda de mesa, braco de cadeira" },
+        { "id": "medida_encaixe", "rotulo": "Medida desse encaixe", "tipo": "numero_mm", "obrigatorio": true,
+          "ajuda": "Meca com regua ou trena. Aproximado serve; sem medida nenhuma, nao",
+          "nao_sei_permitido": true },
+        { "id": "folga", "rotulo": "Folga aceita", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Justo", "Mais ou menos 0,5 mm", "Mais ou menos 1 mm", "Mais ou menos 2 mm", "Nao sei"],
+          "ajuda": "Se precisa entrar e sair com frequencia, escolha folga maior",
+          "nota_de_projeto": "E o campo que mais salva reimpressao" },
+        { "id": "envelope", "rotulo": "Tamanho total aproximado", "tipo": "tres_numeros_mm", "obrigatorio": true,
+          "subcampos": ["comprimento", "largura", "altura"],
+          "ajuda": "O sistema avisa na hora se nao couber na mesa de impressao disponivel",
+          "validacao": { "contra": "edicao.json#fabricacao.mesa_impressao_mm", "bloqueia": false, "marca_ficha": true } },
+        { "id": "requisitos", "rotulo": "Ela precisa aguentar o que", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": [
+            { "id": "peso_ate_1kg", "rotulo": "Peso ate 1 kg" },
+            { "id": "peso_acima_3kg", "rotulo": "Peso acima de 3 kg" },
+            { "id": "limpeza_alcool", "rotulo": "Limpeza com alcool" },
+            { "id": "autoclave", "rotulo": "Autoclave" },
+            { "id": "calor_60", "rotulo": "Calor acima de 60 graus" },
+            { "id": "contato_pele", "rotulo": "Contato com a pele" },
+            { "id": "precisa_flexivel", "rotulo": "Precisa dobrar ou ser flexivel" },
+            { "id": "nao_sei", "rotulo": "Nao sei dizer ainda", "destaque": true }
+          ],
+          "ajuda": "Cada marcacao muda o material sugerido e a espessura da parede" },
+        { "id": "material", "rotulo": "Material", "tipo": "selecao_unica", "obrigatorio": true,
+          "fonte": "edicao.json#fabricacao.materiais",
+          "opcao_extra": { "id": "nao_sei", "rotulo": "Nao sei, me ajudem a escolher", "destaque": true },
+          "sugestao_automatica": "edicao.json#fabricacao.sugestao_material",
+          "_regra": "A sugestao muda sozinha quando um requisito e marcado, e a razao aparece escrita na tela, com as palavras do arquivo de regras" },
+        { "id": "quantidade", "rotulo": "Quantas pecas", "tipo": "numero", "obrigatorio": true, "padrao": 1 },
+        { "id": "montagem", "rotulo": "Sao partes que se juntam", "tipo": "sim_nao", "obrigatorio": true,
+          "ajuda": "Se sao duas partes que se encaixam, diga aqui" },
+        { "id": "referencia", "rotulo": "Referencia visual", "tipo": "upload", "aceita": ["image/jpeg", "image/png", "application/pdf"], "max_mb": 10, "obrigatorio": false,
+          "ajuda": "Foto do lugar onde a peca vai, mesmo tirada de celular, vale mais que descricao" }
+      ]
+    },
+
+    {
+      "id": "forma_c",
+      "letra": "C",
+      "titulo": "Dispositivo ou montagem",
+      "descricao": "Sensor, eletronica, adaptacao de equipamento existente, instalacao.",
+      "cor_token": "--e1",
+      "gera": "Entrada na fila de conversa com a comissao, mais a lista de componentes a levantar.",
+      "fila_comissao": true,
+      "campos": [
+        { "id": "mede_ou_aciona", "rotulo": "O que o dispositivo mede ou aciona", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Temperatura, presenca, peso, abertura de porta, um alarme, uma luz" },
+        { "id": "onde_fica", "rotulo": "Onde ele fica instalado", "tipo": "texto_curto", "obrigatorio": true },
+        { "id": "alimentacao", "rotulo": "Como e alimentado", "tipo": "selecao_unica", "obrigatorio": true,
+          "opcoes": ["Tomada", "Pilha ou bateria", "USB", "Nao sei ainda"] },
+        { "id": "depende_de", "rotulo": "Do que ele depende", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": ["Peca impressa em 3D", "Eletronica", "Software", "Adaptacao de equipamento que ja existe"],
+          "_regra": "Marcar 'peca impressa' abre tambem os campos da forma B" },
+        { "id": "ja_existe", "rotulo": "Ja existe equipamento parecido no mercado", "tipo": "texto_longo", "linhas": 2, "obrigatorio": true,
+          "ajuda": "Dizer que ja existe nao desclassifica. Dizer que nao existe sem ter procurado, sim" }
+      ]
+    },
+
+    {
+      "id": "forma_d",
+      "letra": "D",
+      "titulo": "Servico, processo ou material educativo",
+      "descricao": "Protocolo, fluxo de atendimento, campanha, jogo, material impresso, formacao.",
+      "cor_token": "--e6",
+      "gera": "Entrada na fila de conversa, mais o rascunho do artefato a ser produzido.",
+      "fila_comissao": true,
+      "campos": [
+        { "id": "quem_executa_hoje", "rotulo": "Quem executa isso hoje", "tipo": "texto_curto", "obrigatorio": true },
+        { "id": "passo_a_passo_atual", "rotulo": "Qual e o passo a passo atual", "tipo": "lista_ate", "max": 6, "obrigatorio": true,
+          "ajuda": "Como acontece hoje, na pratica, inclusive as partes feias" },
+        { "id": "o_que_muda", "rotulo": "O que exatamente muda", "tipo": "texto_longo", "linhas": 3, "obrigatorio": true,
+          "ajuda": "Aponte o passo que sai, o que entra ou o que troca de lugar" },
+        { "id": "artefato", "rotulo": "Qual e o artefato entregavel", "tipo": "selecao_multipla", "obrigatorio": true,
+          "opcoes": ["Roteiro ou protocolo escrito", "Checklist", "Cartaz ou folheto", "Jogo ou dinamica", "Trilha de formacao", "Video", "Outro"] },
+        { "id": "quem_valida", "rotulo": "Quem precisa validar para isso virar rotina", "tipo": "texto_curto", "obrigatorio": true,
+          "ajuda": "Coordenacao da unidade, secretaria municipal, conselho de classe, direcao da escola" }
+      ]
+    }
+  ],
+
+  "trava_sanitaria": {
+    "_comentario": "Campo obrigatorio, aparece em todas as formas. Nao bloqueia a inscricao. Marca a ficha e coloca na fila de triagem.",
+    "rotulo": "A solucao toca o paciente de alguma destas formas",
+    "tipo": "selecao_multipla",
+    "opcoes": [
+      { "id": "ferida", "rotulo": "Contato com ferida" },
+      { "id": "mucosa", "rotulo": "Contato com mucosa" },
+      { "id": "sangue", "rotulo": "Contato com corrente sanguinea" },
+      { "id": "via_aerea", "rotulo": "Contato com via aerea" },
+      { "id": "substitui_uso_unico", "rotulo": "Substitui um item de uso unico" },
+      { "id": "nenhuma", "rotulo": "Nenhuma das anteriores" }
+    ],
+    "efeito": {
+      "bloqueia_envio": false,
+      "marca_ficha": true,
+      "entra_fila_comissao": true,
+      "restringe_impressao": "maquete_de_demonstracao",
+      "mensagem_na_tela": "Obrigado por marcar. Isso nao atrapalha sua inscricao. Significa so que a comissao vai conversar com voces antes da oficina, e que a peca sera impressa como maquete de demonstracao, nao para uso em pessoa."
+    },
+    "justificativa": "Este e um evento de saude. A regra precisa estar no codigo, nao no bom senso de quem opera a impressora."
+  },
+
+  "regra_de_honestidade": {
+    "_comentario": "Esta frase precisa aparecer no formulario e no regulamento com as mesmas palavras.",
+    "texto": "Prototipo gerado por IA entra como rascunho e e identificado como tal na ficha. Equipe que apresentar imagem gerada como se fosse produto funcionando perde ponto em exequibilidade na avaliacao de 03/11. O objetivo da geracao e dar materia-prima para a critica da oficina, nao encurtar o trabalho da equipe.",
+    "onde_aparece": ["etapa_8_topo", "tela_final", "regulamento"]
+  }
+}
