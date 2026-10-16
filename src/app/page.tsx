@@ -67,12 +67,11 @@ export default function HomePage() {
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
           <div className="lg:col-span-7 space-y-6">
-            {/* Badge de status vivo com pulso */}
-            <div className="inline-flex items-center gap-2 max-w-full flex-wrap px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] sm:text-xs font-mono tracking-wider backdrop-blur-md">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--acao)] animate-heartbeat shadow-[0_0_8px_var(--acao)] shrink-0" />
+            {/* Informações da edição e status */}
+            <div className="flex items-center gap-2.5 max-w-full flex-wrap text-xs sm:text-sm font-mono tracking-wider">
               <span className="text-[var(--acento)] font-bold">2ª edição · Londrina</span>
-              <span className="text-white/60">|</span>
-              <span className="text-white/90">Inscrições Abertas</span>
+              <span className="text-white/40">|</span>
+              <span className="text-white/90 font-medium">Inscrições Abertas</span>
             </div>
 
             <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-balance">
