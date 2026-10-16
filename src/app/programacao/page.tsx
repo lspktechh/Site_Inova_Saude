@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { edicao } from "@/lib/config";
-import { Calendar, Clock, MapPin, CheckCircle, ArrowRight, Award, Compass, ExternalLink } from "lucide-react";
+import { edicao, dataCurta } from "@/lib/config";
+import { Clock, MapPin, ArrowRight, ExternalLink, ChevronDown } from "lucide-react";
 
 export default function ProgramacaoPage() {
   const etapas = [
@@ -59,143 +59,114 @@ export default function ProgramacaoPage() {
   ];
 
   return (
-    <div className="w-full max-w-5xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-8 sm:space-y-12">
-      {/* ──── HERO DA PROGRAMAÇÃO ──── */}
-      <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
-          <Calendar size={14} className="shrink-0" />
-          <span className="truncate">Cronograma Oficial · {edicao.edicao.nome}</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
-          Programação do Evento
-        </h1>
-        <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Confira as datas, horários e locais de cada marco da maratona. O credenciamento presencial nos dias
-          31/10 e 05/11 é realizado via leitura do QR Code individual e garante a emissão do certificado oficial de 20 horas.
+    <div className="w-full max-w-4xl min-w-0 mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-10 sm:space-y-14">
+      {/* ──── CABEÇALHO ──── */}
+      <div className="space-y-3 max-w-2xl">
+        <span className="rotulo">Cronograma · {edicao.edicao.nome}</span>
+        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">Programação</h1>
+        <p className="text-base text-[var(--fg-2)] leading-relaxed">
+          Nos dias presenciais, o check-in é feito pelo QR Code individual e garante o certificado de 20 horas.
         </p>
       </div>
 
-      {/* ──── LINHA DO TEMPO ESTILIZADA ──── */}
-      <div className="relative border-l-2 border-[var(--borda)] ml-3 sm:ml-6 space-y-8 pl-5 sm:pl-8">
-        {etapas.map((etapa, idx) => {
+      {/* ──── LINHA DO TEMPO ──── */}
+      <ol className="relative space-y-4">
+        <span className="absolute left-[1.15rem] sm:left-[1.4rem] top-4 bottom-4 border-l-2 border-[var(--borda)]" aria-hidden />
+        {etapas.map((etapa) => {
           const isAtivo = etapa.status === "ativo";
+          const cor = isAtivo
+            ? "var(--acao)"
+            : etapa.tipo === "presencial"
+            ? "var(--marca)"
+            : etapa.tipo === "avaliacao"
+            ? "var(--alerta)"
+            : "var(--fg-2)";
+          const [dia, resto] = etapa.data.split(" · ");
           return (
-            <div key={idx} className="relative group">
-              {/* Marcador na Linha do Tempo com Pulso Vivo para Fase Ativa */}
-              <div
-                className={`absolute -left-[31px] sm:-left-[43px] top-2 w-6 h-6 rounded-full border-4 border-[var(--bg)] flex items-center justify-center transition-all ${
-                  isAtivo
-                    ? "bg-[var(--acao)] shadow-[0_0_12px_var(--acao)]"
-                    : etapa.tipo === "presencial"
-                    ? "bg-[var(--marca)]"
-                    : etapa.tipo === "avaliacao"
-                    ? "bg-[var(--alerta)]"
-                    : "bg-[var(--borda)]"
+            <li key={etapa.titulo} className="relative flex gap-4 sm:gap-6">
+              <span
+                className={`relative z-10 mt-5 w-10 h-10 sm:w-12 sm:h-12 shrink-0 rounded-full border-4 border-[var(--bg)] ${
+                  isAtivo ? "shadow-[0_0_14px_var(--acao)]" : ""
                 }`}
-              >
-                {isAtivo && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
-              </div>
+                style={{ background: cor }}
+              />
 
-              <div
-                className={`bg-[var(--surf)] border rounded-2xl p-4 sm:p-7 space-y-3.5 transition-all shadow-xs ${
-                  isAtivo
-                    ? "border-[var(--acao)] ring-2 ring-[var(--acao)]/15 shadow-md"
-                    : "border-[var(--borda)] hover:border-[var(--marca-2)]"
+              <details
+                open={isAtivo}
+                className={`expansivel flex-1 min-w-0 bg-[var(--surf)] border rounded-2xl ${
+                  isAtivo ? "border-[var(--acao)]" : "border-[var(--borda)]"
                 }`}
               >
-                <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold text-[var(--marca)] bg-[var(--surf-2)] px-2.5 py-1 rounded-md">
-                      {etapa.data}
-                    </span>
-                    {isAtivo && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-white bg-[var(--acao)] px-2.5 py-0.5 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                        <span>Fase Atual</span>
+                <summary className="p-5 sm:p-6">
+                  <div className="min-w-0 space-y-1.5">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                      <span className="font-extrabold text-lg" style={{ color: cor }}>
+                        {dia}
                       </span>
-                    )}
-                  </div>
-
-                  <div className="flex items-center gap-2 text-xs font-mono text-[var(--fg-2)]">
-                    <Clock size={13} />
-                    <span>{etapa.horario}</span>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-xl sm:text-2xl font-bold text-[var(--fg)]">
-                    {etapa.titulo}
-                  </h3>
-                  <p className="text-sm text-[var(--fg-2)] mt-1.5 leading-relaxed">
-                    {etapa.descricao}
-                  </p>
-                </div>
-
-                <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-[var(--borda)]/60 text-xs">
-                  <div className="flex items-center gap-2 font-mono text-[var(--fg)] font-semibold">
-                    <CheckCircle size={14} className="text-[var(--acao)]" />
-                    <span>{etapa.destaque}</span>
-                  </div>
-
-                  {etapa.local && (
-                    <div className="flex items-center gap-1.5 text-[var(--fg-2)] font-mono">
-                      <MapPin size={13} className="text-[var(--marca)]" />
-                      <span>{etapa.local}</span>
+                      {resto && <span className="text-sm text-[var(--fg-2)]">{resto}</span>}
+                      {isAtivo && (
+                        <span className="text-[11px] font-bold text-white bg-[var(--acao)] px-2.5 py-0.5 rounded-full">
+                          Agora
+                        </span>
+                      )}
                     </div>
-                  )}
+                    <h2 className="text-lg sm:text-xl font-bold text-[var(--fg)] leading-snug">{etapa.titulo}</h2>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-[var(--fg-2)]">
+                      <span className="inline-flex items-center gap-1.5">
+                        <Clock size={14} /> {etapa.horario}
+                      </span>
+                      {etapa.local && (
+                        <span className="inline-flex items-center gap-1.5">
+                          <MapPin size={14} /> {etapa.local}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  <ChevronDown size={20} className="seta text-[var(--fg-2)]" />
+                </summary>
+
+                <div className="px-5 sm:px-6 pb-6 space-y-3 text-sm leading-relaxed">
+                  <p className="text-[var(--fg-2)]">{etapa.descricao}</p>
+                  <p className="font-semibold text-[var(--fg)]">→ {etapa.destaque}</p>
                 </div>
-              </div>
-            </div>
+              </details>
+            </li>
           );
         })}
-      </div>
+      </ol>
 
-      {/* ──── LOCAL DO EVENTO & MAPA ──── */}
-      <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-4 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center">
-            <MapPin size={22} />
-          </div>
-          <div>
-            <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca)] font-bold">
-              Local das Atividades Presenciais
-            </span>
-            <h3 className="text-xl font-bold text-[var(--fg)]">Universidade Positivo · Campus Londrina</h3>
-          </div>
+      {/* ──── LOCAL ──── */}
+      <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center gap-5">
+        <div className="w-12 h-12 rounded-2xl bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center shrink-0">
+          <MapPin size={24} />
         </div>
-
-        <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-          As oficinas práticas de prototipagem e o Pitch Final com a banca acontecem nas instalações da Universidade Positivo e do ecossistema de inovação ecohub em Londrina/PR. Estacionamento gratuito e credenciamento ágil com leitores na portaria.
-        </p>
-
-        <div className="flex flex-wrap items-center gap-3 pt-2">
-          <a
-            href="https://maps.google.com/?q=Universidade+Positivo+Londrina"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-[var(--marca)] hover:underline"
-          >
-            <Compass size={14} />
-            <span>Abrir no Google Maps</span>
-            <ExternalLink size={12} />
-          </a>
+        <div className="flex-1 space-y-1">
+          <h2 className="text-lg font-bold text-[var(--fg)]">Universidade Positivo · Campus Londrina</h2>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+            Oficinas e Pitch Final na UP e no ecohub Londrina/PR. Estacionamento gratuito e check-in ágil na portaria.
+          </p>
         </div>
+        <a
+          href="https://maps.google.com/?q=Universidade+Positivo+Londrina"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="shrink-0 inline-flex items-center gap-1.5 text-sm font-bold text-[var(--marca)] hover:underline"
+        >
+          Abrir no Maps <ExternalLink size={14} />
+        </a>
       </div>
 
       {/* ──── CTA FINAL ──── */}
-      <div className="bg-gradient-to-r from-[#072F56] to-[#041B32] text-white rounded-3xl p-7 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/15">
+      <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
         <div className="space-y-1 text-center sm:text-left">
-          <h4 className="font-extrabold text-xl sm:text-2xl text-white">Pronto para transformar a saúde?</h4>
-          <p className="text-sm text-white/80 max-w-xl">
-            As inscrições encerram em 23/10 às 23h59. Garanta a vaga da sua equipe e receba o voucher imediato.
-          </p>
+          <h2 className="font-extrabold text-xl sm:text-2xl">Pronto para transformar a saúde?</h2>
+          <p className="text-sm text-white/75 max-w-xl">Inscrições até {dataCurta(edicao.datas.inscricoes.encerramento)} às 23h59. O voucher sai na hora.</p>
         </div>
         <Link
           href="/inscricao"
-          className="shrink-0 bg-[var(--acento)] text-[#1e1708] font-bold text-sm px-7 py-3.5 rounded-xl hover:brightness-105 transition-all inline-flex items-center gap-2 shadow-lg cursor-pointer"
+          className="shrink-0 bg-[var(--acento)] text-[#1e1708] font-bold text-sm px-7 py-3.5 rounded-xl hover:brightness-105 transition-all inline-flex items-center gap-2 shadow-lg"
         >
-          <span>Garantir Minha Vaga</span>
-          <ArrowRight size={16} />
+          Garantir minha vaga <ArrowRight size={16} />
         </Link>
       </div>
     </div>

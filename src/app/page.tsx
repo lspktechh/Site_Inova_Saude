@@ -1,6 +1,22 @@
 import Link from "next/link";
-import { edicao, formulario } from "@/lib/config";
-import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
+import { edicao, formulario, site } from "@/lib/config";
+import {
+  ArrowRight,
+  Users,
+  Sparkles,
+  UserPlus,
+  Award,
+  ShieldCheck,
+  Cpu,
+  Activity,
+  Stethoscope,
+  Compass,
+  ChevronDown,
+  Route,
+  ClipboardList,
+  QrCode,
+  BadgeCheck,
+} from "lucide-react";
 import { HeroCountdown } from "@/components/HeroCountdown";
 
 export default function HomePage() {
@@ -10,51 +26,54 @@ export default function HomePage() {
       nome: "Infraestrutura em Saúde Digital",
       icone: Cpu,
       cor: "var(--e4)",
-      impacto: "Prontuários interoperáveis, segurança de dados clínicos e redução de filas de atendimento.",
+      impacto: "Prontuários interoperáveis, segurança de dados clínicos e menos filas.",
       dorExemplo: "Médicos e enfermeiros preenchendo o mesmo dado cadastral em 3 sistemas desconectados.",
     },
     {
       nome: "Saúde Mental e Bem-Estar",
       icone: Activity,
       cor: "var(--e1)",
-      impacto: "Prevenção de burnout em plantonistas, acolhimento precoce e suporte psicológico comunitário.",
+      impacto: "Prevenção de burnout, acolhimento precoce e suporte psicológico comunitário.",
       dorExemplo: "Altos índices de exaustão e sobrecarga emocional em equipes de enfermagem na UTI.",
     },
     {
       nome: "Logística e Gestão de Serviços de Saúde",
       icone: Stethoscope,
       cor: "var(--e5)",
-      impacto: "Giro de leitos ágil, rastreamento de medicamentos e eliminação de desperdício hospitalar.",
+      impacto: "Giro de leitos ágil, rastreio de medicamentos e menos desperdício.",
       dorExemplo: "Demora de até 40 min para higienizar o leito após a alta hospitalar.",
     },
     {
       nome: "Capacitação e Formação Profissional",
       icone: Compass,
       cor: "var(--e2)",
-      impacto: "Simulação realística, materiais interativos e atualização rápida em protocolos clínicos.",
+      impacto: "Simulação realística, materiais interativos e protocolos atualizados.",
       dorExemplo: "Insegurança de alunos recém-formados na calibração de ventiladores mecânicos.",
     },
     {
       nome: "Sustentabilidade e Responsabilidade Digital",
       icone: ShieldCheck,
       cor: "var(--e6)",
-      impacto: "Redução de descartáveis plásticos na rotina hospitalar e uso ético de tecnologias verdes.",
+      impacto: "Menos descartáveis plásticos e uso ético de tecnologias verdes.",
       dorExemplo: "Tonéis de resíduos descartáveis que poderiam ter adaptadores duráveis e esterilizáveis.",
     },
   ];
 
+  const iconesPasso: Record<string, typeof Route> = {
+    trilha: Route,
+    formulario: ClipboardList,
+    qrcode: QrCode,
+    certificado: BadgeCheck,
+  };
+  const comoFunciona = site.home.como_funciona;
+  const passos = comoFunciona.passos;
+
   return (
-    <div className="w-full max-w-full min-w-0 space-y-16 sm:space-y-24 pb-20">
-      {/* ──── HERO SECTION COM AMBIENTE CLÍNICO-DIGITAL ──── */}
-      <section className="relative overflow-hidden glass-hero text-white py-16 sm:py-24 border-b border-white/10">
-        {/* Onda ECG estilizada no fundo */}
-        <div className="absolute inset-0 pointer-events-none opacity-20 flex items-center justify-center overflow-hidden">
-          <svg
-            className="w-full h-48 stroke-[var(--acao)]"
-            viewBox="0 0 1200 150"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
+    <div className="w-full max-w-full min-w-0 space-y-20 sm:space-y-28 pb-20">
+      {/* ──── HERO ──── */}
+      <section className="relative overflow-hidden glass-hero text-white py-16 sm:py-24">
+        <div className="absolute inset-0 pointer-events-none opacity-15 flex items-center justify-center overflow-hidden">
+          <svg className="w-full h-48 stroke-[var(--acao)]" viewBox="0 0 1200 150" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M0,75 L300,75 L320,30 L340,110 L360,20 L380,95 L400,75 L700,75 L720,25 L740,120 L760,15 L780,100 L800,75 L1200,75"
               strokeWidth="3"
@@ -66,203 +85,134 @@ export default function HomePage() {
         </div>
 
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
-          <div className="lg:col-span-7 space-y-6">
-            {/* Informações da edição e status */}
-            <div className="flex items-center gap-2.5 max-w-full flex-wrap text-xs sm:text-sm font-mono tracking-wider">
-              <span className="text-[var(--acento)] font-bold">2ª edição · Londrina</span>
-              <span className="text-white/40">|</span>
-              <span className="text-emerald-400 font-bold">Inscrições Abertas</span>
-            </div>
-
-            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-balance">
-              Transforme uma dor real da saúde em{" "}
-              <span className="shimmer-text">solução</span>.
-            </h1>
-
-            <p className="text-base sm:text-lg text-white/85 max-w-xl leading-relaxed">
-              Equipes de 3 a 6 pessoas, de qualquer curso. Você traz o problema que viu acontecer no hospital, UBS ou clínica; a gente ajuda a transformar em projeto até o Pitch Final.
+          <div className="lg:col-span-7 space-y-7">
+            <p className="text-sm font-semibold">
+              <span className="text-[var(--acento)]">2ª edição · Londrina</span>
+              <span className="text-white/30 mx-2">·</span>
+              <span className="text-emerald-400">Inscrições abertas</span>
             </p>
 
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-balance">
+              Transforme uma dor real da saúde em <span className="shimmer-text">solução</span>.
+            </h1>
+
+            <p className="text-base sm:text-lg text-white/80 max-w-lg leading-relaxed">
+              Equipes de 3 a 6 pessoas, de qualquer curso. Traga o problema que você viu no hospital, UBS ou
+              clínica, e a gente ajuda a transformar em projeto até o Pitch Final.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/inscricao"
-                className="inline-flex items-center justify-center gap-2.5 bg-[var(--acento)] text-[#1e1708] font-bold text-base px-7 py-4 rounded-xl shadow-lg hover:brightness-105 active:scale-95 transition-all text-center"
+                className="inline-flex items-center justify-center gap-2.5 bg-[var(--acento)] text-[#1e1708] font-bold text-base px-7 py-4 rounded-xl shadow-lg hover:brightness-105 active:scale-95 transition-all"
               >
-                <span>Inscrever Minha Equipe</span>
+                Inscrever minha equipe
                 <ArrowRight size={18} />
               </Link>
               <Link
                 href="/banco-de-talentos"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-base px-6 py-4 rounded-xl border border-white/20 transition-all text-center"
+                className="inline-flex items-center justify-center gap-2 text-white/90 hover:text-white font-medium text-base px-6 py-4 rounded-xl border border-white/20 hover:bg-white/10 transition-all"
               >
-                <span>Banco de Talentos</span>
                 <Users size={18} />
+                Banco de Talentos
               </Link>
-            </div>
-
-            {/* Pílulas de datas com ícones */}
-            <div className="flex flex-wrap gap-2 pt-2">
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
-                <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Oficina Presencial: 31/10</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
-                <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Classificação: 03/11</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
-                <Award size={13} className="text-[var(--acento)]" />
-                <span>Pitch Final: 05/11</span>
-              </div>
             </div>
           </div>
 
-          {/* Card com o Timer Regressivo */}
           <div className="lg:col-span-5">
             <HeroCountdown />
           </div>
         </div>
       </section>
 
-      {/* ──── TRÊS FORMAS DE PARTICIPAR (ESTILIZADAS E RESPONSIVAS) ──── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-[var(--marca)]" />
-            <span className="font-mono text-xs uppercase tracking-widest text-[var(--fg-2)] font-bold">
-              Como Funciona a Entrada
-            </span>
-          </div>
-          <h2 className="text-2xl sm:text-4xl font-extrabold tracking-tight text-[var(--fg)]">
+      {/* ──── TRÊS CAMINHOS ──── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="rotulo">Como entrar</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--fg)]">
             Três caminhos de participação
           </h2>
-          <p className="text-sm sm:text-base text-[var(--fg-2)] max-w-2xl leading-relaxed">
-            O formulário é adaptativo: a trilha que você escolher renderiza apenas o que faz sentido para você.
-            Ninguém fica de fora por não ter grupo formado.
-          </p>
+          <p className="text-[var(--fg-2)]">Ninguém fica de fora por não ter grupo formado.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trilhas.map((trilha: any, idx: number) => {
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+          {trilhas.map((trilha: any) => {
             const isGroup = trilha.trilha === "equipe_com_ideia";
             const isIdeaOnly = trilha.trilha === "ideia_sem_equipe";
-
-            const accentColor = isGroup ? "var(--e5)" : isIdeaOnly ? "var(--e4)" : "var(--e1)";
+            const cor = isGroup ? "var(--e5)" : isIdeaOnly ? "var(--e4)" : "var(--e1)";
             const Icon = isGroup ? Users : isIdeaOnly ? Sparkles : UserPlus;
 
             return (
-              <div
+              <Link
                 key={trilha.trilha}
-                className="health-card p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden group"
-                style={{ borderTop: `4px solid ${accentColor}` }}
+                href={`/inscricao?trilha=${trilha.trilha}`}
+                className="health-card p-7 flex flex-col gap-5 group"
               >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span
-                      className="font-mono text-xs font-bold px-2.5 py-1 rounded-md"
-                      style={{ background: "var(--surf-2)", color: accentColor }}
-                    >
-                      Trilha 0{idx + 1}
-                    </span>
-                    <div
-                      className="w-10 h-10 rounded-xl flex items-center justify-center transition-transform group-hover:scale-110"
-                      style={{ background: "var(--surf-2)" }}
-                    >
-                      <Icon size={20} style={{ color: accentColor }} />
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-[var(--fg)] leading-snug group-hover:text-[var(--marca)] transition-colors">
-                    {trilha.titulo}
-                  </h3>
-
-                  <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-                    {trilha.descricao}
-                  </p>
+                <div
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110"
+                  style={{ background: cor, color: cor === "var(--e1)" ? "#1e1708" : "#fff" }}
+                >
+                  <Icon size={26} />
                 </div>
-
-                <div className="pt-6 mt-6 border-t border-[var(--borda)] flex items-center justify-between">
-                  <span className="font-mono text-xs text-[var(--fg-2)]">
-                    {trilha.estimativa}
+                <div className="space-y-2 flex-1">
+                  <h3 className="text-xl font-bold text-[var(--fg)] leading-snug">{trilha.titulo}</h3>
+                  <p className="text-sm text-[var(--fg-2)] leading-relaxed">{trilha.descricao}</p>
+                </div>
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-[var(--fg-2)]">{trilha.estimativa}</span>
+                  <span className="inline-flex items-center gap-1 font-bold text-[var(--acao)]">
+                    Começar <ArrowRight size={15} className="transition-transform group-hover:translate-x-1" />
                   </span>
-                  <Link
-                    href={`/inscricao?trilha=${trilha.trilha}`}
-                    className="inline-flex items-center gap-1.5 text-sm font-bold hover:underline"
-                    style={{ color: accentColor }}
-                  >
-                    <span>Começar</span>
-                    <ArrowRight size={15} />
-                  </Link>
                 </div>
-              </div>
+              </Link>
             );
           })}
         </div>
       </section>
 
-      {/* ──── OS 5 EIXOS TEMÁTICOS COM CONTEXTO REAL ──── */}
-      <section className="bg-[var(--surf-2)] py-16 border-y border-[var(--borda)]">
+      {/* ──── 5 EIXOS ──── */}
+      <section className="bg-[var(--surf-2)] py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-            <div className="space-y-2">
-              <span className="font-mono text-xs uppercase tracking-widest text-[var(--marca)] font-bold">
-                Edital nº 4/2026 · Áreas Prioritárias
-              </span>
-              <h2 className="text-2xl sm:text-4xl font-extrabold text-[var(--fg)] tracking-tight">
-                Os 5 Eixos de Desafios da Saúde
+            <div className="space-y-3">
+              <span className="rotulo">Edital nº 4/2026</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-[var(--fg)] tracking-tight">
+                Os 5 eixos de desafios
               </h2>
-              <p className="text-sm sm:text-base text-[var(--fg-2)] max-w-2xl leading-relaxed">
-                Você pode propor uma solução em qualquer um dos 5 eixos temáticos abaixo. Conheça as dores reais mapeadas no território.
-              </p>
             </div>
-
             <Link
               href="/desafios"
               className="inline-flex items-center gap-2 text-sm font-bold text-[var(--marca)] hover:underline whitespace-nowrap"
             >
-              <span>Ver todos os desafios detalhados</span>
-              <ArrowRight size={16} />
+              Ver desafios detalhados <ArrowRight size={16} />
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {eixos.map((eixo, i) => {
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {eixos.map((eixo) => {
               const Icon = eixo.icone;
               return (
                 <div
                   key={eixo.nome}
-                  className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 shadow-xs hover:border-[var(--marca-2)] hover:shadow-md transition-all flex flex-col justify-between space-y-4"
+                  className="bg-[var(--surf)] rounded-2xl p-5 flex flex-col gap-4 border border-transparent hover:border-[var(--borda)] transition-all"
                 >
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center text-white shrink-0"
-                        style={{ background: eixo.cor }}
-                      >
-                        <Icon size={20} />
-                      </div>
-                      <span className="font-mono text-xs font-bold text-[var(--fg-2)] uppercase">
-                        Eixo 0{i + 1}
-                      </span>
-                    </div>
-
-                    <h4 className="font-bold text-lg text-[var(--fg)] leading-snug">
-                      {eixo.nome}
-                    </h4>
-
-                    <p className="text-xs text-[var(--fg-2)] leading-relaxed">
-                      {eixo.impacto}
-                    </p>
+                  <div
+                    className="w-11 h-11 rounded-xl flex items-center justify-center"
+                    style={{ background: eixo.cor, color: ["var(--e1)", "var(--e2)"].includes(eixo.cor) ? "#1e1708" : "#fff" }}
+                  >
+                    <Icon size={22} />
                   </div>
-
-                  <div className="pt-3 border-t border-[var(--borda)]/60">
-                    <span className="font-mono text-[10px] text-[var(--alerta)] font-semibold uppercase block mb-1">
-                      Dor Real Mapeada:
-                    </span>
-                    <p className="text-xs text-[var(--fg)] italic leading-tight">
-                      "{eixo.dorExemplo}"
-                    </p>
+                  <div className="space-y-2 flex-1">
+                    <h3 className="font-bold text-base text-[var(--fg)] leading-snug">{eixo.nome}</h3>
+                    <p className="text-xs text-[var(--fg-2)] leading-relaxed">{eixo.impacto}</p>
                   </div>
+                  <details className="expansivel text-xs">
+                    <summary className="font-semibold text-[var(--alerta)]">
+                      Dor real mapeada
+                      <ChevronDown size={14} className="seta" />
+                    </summary>
+                    <p className="pt-2 text-[var(--fg)] italic leading-snug">“{eixo.dorExemplo}”</p>
+                  </details>
                 </div>
               );
             })}
@@ -270,71 +220,52 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ──── METODOLOGIA DE DESIGN THINKING & CREDENCIAMENTO ──── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-        <div className="health-card p-7 sm:p-9 space-y-4 relative overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-[var(--acao)]/10 text-[var(--acao)] flex items-center justify-center">
-            <Sparkles size={22} />
-          </div>
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--acao)] font-bold block">
-            Pedagogia da Inovação
-          </span>
-          <h3 className="text-2xl font-bold text-[var(--fg)]">
-            Formulário que ensina enquanto você preenche
-          </h3>
-          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            Diferente de formulários comuns que pedem "descreva sua ideia" numa caixa de texto solta, o formulário do INOVA SAÚDE guia você com Design Thinking (Empatizar e Definir) e Lean Inception (É / Não é / Faz / Não faz), mostrando exemplos de "Assim funciona" e "Assim não" campo a campo.
-          </p>
-          <div className="pt-3 flex flex-wrap gap-2 text-xs font-mono text-[var(--fg)]">
-            <span className="bg-[var(--surf-2)] px-2.5 py-1 rounded-md border border-[var(--borda)]">💡 Rascunho salvo a cada campo</span>
-            <span className="bg-[var(--surf-2)] px-2.5 py-1 rounded-md border border-[var(--borda)]">⏱ ~18 minutos</span>
-          </div>
+      {/* ──── COMO FUNCIONA ──── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-10">
+        <div className="text-center space-y-3 max-w-2xl mx-auto">
+          <span className="rotulo">{comoFunciona.rotulo}</span>
+          <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-[var(--fg)]">{comoFunciona.titulo}</h2>
         </div>
 
-        <div className="health-card p-7 sm:p-9 space-y-4 relative overflow-hidden">
-          <div className="w-10 h-10 rounded-xl bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center">
-            <CheckCircle2 size={22} />
-          </div>
-          <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca)] font-bold block">
-            Credenciamento Digital em Tempo Real
-          </span>
-          <h3 className="text-2xl font-bold text-[var(--fg)]">
-            QR Code Oficial & Controle de Presença
-          </h3>
-          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            Ao finalizar o envio, o participante é imediatamente cadastrado no sistema central de credenciamento. Cada membro recebe um voucher com QR Code de alta entropia para leitura nos terminais nos dias 31/10 (Oficina) e 05/11 (Pitch Final), garantindo a emissão do certificado oficial de 20 horas.
-          </p>
-          <div className="pt-3 flex items-center gap-3">
-            <Link
-              href="/inscricao"
-              className="text-sm font-bold text-[var(--acao)] hover:underline inline-flex items-center gap-1.5"
-            >
-              <span>Ir para o formulário de inscrição</span>
-              <ArrowRight size={16} />
-            </Link>
-          </div>
-        </div>
+        <ol className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-6">
+          {passos.map((passo, i) => {
+            const Icon = iconesPasso[passo.icone] ?? Route;
+            return (
+              <li key={passo.titulo} className="relative flex flex-col items-center text-center gap-3">
+                {i < passos.length - 1 && (
+                  <span className="hidden lg:block absolute top-8 left-[calc(50%+2.5rem)] right-[calc(-50%+2.5rem)] border-t-2 border-dashed border-[var(--borda)]" />
+                )}
+                <div className="relative w-16 h-16 rounded-full bg-[var(--acao)]/10 text-[var(--acao)] flex items-center justify-center">
+                  <Icon size={28} />
+                  <span className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-[var(--acao)] text-white text-xs font-bold flex items-center justify-center">
+                    {i + 1}
+                  </span>
+                </div>
+                <h3 className="font-bold text-[var(--fg)]">{passo.titulo}</h3>
+                <p className="text-sm text-[var(--fg-2)] leading-relaxed max-w-[16rem]">{passo.texto}</p>
+              </li>
+            );
+          })}
+        </ol>
       </section>
 
-      {/* ──── BANNER DE PREMIAÇÃO OFICIAL ──── */}
+      {/* ──── PREMIAÇÃO ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl border border-white/15 relative overflow-hidden">
-          <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--acento)] text-[#1e1708] flex items-center justify-center shrink-0 shadow-md">
+        <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-8 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
+          <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+            <div className="w-14 h-14 rounded-2xl bg-[var(--acento)] text-[#1e1708] flex items-center justify-center shrink-0">
               <Award size={30} />
             </div>
             <div className="space-y-1">
-              <h4 className="text-xl sm:text-2xl font-extrabold text-white">Premiação para Equipes Finalistas</h4>
-              <p className="text-sm text-white/80 max-w-2xl leading-relaxed">
-                {edicao.premiacao.texto_site}
-              </p>
+              <h2 className="text-xl sm:text-2xl font-extrabold">Premiação para as equipes finalistas</h2>
+              <p className="text-sm text-white/75 max-w-xl">{edicao.premiacao.texto_site}</p>
             </div>
           </div>
           <Link
             href="/regulamento"
-            className="shrink-0 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase tracking-wider px-5 py-3 rounded-xl border border-white/25 transition-all text-center"
+            className="shrink-0 inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white text-sm font-semibold px-5 py-3 rounded-xl transition-all"
           >
-            Ver Rúbrica & Critérios
+            Ver critérios <ArrowRight size={16} />
           </Link>
         </div>
       </section>

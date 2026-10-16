@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
-import { edicao, competencias } from "@/lib/config";
+import { edicao, competencias, dataCurta } from "@/lib/config";
 import {
   Users,
   UserPlus,
@@ -272,23 +272,17 @@ export default function BancoDeTalentosPage() {
 
   return (
     <div className="w-full max-w-6xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-8 sm:space-y-10">
-      {/* ──── HERO DO BANCO DE TALENTOS ──── */}
-      <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse shrink-0" />
-          <span className="truncate">Pareamento Dinâmico de Participantes · 2ª Edição</span>
-        </div>
-        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
-          Banco de Talentos
-        </h1>
-        <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Ninguém fica de fora do <strong>INOVA SAÚDE 2026</strong> por não ter grupo. Conecte-se com alunos
-          e profissionais de outras áreas (Saúde, Tech, Design e Maker) para formar equipes multidisciplinares completas de 3 a 6 pessoas.
+      {/* ──── CABEÇALHO ──── */}
+      <div className="space-y-3 max-w-2xl">
+        <span className="rotulo">Pareamento de participantes</span>
+        <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">Banco de Talentos</h1>
+        <p className="text-base text-[var(--fg-2)] leading-relaxed">
+          Sem grupo? Encontre pessoas de Saúde, Tech, Design e Maker e forme uma equipe de 3 a 6 pessoas.
         </p>
       </div>
 
       {/* ──── CONTROLES DE BUSCA E FILTROS ──── */}
-      <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-6 space-y-4 shadow-xs">
+      <div className="space-y-4">
         {/* Campo de Busca Rápida */}
         <div className="relative">
           <Search size={18} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--fg-2)]" />
@@ -296,36 +290,36 @@ export default function BancoDeTalentosPage() {
             type="text"
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            placeholder="Buscar por habilidade (ex: Figma, 3D, Enfermagem, Front-end) ou palavra-chave..."
-            className="w-full pl-10 pr-4 py-2.5 bg-[var(--surf-2)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
+            placeholder="Buscar habilidade ou palavra-chave (ex: Figma, 3D, Enfermagem)"
+            className="w-full pl-10 pr-4 py-3 bg-[var(--surf)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
           />
         </div>
 
         {/* Linha de Abas e Seletores */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 pt-2 border-t border-[var(--borda)]">
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
           {/* Seletor de Abas */}
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="grid grid-cols-2 sm:inline-flex gap-1 p-1 bg-[var(--surf-2)] rounded-xl">
             <button
               type="button"
               onClick={() => setTab("equipes")}
-              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
+              className={`px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
                 tab === "equipes"
-                  ? "bg-[var(--marca)] text-white shadow-xs"
-                  : "bg-[var(--surf-2)] text-[var(--fg-2)] hover:text-[var(--fg)]"
+                  ? "bg-[var(--surf)] text-[var(--fg)] shadow-sm"
+                  : "text-[var(--fg-2)] hover:text-[var(--fg)]"
               }`}
             >
-              Equipes com Vagas ({equipesFiltradas.length})
+              Equipes com vaga ({equipesFiltradas.length})
             </button>
             <button
               type="button"
               onClick={() => setTab("candidatos")}
-              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
+              className={`px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
                 tab === "candidatos"
-                  ? "bg-[var(--marca)] text-white shadow-xs"
-                  : "bg-[var(--surf-2)] text-[var(--fg-2)] hover:text-[var(--fg)]"
+                  ? "bg-[var(--surf)] text-[var(--fg)] shadow-sm"
+                  : "text-[var(--fg-2)] hover:text-[var(--fg)]"
               }`}
             >
-              Pessoas Disponíveis ({candidatosFiltrados.length})
+              Pessoas ({candidatosFiltrados.length})
             </button>
           </div>
 
@@ -334,9 +328,9 @@ export default function BancoDeTalentosPage() {
             <select
               value={filtroEixo}
               onChange={(e) => setFiltroEixo(e.target.value)}
-              className="w-full sm:w-auto bg-[var(--surf-2)] border border-[var(--borda)] rounded-xl px-3 py-2 text-xs font-mono font-medium focus:outline-hidden"
+              className="w-full sm:w-auto bg-[var(--surf)] border border-[var(--borda)] rounded-xl px-3 py-2.5 text-sm focus:outline-hidden"
             >
-              <option value="todos">Todos os 5 Eixos Temáticos</option>
+              <option value="todos">Todos os eixos</option>
               {edicao.eixos_tematicos.map((e) => (
                 <option key={e} value={e}>
                   {e}
@@ -348,9 +342,9 @@ export default function BancoDeTalentosPage() {
               <select
                 value={filtroDominio}
                 onChange={(e) => setFiltroDominio(e.target.value)}
-                className="bg-[var(--surf-2)] border border-[var(--borda)] rounded-xl px-3 py-2 text-xs font-mono font-medium focus:outline-hidden"
+                className="bg-[var(--surf)] border border-[var(--borda)] rounded-xl px-3 py-2.5 text-sm focus:outline-hidden"
               >
-                <option value="todos">Todas as Áreas</option>
+                <option value="todos">Todas as áreas</option>
                 <option value="saude">🏥 Saúde & Clínica</option>
                 <option value="tech">💻 Tecnologia & Dev</option>
                 <option value="design">🎨 Design & UX</option>
@@ -370,35 +364,31 @@ export default function BancoDeTalentosPage() {
             return (
               <div
                 key={eq.id}
-                className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:border-[var(--marca-2)] hover:shadow-md transition-all relative"
+                className="health-card p-6 flex flex-col justify-between"
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="text-xs font-mono font-bold text-[var(--acao)] bg-[var(--acao)]/10 px-3 py-1 rounded-full">
-                      {eq.vagasRestantes} vaga(s) restante(s)
+                    <span className="text-xs font-bold text-[var(--acao)] bg-[var(--acao)]/10 px-3 py-1 rounded-full">
+                      {eq.vagasRestantes} {eq.vagasRestantes === 1 ? "vaga" : "vagas"}
                     </span>
-                    <span className="text-[11px] font-mono text-[var(--fg-2)] truncate max-w-[130px]">
-                      {eq.eixo.split(" ")[0]}...
+                    <span className="text-xs text-[var(--fg-2)] truncate max-w-[60%]" title={eq.eixo}>
+                      {eq.eixo}
                     </span>
                   </div>
 
                   <div>
                     <h3 className="text-xl font-bold text-[var(--fg)]">{eq.nome}</h3>
-                    <p className="text-xs text-[var(--fg-2)] mt-2 leading-relaxed">
-                      "{eq.ideia}"
-                    </p>
+                    <p className="text-sm text-[var(--fg-2)] mt-2 leading-relaxed">{eq.ideia}</p>
                   </div>
 
                   {/* Lacunas calculadas que faltam na equipe */}
-                  <div className="p-3.5 bg-amber-500/10 border border-amber-500/25 rounded-xl space-y-1.5">
-                    <span className="text-[11px] font-mono font-bold text-amber-700 dark:text-amber-400 uppercase tracking-wider block">
-                      ⚠️ O que falta na equipe:
-                    </span>
+                  <div className="space-y-2">
+                    <span className="text-xs font-bold text-[var(--alerta)] block">Procuram</span>
                     <div className="flex flex-wrap gap-1.5">
                       {eq.faltaNaEquipe.map((falta) => (
                         <span
                           key={falta}
-                          className="text-[11px] font-semibold bg-white dark:bg-black/30 px-2 py-0.5 rounded border border-amber-500/30 text-amber-900 dark:text-amber-200"
+                          className="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--alerta)]/10 text-[var(--fg)]"
                         >
                           {falta}
                         </span>
@@ -407,17 +397,14 @@ export default function BancoDeTalentosPage() {
                   </div>
                 </div>
 
-                <div className="pt-5 mt-5 border-t border-[var(--borda)] flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => abrirModal(eq.nome, eq.liderContato, "equipe")}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2.5 rounded-xl bg-[var(--marca)] text-white hover:bg-[var(--marca-2)] transition-colors cursor-pointer"
-                  >
-                    <Mail size={14} />
-                    <span>Pedir para Entrar</span>
-                  </button>
-                  <span className="text-[11px] text-[var(--fg-2)] font-mono">Contato direto</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => abrirModal(eq.nome, eq.liderContato, "equipe")}
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 text-sm font-bold px-4 py-3 rounded-xl bg-[var(--acao)] text-white hover:bg-[var(--acao-hover)] transition-colors cursor-pointer"
+                >
+                  <Mail size={15} />
+                  Pedir para entrar
+                </button>
               </div>
             );
           })}
@@ -431,31 +418,29 @@ export default function BancoDeTalentosPage() {
             return (
               <div
                 key={cand.id}
-                className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 flex flex-col justify-between shadow-xs hover:border-[var(--marca-2)] hover:shadow-md transition-all"
+                className="health-card p-6 flex flex-col justify-between"
               >
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-mono font-bold text-[var(--marca)] bg-[var(--surf-2)] px-2.5 py-1 rounded-md">
-                      {cand.papel}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-emerald-500" title="Disponível para time" />
+                  <div className="flex items-center gap-3">
+                    <div className="relative w-11 h-11 shrink-0 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] font-bold flex items-center justify-center">
+                      {cand.nome.split(" ").map((n) => n[0]).slice(0, 2).join("")}
+                      <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-500 border-2 border-[var(--surf)]" title="Disponível para time" />
+                    </div>
+                    <div className="min-w-0">
+                      <h3 className="text-lg font-bold text-[var(--fg)] leading-tight">{cand.nome}</h3>
+                      <p className="text-xs text-[var(--fg-2)]">{cand.curso}</p>
+                    </div>
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-bold text-[var(--fg)]">{cand.nome}</h3>
-                    <p className="text-xs font-medium text-[var(--fg-2)]">{cand.curso}</p>
+                    <p className="text-sm font-semibold text-[var(--marca)]">{cand.papel}</p>
                     {cand.bio && (
-                      <p className="text-xs text-[var(--fg-2)] mt-2 italic leading-relaxed">
-                        "{cand.bio}"
-                      </p>
+                      <p className="text-sm text-[var(--fg-2)] mt-1.5 leading-relaxed">{cand.bio}</p>
                     )}
                   </div>
 
                   {/* Competências com Cores de Domínio */}
-                  <div className="space-y-1.5">
-                    <span className="text-[10px] font-mono text-[var(--fg-2)] uppercase block">
-                      Habilidades Mapeadas:
-                    </span>
+                  <div>
                     <div className="flex flex-wrap gap-1.5">
                       {cand.competencias.map((comp) => {
                         const fmt = formatCompetencia(comp);
@@ -472,17 +457,14 @@ export default function BancoDeTalentosPage() {
                   </div>
                 </div>
 
-                <div className="pt-5 mt-5 border-t border-[var(--borda)] flex items-center justify-between">
-                  <button
-                    type="button"
-                    onClick={() => abrirModal(cand.nome, cand.email || "contato@inova.com", "candidato")}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2.5 rounded-xl bg-[var(--acao)] text-white hover:brightness-105 transition-all cursor-pointer"
-                  >
-                    <UserPlus size={14} />
-                    <span>Convidar para Time</span>
-                  </button>
-                  <span className="text-[11px] text-[var(--fg-2)] font-mono">Disponível</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => abrirModal(cand.nome, cand.email || "contato@inova.com", "candidato")}
+                  className="mt-6 w-full inline-flex items-center justify-center gap-2 text-sm font-bold px-4 py-3 rounded-xl bg-[var(--acao)] text-white hover:brightness-105 transition-all cursor-pointer"
+                >
+                  <UserPlus size={15} />
+                  Convidar para o time
+                </button>
               </div>
             );
           })}
@@ -562,13 +544,13 @@ export default function BancoDeTalentosPage() {
       )}
 
       {/* ──── CHAMADA PARA AÇÃO FINAL ──── */}
-      <div className="bg-gradient-to-r from-[#072F56] to-[#041B32] text-white rounded-3xl p-7 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/15">
+      <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-8 sm:p-10 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl border border-white/10">
         <div className="space-y-1 text-center sm:text-left">
           <h3 className="text-xl sm:text-2xl font-extrabold text-white">
             Ainda não cadastrou seu perfil ou equipe?
           </h3>
           <p className="text-sm text-white/80 max-w-xl">
-            Escolha a trilha correspondente no formulário guiado. O sistema publica seu perfil aqui automaticamente para pareamento até 30/10.
+            Escolha sua trilha no formulário; seu perfil aparece aqui para pareamento até {dataCurta(edicao.datas.pareamento.fim)}.
           </p>
         </div>
         <Link
