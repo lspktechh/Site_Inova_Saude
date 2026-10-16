@@ -44,7 +44,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="space-y-16 sm:space-y-24 pb-20">
+    <div className="w-full max-w-full min-w-0 space-y-16 sm:space-y-24 pb-20">
       {/* ──── HERO SECTION COM AMBIENTE CLÍNICO-DIGITAL ──── */}
       <section className="relative overflow-hidden glass-hero text-white py-16 sm:py-24 border-b border-white/10">
         {/* Onda ECG estilizada no fundo */}
@@ -68,8 +68,8 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
           <div className="lg:col-span-7 space-y-6">
             {/* Badge de status vivo com pulso */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-xs font-mono tracking-wider backdrop-blur-md">
-              <span className="w-2.5 h-2.5 rounded-full bg-[var(--acao)] animate-heartbeat shadow-[0_0_8px_var(--acao)]" />
+            <div className="inline-flex items-center gap-2 max-w-full flex-wrap px-3 py-1.5 rounded-full bg-white/10 border border-white/20 text-[11px] sm:text-xs font-mono tracking-wider backdrop-blur-md">
+              <span className="w-2.5 h-2.5 rounded-full bg-[var(--acao)] animate-heartbeat shadow-[0_0_8px_var(--acao)] shrink-0" />
               <span className="text-[var(--acento)] font-bold">2ª edição · Londrina</span>
               <span className="text-white/60">|</span>
               <span className="text-white/90">Inscrições Abertas</span>

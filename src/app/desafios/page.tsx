@@ -77,12 +77,12 @@ export default function DesafiosPage() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12">
+    <div className="w-full max-w-6xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-8 sm:space-y-12">
       {/* ──── HERO DE DESAFIOS ──── */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-bold tracking-wider">
-          <Sparkles size={14} />
-          <span>Áreas de Impacto Prioritárias · Edital nº 4/2026</span>
+        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
+          <Sparkles size={14} className="shrink-0" />
+          <span className="truncate">Áreas de Impacto Prioritárias · Edital nº 4/2026</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
           Desafios & Eixos Temáticos

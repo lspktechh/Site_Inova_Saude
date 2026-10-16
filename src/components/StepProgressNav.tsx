@@ -37,14 +37,14 @@ export function StepProgressNav({
   const progressPercent = Math.round((currentIndex / (totalSteps - 1)) * 100);
 
   return (
-    <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-5 shadow-xs space-y-3.5">
+    <div className="w-full max-w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-3 sm:p-5 shadow-xs space-y-3.5">
       {/* Top Header: Step Counter & Auto-save status */}
-      <div className="flex items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2">
-          <span className="font-mono font-bold text-xs px-2.5 py-0.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)]">
+      <div className="flex items-center justify-between gap-2 text-xs">
+        <div className="flex items-center gap-1.5 min-w-0">
+          <span className="font-mono font-bold text-[11px] sm:text-xs px-2 sm:px-2.5 py-0.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] shrink-0">
             Passo {currentIndex + 1} de {totalSteps}
           </span>
-          <span className="font-bold text-[var(--fg)] hidden sm:inline">
+          <span className="font-bold text-[var(--fg)] truncate hidden sm:inline">
             · {STEP_TITLES[currentStep] || "Etapa"}
           </span>
         </div>
@@ -54,7 +54,7 @@ export function StepProgressNav({
           type="button"
           onClick={onSaveDraft}
           title="Clique para forçar salvamento do rascunho no seu navegador"
-          className={`flex items-center gap-1.5 font-mono text-[11px] px-3 py-1 rounded-full border transition-all cursor-pointer ${
+          className={`shrink-0 flex items-center gap-1.5 font-mono text-[10px] sm:text-[11px] px-2.5 sm:px-3 py-1 rounded-full border transition-all cursor-pointer ${
             draftSaved
               ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20 hover:bg-emerald-500/20"
               : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30 hover:bg-amber-500/20"
@@ -62,12 +62,12 @@ export function StepProgressNav({
         >
           {draftSaved ? (
             <>
-              <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400" />
-              <span>{lastSavedTime ? `Salvo às ${lastSavedTime}` : "Rascunho salvo"}</span>
+              <CheckCircle2 size={13} className="text-emerald-600 dark:text-emerald-400 shrink-0" />
+              <span>{lastSavedTime ? `Salvo ${lastSavedTime}` : "Salvo"}</span>
             </>
           ) : (
             <>
-              <Save size={13} className="animate-spin text-amber-600 dark:text-amber-400" />
+              <Save size={13} className="animate-spin text-amber-600 dark:text-amber-400 shrink-0" />
               <span>Salvando...</span>
             </>
           )}
@@ -83,7 +83,7 @@ export function StepProgressNav({
       </div>
 
       {/* Stepper horizontal rolável no mobile */}
-      <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
+      <div className="w-full max-w-full min-w-0 flex items-center gap-2 overflow-x-auto no-scrollbar py-1 text-xs">
         {availableSteps.map((step, idx) => {
           const isCurrent = step === currentStep;
           const isCompleted = idx < currentIndex;

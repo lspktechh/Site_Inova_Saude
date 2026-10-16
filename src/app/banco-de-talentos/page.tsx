@@ -271,12 +271,12 @@ export default function BancoDeTalentosPage() {
   }, [candidatos, filtroEixo, filtroDominio, busca]);
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-10">
+    <div className="w-full max-w-6xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-8 sm:space-y-10">
       {/* ──── HERO DO BANCO DE TALENTOS ──── */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-bold tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse" />
-          <span>Pareamento Dinâmico de Participantes · 2ª Edição</span>
+        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
+          <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse shrink-0" />
+          <span className="truncate">Pareamento Dinâmico de Participantes · 2ª Edição</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
           Banco de Talentos
@@ -304,11 +304,11 @@ export default function BancoDeTalentosPage() {
         {/* Linha de Abas e Seletores */}
         <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 pt-2 border-t border-[var(--borda)]">
           {/* Seletor de Abas */}
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2">
             <button
               type="button"
               onClick={() => setTab("equipes")}
-              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
                 tab === "equipes"
                   ? "bg-[var(--marca)] text-white shadow-xs"
                   : "bg-[var(--surf-2)] text-[var(--fg-2)] hover:text-[var(--fg)]"
@@ -319,7 +319,7 @@ export default function BancoDeTalentosPage() {
             <button
               type="button"
               onClick={() => setTab("candidatos")}
-              className={`flex-1 sm:flex-none px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+              className={`w-full sm:w-auto px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer text-center ${
                 tab === "candidatos"
                   ? "bg-[var(--marca)] text-white shadow-xs"
                   : "bg-[var(--surf-2)] text-[var(--fg-2)] hover:text-[var(--fg)]"
@@ -334,7 +334,7 @@ export default function BancoDeTalentosPage() {
             <select
               value={filtroEixo}
               onChange={(e) => setFiltroEixo(e.target.value)}
-              className="bg-[var(--surf-2)] border border-[var(--borda)] rounded-xl px-3 py-2 text-xs font-mono font-medium focus:outline-hidden"
+              className="w-full sm:w-auto bg-[var(--surf-2)] border border-[var(--borda)] rounded-xl px-3 py-2 text-xs font-mono font-medium focus:outline-hidden"
             >
               <option value="todos">Todos os 5 Eixos Temáticos</option>
               {edicao.eixos_tematicos.map((e) => (

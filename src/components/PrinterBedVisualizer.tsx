@@ -83,7 +83,7 @@ export function PrinterBedVisualizer({
   const fillPiece = fitsAll ? "rgba(16, 185, 129, 0.35)" : "rgba(239, 68, 68, 0.4)";
 
   return (
-    <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-5 space-y-4 shadow-xs">
+    <div className="w-full max-w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-3 sm:p-5 space-y-4 shadow-xs">
       <div className="flex items-center justify-between border-b border-[var(--borda)] pb-3">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center">

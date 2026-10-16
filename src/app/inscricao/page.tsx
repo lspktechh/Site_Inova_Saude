@@ -647,7 +647,7 @@ function InscriptionContent() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 relative">
+    <div className="w-full max-w-4xl min-w-0 mx-auto px-3 sm:px-6 py-6 sm:py-12 space-y-6 sm:space-y-8 relative">
       {/* Toast Flutuante de Confirmação */}
       {toastMessage && (
         <div className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 bg-[var(--marca-fundo)] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-white/20 flex items-center gap-2.5 text-xs font-mono">
@@ -705,7 +705,7 @@ function InscriptionContent() {
       />
 
       {/* Conteúdo da Etapa Atual */}
-      <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-10 shadow-sm space-y-8">
+      <div className="w-full max-w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-10 shadow-sm space-y-6 sm:space-y-8">
         {/* ETAPA 0: ESCOLHA DE TRILHA */}
         {currentStep === 0 && (
           <div className="space-y-6">
@@ -1607,27 +1607,27 @@ function InscriptionContent() {
                   <label className="text-xs font-bold text-[var(--fg)]">
                     Tamanho total aproximado (Comprimento × Largura × Altura em mm)
                   </label>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-3 gap-2 sm:gap-3">
                     <input
                       type="number"
                       value={pecaEnvelope[0]}
                       onChange={(e) => setPecaEnvelope([Number(e.target.value), pecaEnvelope[1], pecaEnvelope[2]])}
                       placeholder="X (mm)"
-                      className="bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3 py-2 text-sm text-center"
+                      className="w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm text-center focus:border-[var(--acao)] focus:outline-hidden"
                     />
                     <input
                       type="number"
                       value={pecaEnvelope[1]}
                       onChange={(e) => setPecaEnvelope([pecaEnvelope[0], Number(e.target.value), pecaEnvelope[2]])}
                       placeholder="Y (mm)"
-                      className="bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3 py-2 text-sm text-center"
+                      className="w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm text-center focus:border-[var(--acao)] focus:outline-hidden"
                     />
                     <input
                       type="number"
                       value={pecaEnvelope[2]}
                       onChange={(e) => setPecaEnvelope([pecaEnvelope[0], pecaEnvelope[1], Number(e.target.value)])}
                       placeholder="Z (mm)"
-                      className="bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3 py-2 text-sm text-center"
+                      className="w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-2 sm:px-3 py-2 text-xs sm:text-sm text-center focus:border-[var(--acao)] focus:outline-hidden"
                     />
                   </div>
 
@@ -1809,13 +1809,13 @@ function InscriptionContent() {
 
         {/* Botões de Ação e Navegação com Salvamento Explícito */}
         {currentStep < 9 && (
-          <div className="flex flex-wrap items-center justify-between gap-3 pt-6 border-t border-[var(--borda)]">
+          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-[var(--borda)]">
             <div className="flex items-center gap-2">
               {currentStep > 0 && (
                 <button
                   type="button"
                   onClick={handlePrev}
-                  className="inline-flex items-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl border border-[var(--borda)] text-sm font-medium text-[var(--fg-2)] hover:bg-[var(--surf-2)] transition-colors cursor-pointer"
+                  className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2.5 rounded-xl border border-[var(--borda)] text-sm font-medium text-[var(--fg-2)] hover:bg-[var(--surf-2)] transition-colors cursor-pointer"
                 >
                   <ArrowLeft size={16} />
                   <span>Voltar</span>
@@ -1826,11 +1826,11 @@ function InscriptionContent() {
               <button
                 type="button"
                 onClick={handleManualSaveDraft}
-                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--surf)] hover:bg-[var(--surf-2)] text-xs font-mono font-bold text-[var(--fg)] transition-all shadow-2xs cursor-pointer active:scale-95"
+                className="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--surf)] hover:bg-[var(--surf-2)] text-[11px] sm:text-xs font-mono font-bold text-[var(--fg)] transition-all shadow-2xs cursor-pointer active:scale-95"
                 title="Salvar rascunho no navegador agora"
               >
-                <Save size={14} className={draftSaved ? "text-[var(--ok)]" : "text-[var(--alerta)]"} />
-                <span>{draftSaved ? (lastSavedTime ? `Salvo às ${lastSavedTime}` : "Rascunho Salvo") : "Salvar Rascunho"}</span>
+                <Save size={14} className={draftSaved ? "text-[var(--ok)] shrink-0" : "text-[var(--alerta)] shrink-0"} />
+                <span className="truncate">{draftSaved ? (lastSavedTime ? `Salvo ${lastSavedTime}` : "Salvo") : "Salvar Rascunho"}</span>
               </button>
             </div>
 
@@ -1839,7 +1839,7 @@ function InscriptionContent() {
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-[var(--acao)] hover:brightness-105 text-white font-bold text-base shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 sm:px-7 py-3 rounded-xl bg-[var(--acao)] hover:brightness-105 text-white font-bold text-sm sm:text-base shadow-md transition-all disabled:opacity-50 cursor-pointer"
               >
                 <span>{isSubmitting ? "Enviando Inscrição..." : "Finalizar Inscrição"}</span>
                 <CheckCircle size={18} />
@@ -1848,7 +1848,7 @@ function InscriptionContent() {
               <button
                 type="button"
                 onClick={handleNext}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white font-bold text-sm shadow-xs transition-colors cursor-pointer"
               >
                 <span>Avançar</span>
                 <ArrowRight size={16} />

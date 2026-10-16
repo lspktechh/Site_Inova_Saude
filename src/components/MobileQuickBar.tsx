@@ -8,12 +8,12 @@ export function MobileQuickBar() {
   const pathname = usePathname();
 
   // Não exibe a barra se o usuário já estiver na tela do formulário de inscrição
-  if (pathname === "/inscricao") return null;
+  if (pathname && pathname.includes("/inscricao")) return null;
 
   return (
     <aside
       aria-label="Ação rápida de inscrição"
-      className="md:hidden fixed bottom-0 inset-x-0 z-50 p-3 bg-[var(--surf)]/90 backdrop-blur-md border-t border-[var(--borda)] shadow-[0_-8px_25px_rgba(0,0,0,0.12)] transition-transform duration-300"
+      className="md:hidden fixed bottom-0 inset-x-0 z-50 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))] bg-[var(--surf)]/90 backdrop-blur-md border-t border-[var(--borda)] shadow-[0_-8px_25px_rgba(0,0,0,0.12)] transition-transform duration-300"
     >
       <div className="flex items-center justify-between gap-3 max-w-md mx-auto">
         <div className="flex flex-col">

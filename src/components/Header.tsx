@@ -20,47 +20,47 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 bg-[var(--surf)] border-b border-[var(--borda)] shadow-xs">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-2">
         {/* Marcas Oficiais */}
-        <Link href="/" className="flex items-center gap-4 sm:gap-6 flex-wrap">
+        <Link href="/" className="flex items-center gap-2 sm:gap-6 min-w-0">
           <img
             src={asset("/logos/up_pos.png")}
             alt="Universidade Positivo"
-            className="h-8 sm:h-9 w-auto dark:hidden"
+            className="h-6 sm:h-9 w-auto max-w-[75px] sm:max-w-none object-contain shrink-0 dark:hidden"
           />
           <img
             src={asset("/logos/up_neg.png")}
             alt="Universidade Positivo"
-            className="h-8 sm:h-9 w-auto hidden dark:block"
+            className="h-6 sm:h-9 w-auto max-w-[75px] sm:max-w-none object-contain shrink-0 hidden dark:block"
           />
 
           <img
             src={asset("/logos/eco_cor.png")}
             alt="ecohub ecossistema de inovação"
-            className="h-7 sm:h-8 w-auto dark:hidden"
+            className="h-5 sm:h-8 w-auto max-w-[70px] sm:max-w-none object-contain shrink-0 dark:hidden"
           />
           <img
             src={asset("/logos/eco_branco.png")}
             alt="ecohub ecossistema de inovação"
-            className="h-7 sm:h-8 w-auto hidden dark:block"
+            className="h-5 sm:h-8 w-auto max-w-[70px] sm:max-w-none object-contain shrink-0 hidden dark:block"
           />
 
           <img
             src={asset("/logos/ics_pos.png")}
             alt="Instituto Cruzeiro do Sul"
-            className="h-7 sm:h-8 w-auto dark:hidden"
+            className="h-5 sm:h-8 w-auto max-w-[70px] sm:max-w-none object-contain shrink-0 dark:hidden"
           />
           <img
             src={asset("/logos/ics_neg.png")}
             alt="Instituto Cruzeiro do Sul"
-            className="h-7 sm:h-8 w-auto hidden dark:block"
+            className="h-5 sm:h-8 w-auto max-w-[70px] sm:max-w-none object-contain shrink-0 hidden dark:block"
           />
         </Link>
 
         {/* Navegação Desktop */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navItems.map((item) => {
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== "/" && pathname?.includes(item.href));
             return (
               <Link
                 key={item.href}

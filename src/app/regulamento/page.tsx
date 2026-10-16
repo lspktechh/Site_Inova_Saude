@@ -35,11 +35,11 @@ export default function RegulamentoPage() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-14">
+    <div className="w-full max-w-5xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-10 sm:space-y-14">
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-semibold">
-          <Scale size={14} />
-          <span>Normas & Critérios de Avaliação</span>
+        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-semibold">
+          <Scale size={14} className="shrink-0" />
+          <span className="truncate">Normas & Critérios de Avaliação</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
           Regulamento & Critérios
@@ -51,7 +51,7 @@ export default function RegulamentoPage() {
       </div>
 
       {/* Rúbrica Ponderada e Critérios */}
-      <section className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
+      <section className="w-full max-w-full min-w-0 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-4 sm:p-8 space-y-6 shadow-xs">
         <div className="border-b border-[var(--borda)] pb-4 space-y-1">
           <span className="font-mono text-xs uppercase tracking-wider text-[var(--marca-2)] font-bold">
             {avaliacao.classificatoria.nome}

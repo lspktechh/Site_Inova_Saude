@@ -59,12 +59,12 @@ export default function ProgramacaoPage() {
   ];
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-16 space-y-12">
+    <div className="w-full max-w-5xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-8 sm:space-y-12">
       {/* ──── HERO DA PROGRAMAÇÃO ──── */}
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-bold tracking-wider">
-          <Calendar size={14} />
-          <span>Cronograma Oficial · {edicao.edicao.nome}</span>
+        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
+          <Calendar size={14} className="shrink-0" />
+          <span className="truncate">Cronograma Oficial · {edicao.edicao.nome}</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
           Programação do Evento
@@ -76,14 +76,14 @@ export default function ProgramacaoPage() {
       </div>
 
       {/* ──── LINHA DO TEMPO ESTILIZADA ──── */}
-      <div className="relative border-l-2 border-[var(--borda)] ml-4 sm:ml-6 space-y-8 pl-6 sm:pl-8">
+      <div className="relative border-l-2 border-[var(--borda)] ml-3 sm:ml-6 space-y-8 pl-5 sm:pl-8">
         {etapas.map((etapa, idx) => {
           const isAtivo = etapa.status === "ativo";
           return (
             <div key={idx} className="relative group">
               {/* Marcador na Linha do Tempo com Pulso Vivo para Fase Ativa */}
               <div
-                className={`absolute -left-[35px] sm:-left-[43px] top-2 w-6 h-6 rounded-full border-4 border-[var(--bg)] flex items-center justify-center transition-all ${
+                className={`absolute -left-[31px] sm:-left-[43px] top-2 w-6 h-6 rounded-full border-4 border-[var(--bg)] flex items-center justify-center transition-all ${
                   isAtivo
                     ? "bg-[var(--acao)] shadow-[0_0_12px_var(--acao)]"
                     : etapa.tipo === "presencial"
@@ -97,7 +97,7 @@ export default function ProgramacaoPage() {
               </div>
 
               <div
-                className={`bg-[var(--surf)] border rounded-2xl p-6 sm:p-7 space-y-3.5 transition-all shadow-xs ${
+                className={`bg-[var(--surf)] border rounded-2xl p-4 sm:p-7 space-y-3.5 transition-all shadow-xs ${
                   isAtivo
                     ? "border-[var(--acao)] ring-2 ring-[var(--acao)]/15 shadow-md"
                     : "border-[var(--borda)] hover:border-[var(--marca-2)]"
