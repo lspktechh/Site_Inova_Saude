@@ -92,6 +92,10 @@
     "frase_apoio": "Realizacao: Instituto Cruzeiro do Sul, com o ecohub Londrina, em parceria com a Universidade Positivo, nos termos do Termo de Cooperacao Tecnico-Cientifica. Apoio: Instituto Cruzeiro do Sul, Fundacao Araucaria e Secretaria de Ciencia, Tecnologia e Ensino Superior do Parana."
   },
 
+  "credenciamento": {
+    "_comentario": "Evento correspondente no sistema de credenciamento (event-checkin). A URL da API vem da variavel NEXT_PUBLIC_API_URL no deploy.",
+    "slug_evento": "inova-saude-2026"
+  },
   "contato": {
     "email_evento": "ecohub@up.edu.br",
     "responsavel_comissao": "Comissao Organizadora do INOVA SAUDE 2026"

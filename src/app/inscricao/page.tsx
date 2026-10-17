@@ -629,7 +629,11 @@ function InscriptionContent() {
       setCurrentStep(9); // Tela final
     } catch (err) {
       console.error("Erro ao enviar inscrição:", err);
-      alert("Houve um problema ao enviar a inscrição. Por favor, tente novamente.");
+      alert(
+        err instanceof Error && err.message
+          ? err.message
+          : "Houve um problema ao enviar a inscrição. Por favor, tente novamente."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -1757,17 +1761,27 @@ function InscriptionContent() {
               </p>
             </div>
 
-            {/* Voucher Oficial de Credenciamento com QR Code */}
-            <OfficialVoucher
-              teamName={equipeNome}
-              leaderName={membros[0]?.nome || "Líder"}
-              leaderEmail={membros[0]?.email || ""}
-              qrToken={submissionResult?.qrToken || `INOVA2026-CHECKIN-${submissionResult?.id || "DEMO"}`}
-              membersCount={membros.length}
-              membersList={membros}
-              submissionId={submissionResult?.id || "DEMO"}
-              onDownloadJson={handleDownloadFicha}
-            />
+            {/* Voucher Oficial: só com o QR emitido pelo sistema de credenciamento */}
+            {submissionResult?.qrToken ? (
+              <OfficialVoucher
+                teamName={equipeNome}
+                leaderName={membros[0]?.nome || "Líder"}
+                leaderEmail={membros[0]?.email || ""}
+                qrToken={submissionResult.qrToken}
+                membersCount={membros.length}
+                membersList={membros}
+                submissionId={submissionResult.id}
+                onDownloadJson={handleDownloadFicha}
+              />
+            ) : (
+              <div className="p-5 rounded-2xl border border-[var(--borda)] bg-[var(--surf)] text-sm text-[var(--fg-2)] text-center space-y-1">
+                <p className="font-bold text-[var(--fg)]">Inscrição registrada no credenciamento</p>
+                <p>
+                  Protocolo <span className="font-mono">{submissionResult?.id}</span>. O QR Code de acesso será enviado
+                  para {membros[0]?.email || "o e-mail do líder"}.
+                </p>
+              </div>
+            )}
 
             {/* Ficha de Protótipo Gerada (JSON Legível) */}
             <div className="space-y-3">
