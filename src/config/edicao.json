@@ -82,15 +82,25 @@
     "max_por_equipe": 3
   },
   "videos": {
-    "_comentario": "Secao de videos da home. Fica escondida enquanto 'destaque' for null. Aceita link do YouTube (inclusive Shorts) ou arquivo .mp4 em /public/videos. formato: 'vertical' (celular, 9:16) ou 'horizontal' (16:9).",
-    "titulo": "Assista",
-    "destaque": null,
-    "demais": [],
-    "_exemplo": {
-      "titulo": "Chamada oficial INOVA SAUDE 2026",
-      "url": "https://www.youtube.com/shorts/XXXXXXXXXXX",
+    "_comentario": "Secao de videos da home. Aceita link do YouTube (inclusive Shorts) ou arquivo .mp4 em /public/videos. formato: 'vertical' (celular, 9:16) ou 'horizontal' (16:9). Basta colar o link na propriedade 'url'.",
+    "titulo": "Vídeos & Divulgação",
+    "destaque": {
+      "titulo": "Chamada Oficial · INOVA SAÚDE 2026",
+      "url": "",
       "formato": "vertical"
-    }
+    },
+    "demais": [
+      {
+        "titulo": "Como montar sua equipe e escolher um desafio",
+        "url": "",
+        "formato": "vertical"
+      },
+      {
+        "titulo": "Orientações sobre as Mentorias Online",
+        "url": "",
+        "formato": "vertical"
+      }
+    ]
   },
   "eixos_tematicos": [
     "Infraestrutura em Saude Digital",

@@ -32,8 +32,20 @@ function Player({ video, destaque = false }: { video: Video; destaque?: boolean 
             allow="accelerometer; encrypted-media; gyroscope; picture-in-picture; fullscreen"
             allowFullScreen
           />
-        ) : (
+        ) : video.url ? (
           <video src={asset(video.url)} controls playsInline preload="metadata" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center text-white bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 relative">
+            <div className="w-14 h-14 rounded-full bg-[var(--acento)] text-[#1e1708] flex items-center justify-center mb-3 shadow-lg">
+              <PlayCircle size={28} />
+            </div>
+            <span className="font-mono text-xs uppercase tracking-wider text-[var(--acento)] font-bold">
+              Vídeo de Divulgação
+            </span>
+            <p className="text-xs text-white/70 mt-1 max-w-[200px] leading-relaxed">
+              Formato vertical gravado no celular · Disponível em breve
+            </p>
+          </div>
         )}
       </div>
       {video.titulo && (
