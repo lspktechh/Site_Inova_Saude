@@ -1,59 +1,52 @@
 import Link from "next/link";
-import { edicao } from "@/lib/config";
+import { edicao, dataCurta, encerramentoVisivel } from "@/lib/config";
 import { Calendar, Clock, MapPin, CheckCircle, ArrowRight, Award, Compass, ExternalLink } from "lucide-react";
 
 export default function ProgramacaoPage() {
+  const { datas, certificado, rotulos } = edicao;
+  const prazo = encerramentoVisivel();
+  const pitch = datas.pitch_final;
+
   const etapas = [
     {
-      data: "17/10 a 23/10",
+      data: prazo
+        ? `${dataCurta(datas.inscricoes.abertura)} a ${dataCurta(prazo)}`
+        : `A partir de ${dataCurta(datas.inscricoes.abertura)}`,
       status: "ativo",
-      titulo: "Período Oficial de Inscrições",
+      titulo: "Inscrições Online",
       descricao:
-        "Abertura do formulário guiado em três trilhas. As equipes submetem o problema recortado e especificam a forma do protótipo (Software, 3D, Dispositivo ou Serviço).",
-      destaque: "Inscrições encerram impreterivelmente em 23/10 às 23h59",
+        "Formulário guiado em três trilhas. As equipes submetem o problema recortado e especificam a forma do protótipo (Software, 3D, Dispositivo ou Serviço). Quem não tem equipe entra no Banco de Talentos.",
+      destaque: "WhatsApp e e-mail do responsável pela equipe são obrigatórios",
       tipo: "online",
-      horario: "Até 23h59 de 23/10",
+      horario: prazo ? `Até 23h59 de ${dataCurta(prazo)}` : "Encerramento a ser divulgado",
     },
     {
-      data: "24/10 a 30/10",
+      data: "Após a inscrição",
       status: "futuro",
-      titulo: "Pareamento de Equipes & Fila de Conversa",
-      descricao:
-        "Triagem da Comissão Organizadora. Rodadas de alinhamento de 20 minutos com equipes que acionaram trava sanitária ou escolheram dispositivos complexos (Formas C e D).",
-      destaque: "Ajuste fino de escopo e banco de talentos ativo",
+      titulo: "Mentorias a Distância",
+      descricao: edicao.mentoria.texto,
+      destaque: "Fique atento ao WhatsApp e ao e-mail cadastrados",
       tipo: "online",
-      horario: "Horários agendados",
+      horario: "Contato pelo mentor",
     },
     {
-      data: "31/10 · Sábado",
-      status: "futuro",
-      titulo: "Oficina Presencial de Refinamento",
-      descricao:
-        "Encontro presencial no campus. Mentores aplicam o Feedback Capture Grid (d.school de Stanford) avaliando pontos fortes, críticas, perguntas e ideias sem gerar nota classificatória.",
-      destaque: "Credenciamento oficial por QR Code na entrada às 09h30",
-      tipo: "presencial",
-      horario: "09h30 às 12h30",
-      local: "Laboratório Maker / UP Londrina",
-    },
-    {
-      data: "03/11 · Terça",
+      data: `${dataCurta(datas.avaliacao_classificatoria.data)} · Terça`,
       status: "futuro",
       titulo: "Avaliação Classificatória Independente",
       descricao:
         "Banca independente de avaliadores pontua as propostas pelas 3 Lentes da Inovação (Desejabilidade, Viabilidade, Exequibilidade) e afere o TRL. Os 7 projetos com maior pontuação avançam.",
-      destaque: "Divulgação dos 7 times finalistas do Pitch Final",
+      destaque: `Divulgação dos 7 times finalistas do ${rotulos.evento_final}`,
       tipo: "avaliacao",
       horario: "Divulgação às 18h00",
     },
     {
-      data: "05/11 · Quinta",
+      data: `${dataCurta(pitch.data)} · Quinta`,
       status: "futuro",
-      titulo: "Grande Pitch Final & Premiação",
-      descricao:
-        "Apresentação das 7 equipes finalistas perante a banca examinadora, convidados do ecossistema de saúde e parceiros institucionais. Entrega de troféus, certificados de 20h e premiação.",
-      destaque: "Auditório Principal da Universidade Positivo Londrina",
+      titulo: `Evento Presencial: ${rotulos.evento_final} & Premiação`,
+      descricao: `Apresentação das 7 equipes finalistas perante a banca examinadora, convidados do ecossistema de saúde e parceiros institucionais. Entrega da premiação. ${certificado.registro_presenca.como}`,
+      destaque: `Registro de presença por QR Code libera o certificado de ${certificado.horas} horas`,
       tipo: "presencial",
-      horario: "19h00 às 22h00",
+      horario: `${pitch.inicio.replace(":", "h")} às ${pitch.fim.replace(":", "h")}`,
       local: "Auditório Principal UP",
     },
   ];
@@ -70,8 +63,8 @@ export default function ProgramacaoPage() {
           Programação do Evento
         </h1>
         <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Confira as datas, horários e locais de cada marco da maratona. O credenciamento presencial nos dias
-          31/10 e 05/11 é realizado via leitura do QR Code individual e garante a emissão do certificado oficial de 20 horas.
+          Confira as datas de cada marco da maratona. {certificado.texto} No dia {dataCurta(pitch.data)}, a presença é
+          registrada pela leitura do QR Code individual.
         </p>
       </div>
 
@@ -165,7 +158,7 @@ export default function ProgramacaoPage() {
         </div>
 
         <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-          As oficinas práticas de prototipagem e o Pitch Final com a banca acontecem nas instalações da Universidade Positivo e do ecossistema de inovação ecohub em Londrina/PR. Estacionamento gratuito e credenciamento ágil com leitores na portaria.
+          O {rotulos.evento_final} com a banca e a premiação acontecem nas instalações da Universidade Positivo e do ecossistema de inovação ecohub em Londrina/PR. Estacionamento gratuito e credenciamento ágil com leitores na portaria.
         </p>
 
         <div className="flex flex-wrap items-center gap-3 pt-2">
@@ -187,7 +180,8 @@ export default function ProgramacaoPage() {
         <div className="space-y-1 text-center sm:text-left">
           <h4 className="font-extrabold text-xl sm:text-2xl text-white">Pronto para transformar a saúde?</h4>
           <p className="text-sm text-white/80 max-w-xl">
-            As inscrições encerram em 23/10 às 23h59. Garanta a vaga da sua equipe e receba o voucher imediato.
+            {prazo ? `As inscrições encerram em ${dataCurta(prazo)} às 23h59. ` : "Inscrições abertas e gratuitas. "}
+            Garanta a vaga da sua equipe e receba o voucher na hora.
           </p>
         </div>
         <Link

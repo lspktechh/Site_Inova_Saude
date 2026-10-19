@@ -1,6 +1,5 @@
 {
   "_comentario": "Tudo que muda de uma edicao para a outra vive neste arquivo. Nenhuma data, rotulo, limite ou nome de evento pode estar escrito dentro do codigo. Para rodar a edicao de 2027, copie este arquivo, troque os valores e nao toque em mais nada.",
-
   "edicao": {
     "id": "2026",
     "numero": 2,
@@ -9,30 +8,41 @@
     "cidade": "Londrina",
     "chamada": "Transforme uma dor real da saude em solucao."
   },
-
   "datas": {
-    "construcao_site": { "inicio": "2026-10-15", "fim": "2026-10-17" },
-    "inscricoes": { "abertura": "2026-10-17", "encerramento": "2026-10-23" },
-    "pareamento": { "inicio": "2026-10-24", "fim": "2026-10-30" },
-    "conversa_comissao": { "inicio": "2026-10-24", "fim": "2026-10-30", "duracao_min": 20 },
-    "oficina": { "data": "2026-10-31", "inicio": "09:30", "fim": "12:30" },
-    "avaliacao_classificatoria": { "data": "2026-11-03" },
-    "pitch_final": { "data": "2026-11-05" }
+    "construcao_site": {
+      "inicio": "2026-10-15",
+      "fim": "2026-10-17"
+    },
+    "inscricoes": {
+      "abertura": "2026-10-20",
+      "encerramento": null,
+      "exibir_encerramento": false,
+      "_comentario": "Prazo final ainda nao definido pela Comissao. Quando definir, preencha 'encerramento' (AAAA-MM-DD) e mude 'exibir_encerramento' para true: a contagem e os avisos de prazo aparecem sozinhos."
+    },
+    "pareamento": {
+      "inicio": "2026-10-24",
+      "fim": "2026-10-30"
+    },
+    "avaliacao_classificatoria": {
+      "data": "2026-11-03"
+    },
+    "pitch_final": {
+      "data": "2026-11-05",
+      "inicio": "19:00",
+      "fim": "22:00",
+      "local": "Auditório Principal da Universidade Positivo Londrina"
+    }
   },
-
   "rotulos": {
     "_comentario": "O evento final mudou de nome entre edicoes. Nunca escreva o nome direto na tela.",
     "evento_final": "Pitch Final",
-    "oficina": "Oficina de refinamento",
     "banco_talentos": "Banco de Talentos",
     "ficha": "Ficha de prototipo"
   },
-
   "equipe": {
     "min_integrantes": 3,
     "max_integrantes": 6
   },
-
   "limites": {
     "inscricoes_minimas_para_realizar": 30,
     "equipes_min": 7,
@@ -41,13 +51,47 @@
     "publico_estimado_min": 50,
     "publico_estimado_max": 120
   },
-
   "premiacao": {
     "havera": true,
     "divulgar_valores": false,
-    "texto_site": "Havera premiacao para as equipes finalistas. Os valores serao divulgados oportunamente pela Comissao Organizadora."
+    "texto_site": "Haverá premiação para as equipes finalistas do Pitch Final. Os valores serão divulgados oportunamente pela Comissão Organizadora."
   },
-
+  "certificado": {
+    "horas": 16,
+    "texto": "Quem completar a inscrição e comparecer ao evento presencial recebe certificado de 16 horas complementares.",
+    "registro_presenca": {
+      "data": "2026-11-05",
+      "como": "Leitura do QR Code individual na entrada do Pitch Final. É esse registro que libera o certificado."
+    }
+  },
+  "mentoria": {
+    "texto": "As mentorias são feitas a distância: o mentor entra em contato com a equipe pelo WhatsApp ou e-mail do responsável cadastrados na inscrição.",
+    "canais": [
+      "WhatsApp",
+      "E-mail"
+    ]
+  },
+  "ods": {
+    "_comentario": "Numeros das ODS da ONU que o evento envolve. Os nomes e cores das 17 ficam em ods.json.",
+    "evento": [
+      3,
+      9,
+      10,
+      17
+    ],
+    "max_por_equipe": 3
+  },
+  "videos": {
+    "_comentario": "Secao de videos da home. Fica escondida enquanto 'destaque' for null. Aceita link do YouTube (inclusive Shorts) ou arquivo .mp4 em /public/videos. formato: 'vertical' (celular, 9:16) ou 'horizontal' (16:9).",
+    "titulo": "Assista",
+    "destaque": null,
+    "demais": [],
+    "_exemplo": {
+      "titulo": "Chamada oficial INOVA SAUDE 2026",
+      "url": "https://www.youtube.com/shorts/XXXXXXXXXXX",
+      "formato": "vertical"
+    }
+  },
   "eixos_tematicos": [
     "Infraestrutura em Saude Digital",
     "Saude Mental e Bem-Estar",
@@ -55,43 +99,126 @@
     "Capacitacao e Formacao Profissional",
     "Sustentabilidade e Responsabilidade Digital"
   ],
-
   "fabricacao": {
     "_comentario": "Usado pela etapa 8 forma B para validar o envelope da peca antes de gerar qualquer modelo. Conferir com o laboratorio antes de abrir as inscricoes.",
-    "mesa_impressao_mm": { "x": 220, "y": 220, "z": 250 },
+    "mesa_impressao_mm": {
+      "x": 220,
+      "y": 220,
+      "z": 250
+    },
     "materiais": [
-      { "id": "pla",   "nome": "PLA",           "resiste_alcool": false, "resiste_calor_60": false, "flexivel": false, "autoclave": false },
-      { "id": "petg",  "nome": "PETG",          "resiste_alcool": true,  "resiste_calor_60": true,  "flexivel": false, "autoclave": false },
-      { "id": "tpu",   "nome": "TPU flexivel",  "resiste_alcool": true,  "resiste_calor_60": false, "flexivel": true,  "autoclave": false },
-      { "id": "resina","nome": "Resina",        "resiste_alcool": true,  "resiste_calor_60": true,  "flexivel": false, "autoclave": false }
+      {
+        "id": "pla",
+        "nome": "PLA",
+        "resiste_alcool": false,
+        "resiste_calor_60": false,
+        "flexivel": false,
+        "autoclave": false
+      },
+      {
+        "id": "petg",
+        "nome": "PETG",
+        "resiste_alcool": true,
+        "resiste_calor_60": true,
+        "flexivel": false,
+        "autoclave": false
+      },
+      {
+        "id": "tpu",
+        "nome": "TPU flexivel",
+        "resiste_alcool": true,
+        "resiste_calor_60": false,
+        "flexivel": true,
+        "autoclave": false
+      },
+      {
+        "id": "resina",
+        "nome": "Resina",
+        "resiste_alcool": true,
+        "resiste_calor_60": true,
+        "flexivel": false,
+        "autoclave": false
+      }
     ],
     "sugestao_material": {
       "_comentario": "Primeira regra que casar vence. A razao e mostrada ao usuario na tela, literalmente.",
       "regras": [
-        { "se": ["precisa_flexivel"], "entao": "tpu", "razao": "voce marcou que a peca precisa dobrar, e so o TPU faz isso" },
-        { "se": ["autoclave"], "entao": null, "razao": "autoclave passa de 120 graus e nenhum material da nossa lista aguenta. Isso vai para conversa com a comissao" },
-        { "se": ["calor_60"], "entao": "petg", "razao": "voce marcou calor acima de 60 graus, e o PLA deforma nessa faixa" },
-        { "se": ["limpeza_alcool"], "entao": "petg", "razao": "voce marcou limpeza com alcool: o PLA racha com uso repetido, por isso o PETG aparece sugerido" },
-        { "se": ["peso_acima_3kg"], "entao": "petg", "razao": "voce marcou carga alta, e o PETG tem mais resistencia a impacto que o PLA" },
-        { "se": [], "entao": "pla", "razao": "sem requisito especial, o PLA e o mais facil e barato de imprimir" }
+        {
+          "se": [
+            "precisa_flexivel"
+          ],
+          "entao": "tpu",
+          "razao": "voce marcou que a peca precisa dobrar, e so o TPU faz isso"
+        },
+        {
+          "se": [
+            "autoclave"
+          ],
+          "entao": null,
+          "razao": "autoclave passa de 120 graus e nenhum material da nossa lista aguenta. Isso vai para a conversa com o mentor"
+        },
+        {
+          "se": [
+            "calor_60"
+          ],
+          "entao": "petg",
+          "razao": "voce marcou calor acima de 60 graus, e o PLA deforma nessa faixa"
+        },
+        {
+          "se": [
+            "limpeza_alcool"
+          ],
+          "entao": "petg",
+          "razao": "voce marcou limpeza com alcool: o PLA racha com uso repetido, por isso o PETG aparece sugerido"
+        },
+        {
+          "se": [
+            "peso_acima_3kg"
+          ],
+          "entao": "petg",
+          "razao": "voce marcou carga alta, e o PETG tem mais resistencia a impacto que o PLA"
+        },
+        {
+          "se": [],
+          "entao": "pla",
+          "razao": "sem requisito especial, o PLA e o mais facil e barato de imprimir"
+        }
       ]
     }
   },
-
   "marcas": {
     "_comentario": "Art. 11 do Edital no 4/2026 torna obrigatorias as marcas do Instituto Cruzeiro do Sul, da Fundacao Araucaria e da SETI em todas as pecas. Art. 12: descumprir implica perda do financiamento. O que o edital chama de CPUP e a marca do Instituto Cruzeiro do Sul.",
     "realizacao": [
-      { "id": "ics", "nome": "Instituto Cruzeiro do Sul", "obrigatoria_art11": true },
-      { "id": "ecohub", "nome": "ecohub", "obrigatoria_art11": false },
-      { "id": "up", "nome": "Universidade Positivo", "obrigatoria_art11": false }
+      {
+        "id": "ics",
+        "nome": "Instituto Cruzeiro do Sul",
+        "obrigatoria_art11": true
+      },
+      {
+        "id": "ecohub",
+        "nome": "ecohub",
+        "obrigatoria_art11": false
+      },
+      {
+        "id": "up",
+        "nome": "Universidade Positivo",
+        "obrigatoria_art11": false
+      }
     ],
     "apoio_financeiro": [
-      { "id": "fa", "nome": "Fundacao Araucaria", "obrigatoria_art11": true },
-      { "id": "seti", "nome": "Governo do Parana e SETI", "obrigatoria_art11": true }
+      {
+        "id": "fa",
+        "nome": "Fundacao Araucaria",
+        "obrigatoria_art11": true
+      },
+      {
+        "id": "seti",
+        "nome": "Governo do Parana e SETI",
+        "obrigatoria_art11": true
+      }
     ],
     "frase_apoio": "Realizacao: Instituto Cruzeiro do Sul, com o ecohub Londrina, em parceria com a Universidade Positivo, nos termos do Termo de Cooperacao Tecnico-Cientifica. Apoio: Instituto Cruzeiro do Sul, Fundacao Araucaria e Secretaria de Ciencia, Tecnologia e Ensino Superior do Parana."
   },
-
   "contato": {
     "email_evento": "ecohub@up.edu.br",
     "responsavel_comissao": "Comissao Organizadora do INOVA SAUDE 2026"

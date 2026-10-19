@@ -1,0 +1,97 @@
+{
+  "_comentario": "Os 17 Objetivos de Desenvolvimento Sustentavel da ONU, com as cores oficiais. 'porque' so nas ODS que o evento envolve (edicao.json > ods.evento).",
+  "fonte": "https://brasil.un.org/pt-br/sdgs",
+  "titulo_secao": "Objetivos de Desenvolvimento Sustentável",
+  "texto_secao": "O INOVA SAÚDE 2026 contribui para estas ODS da Agenda 2030 da ONU.",
+  "lista": [
+    {
+      "numero": 1,
+      "nome": "Erradicação da pobreza",
+      "cor": "#E5243B"
+    },
+    {
+      "numero": 2,
+      "nome": "Fome zero e agricultura sustentável",
+      "cor": "#DDA63A"
+    },
+    {
+      "numero": 3,
+      "nome": "Saúde e bem-estar",
+      "cor": "#4C9F38",
+      "porque": "O centro do evento: soluções para dores reais da rotina de saúde."
+    },
+    {
+      "numero": 4,
+      "nome": "Educação de qualidade",
+      "cor": "#C5192D"
+    },
+    {
+      "numero": 5,
+      "nome": "Igualdade de gênero",
+      "cor": "#FF3A21"
+    },
+    {
+      "numero": 6,
+      "nome": "Água potável e saneamento",
+      "cor": "#26BDE2"
+    },
+    {
+      "numero": 7,
+      "nome": "Energia limpa e acessível",
+      "cor": "#FCC30B"
+    },
+    {
+      "numero": 8,
+      "nome": "Trabalho decente e crescimento econômico",
+      "cor": "#A21942"
+    },
+    {
+      "numero": 9,
+      "nome": "Indústria, inovação e infraestrutura",
+      "cor": "#FD6925",
+      "porque": "Prototipagem, tecnologia e infraestrutura para inovar no cuidado."
+    },
+    {
+      "numero": 10,
+      "nome": "Redução das desigualdades",
+      "cor": "#DD1367",
+      "porque": "Acesso mais justo à saúde, no SUS e na rede regional."
+    },
+    {
+      "numero": 11,
+      "nome": "Cidades e comunidades sustentáveis",
+      "cor": "#FD9D24"
+    },
+    {
+      "numero": 12,
+      "nome": "Consumo e produção responsáveis",
+      "cor": "#BF8B2E"
+    },
+    {
+      "numero": 13,
+      "nome": "Ação contra a mudança global do clima",
+      "cor": "#3F7E44"
+    },
+    {
+      "numero": 14,
+      "nome": "Vida na água",
+      "cor": "#0A97D9"
+    },
+    {
+      "numero": 15,
+      "nome": "Vida terrestre",
+      "cor": "#56C02B"
+    },
+    {
+      "numero": 16,
+      "nome": "Paz, justiça e instituições eficazes",
+      "cor": "#00689D"
+    },
+    {
+      "numero": 17,
+      "nome": "Parcerias e meios de implementação",
+      "cor": "#19486A",
+      "porque": "Universidade, ecohub, governo e comunidade construindo juntos."
+    }
+  ]
+}

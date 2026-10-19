@@ -91,7 +91,7 @@
       "titulo": "Dispositivo ou montagem",
       "descricao": "Sensor, eletronica, adaptacao de equipamento existente, instalacao.",
       "cor_token": "--e1",
-      "gera": "Entrada na fila de conversa com a comissao, mais a lista de componentes a levantar.",
+      "gera": "Alinhamento com o mentor por WhatsApp ou e-mail, mais a lista de componentes a levantar.",
       "fila_comissao": true,
       "campos": [
         { "id": "mede_ou_aciona", "rotulo": "O que o dispositivo mede ou aciona", "tipo": "texto_curto", "obrigatorio": true,
@@ -113,7 +113,7 @@
       "titulo": "Servico, processo ou material educativo",
       "descricao": "Protocolo, fluxo de atendimento, campanha, jogo, material impresso, formacao.",
       "cor_token": "--e6",
-      "gera": "Entrada na fila de conversa, mais o rascunho do artefato a ser produzido.",
+      "gera": "Alinhamento com o mentor por WhatsApp ou e-mail, mais o rascunho do artefato a ser produzido.",
       "fila_comissao": true,
       "campos": [
         { "id": "quem_executa_hoje", "rotulo": "Quem executa isso hoje", "tipo": "texto_curto", "obrigatorio": true },
@@ -146,14 +146,14 @@
       "marca_ficha": true,
       "entra_fila_comissao": true,
       "restringe_impressao": "maquete_de_demonstracao",
-      "mensagem_na_tela": "Obrigado por marcar. Isso nao atrapalha sua inscricao. Significa so que a comissao vai conversar com voces antes da oficina, e que a peca sera impressa como maquete de demonstracao, nao para uso em pessoa."
+      "mensagem_na_tela": "Obrigado por marcar. Isso nao atrapalha sua inscricao. Significa so que o mentor vai conversar com voces antes do Pitch Final, e que a peca sera impressa como maquete de demonstracao, nao para uso em pessoa."
     },
     "justificativa": "Este e um evento de saude. A regra precisa estar no codigo, nao no bom senso de quem opera a impressora."
   },
 
   "regra_de_honestidade": {
     "_comentario": "Esta frase precisa aparecer no formulario e no regulamento com as mesmas palavras.",
-    "texto": "Prototipo gerado por IA entra como rascunho e e identificado como tal na ficha. Equipe que apresentar imagem gerada como se fosse produto funcionando perde ponto em exequibilidade na avaliacao de 03/11. O objetivo da geracao e dar materia-prima para a critica da oficina, nao encurtar o trabalho da equipe.",
+    "texto": "Prototipo gerado por IA entra como rascunho e e identificado como tal na ficha. Equipe que apresentar imagem gerada como se fosse produto funcionando perde ponto em exequibilidade na avaliacao de 03/11. O objetivo da geracao e dar materia-prima para a critica nas mentorias, nao encurtar o trabalho da equipe.",
     "onde_aparece": ["etapa_8_topo", "tela_final", "regulamento"]
   }
 }

@@ -2,7 +2,7 @@
 
 import { QRCodeSVG } from "qrcode.react";
 import { CheckCircle, Printer, Download, Sparkles, ShieldCheck, MapPin, Calendar, Users } from "lucide-react";
-import { asset } from "@/lib/config";
+import { asset, edicao, dataCurta } from "@/lib/config";
 
 interface OfficialVoucherProps {
   teamName: string;
@@ -84,22 +84,15 @@ export function OfficialVoucher({
 
             {/* Grid de Informações Chave */}
             <div className="grid grid-cols-2 gap-3.5 pt-2 text-xs">
-              <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
+              <div className="col-span-2 bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
                 <div className="flex items-center gap-1.5 text-white/70 font-mono mb-1">
                   <Calendar size={13} className="text-[var(--acento)]" />
-                  <span>Oficina Presencial</span>
+                  <span>{edicao.rotulos.evento_final} · registro de presença</span>
                 </div>
-                <strong className="text-white text-sm block">31/10 · 09h30</strong>
-                <span className="text-[11px] text-white/60">Campus UP Londrina</span>
-              </div>
-
-              <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
-                <div className="flex items-center gap-1.5 text-white/70 font-mono mb-1">
-                  <Calendar size={13} className="text-[var(--acento)]" />
-                  <span>Pitch Final</span>
-                </div>
-                <strong className="text-white text-sm block">05/11 · 19h00</strong>
-                <span className="text-[11px] text-white/60">Auditório Principal</span>
+                <strong className="text-white text-sm block">
+                  {dataCurta(edicao.datas.pitch_final.data)} · {edicao.datas.pitch_final.inicio.replace(":", "h")}
+                </strong>
+                <span className="text-[11px] text-white/60">Apresente este QR Code na entrada</span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
@@ -116,7 +109,7 @@ export function OfficialVoucher({
                   <ShieldCheck size={13} className="text-[var(--acento)]" />
                   <span>Certificação</span>
                 </div>
-                <strong className="text-white text-sm block">20 Horas</strong>
+                <strong className="text-white text-sm block">{edicao.certificado.horas} Horas</strong>
                 <span className="text-[11px] text-white/60">Ativ. Complementares</span>
               </div>
             </div>

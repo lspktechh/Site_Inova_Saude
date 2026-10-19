@@ -2,6 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
+import { edicao, dataCurta, encerramentoVisivel } from "@/lib/config";
+
+// Com prazo definido e liberado pela Comissão, conta até o fim das inscrições;
+// senão, conta até o evento presencial (Pitch Final).
+const prazo = encerramentoVisivel();
+const pitch = edicao.datas.pitch_final;
+const alvo = prazo
+  ? { iso: `${prazo}T23:59:59-03:00`, titulo: "Encerramento das Inscrições" }
+  : { iso: `${pitch.data}T${pitch.inicio}:00-03:00`, titulo: `Contagem para o ${edicao.rotulos.evento_final}` };
 
 export function HeroCountdown() {
   const [timeLeft, setTimeLeft] = useState<{
@@ -12,8 +21,7 @@ export function HeroCountdown() {
   }>({ dias: 7, horas: 12, minutos: 40, segundos: 0 });
 
   useEffect(() => {
-    // Data limite: 23 de Outubro de 2026 às 23:59:59
-    const targetDate = new Date("2026-10-23T23:59:59-03:00").getTime();
+    const targetDate = new Date(alvo.iso).getTime();
 
     const updateCountdown = () => {
       const now = new Date().getTime();
@@ -46,7 +54,7 @@ export function HeroCountdown() {
         <div className="flex items-center gap-2">
           <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
           <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
-            Encerramento das Inscrições
+            {alvo.titulo}
           </span>
         </div>
         <Clock size={16} className="text-[var(--acento)]" />
@@ -81,7 +89,14 @@ export function HeroCountdown() {
       </div>
 
       <p className="text-xs text-white/75 mt-4 leading-relaxed">
-        Prazo improrrogável pelo <strong>Art. 11 do Edital nº 4/2026</strong>. Inscrições com vagas limitadas para a oficina presencial.
+        {prazo ? (
+          <>Inscrições até <strong>{dataCurta(prazo)} às 23h59</strong>. </>
+        ) : (
+          <>
+            <strong>{dataCurta(pitch.data)} · {pitch.inicio.replace(":", "h")}</strong> · evento presencial.{" "}
+          </>
+        )}
+        Presença registrada pelo QR Code libera o certificado de {edicao.certificado.horas} horas.
       </p>
     </div>
   );

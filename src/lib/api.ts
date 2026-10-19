@@ -52,6 +52,7 @@ export interface InscriptionPayload {
     maior_duvida: string;
     aberta_a_novos: boolean;
     aceites: string[];
+    ods: number[];
   };
   forma?: {
     formas: string[];

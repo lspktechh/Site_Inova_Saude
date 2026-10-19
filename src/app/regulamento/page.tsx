@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { avaliacao, formasPrototipo, edicao } from "@/lib/config";
-import { Scale, ShieldCheck, HelpCircle, ArrowRight, CheckCircle2, AlertOctagon } from "lucide-react";
+import { avaliacao, formasPrototipo, edicao, dataCurta } from "@/lib/config";
+import { Scale, ShieldCheck, HelpCircle, ArrowRight, CheckCircle2, AlertOctagon, Award, MessageCircle } from "lucide-react";
 
 export default function RegulamentoPage() {
   const criterios = avaliacao.classificatoria.criterios;
@@ -14,15 +14,15 @@ export default function RegulamentoPage() {
     },
     {
       p: "Posso me inscrever se eu não tiver equipe?",
-      r: "Sim! Na Etapa 0, escolha 'Quero entrar numa equipe' ou 'Tenho ideia, procuro equipe'. Você será incluído automaticamente no Banco de Talentos público para pareamento até 30/10.",
+      r: "Sim! Na Etapa 0, escolha 'Quero entrar numa equipe' ou 'Tenho ideia, procuro equipe'. Você será incluído automaticamente no Banco de Talentos público para pareamento enquanto as inscrições estiverem abertas.",
     },
     {
       p: "Qual é o tamanho permitido para as equipes?",
-      r: "As equipes devem ter no mínimo 3 e no máximo 6 integrantes para serem homologadas na oficina presencial.",
+      r: "As equipes devem ter no mínimo 3 e no máximo 6 integrantes para terem a inscrição homologada.",
     },
     {
       p: "A inscrição tem algum custo?",
-      r: "Não. A inscrição é 100% gratuita. Todo o evento, materiais da oficina e mentorias são financiados pelo Instituto Cruzeiro do Sul, Fundação Araucária e SETI.",
+      r: "Não. A inscrição é 100% gratuita. Todo o evento, as mentorias e a premiação são financiados pelo Instituto Cruzeiro do Sul, Fundação Araucária e SETI.",
     },
     {
       p: "Posso usar inteligência artificial para gerar imagens e protótipos?",
@@ -30,7 +30,15 @@ export default function RegulamentoPage() {
     },
     {
       p: "Como funciona a emissão de certificados?",
-      r: "O certificado oficial de 20 horas de atividades complementares é emitido digitalmente com validação online por QR Code para todos os participantes que realizarem o check-in na oficina (31/10) e no Pitch Final (05/11).",
+      r: `${edicao.certificado.texto} A presença é registrada pela leitura do QR Code individual no dia ${dataCurta(edicao.certificado.registro_presenca.data)}, e é esse registro que libera o certificado.`,
+    },
+    {
+      p: "Como funcionam as mentorias?",
+      r: edicao.mentoria.texto + " Por isso o WhatsApp e o e-mail do responsável pela equipe são obrigatórios na inscrição.",
+    },
+    {
+      p: "Haverá premiação?",
+      r: edicao.premiacao.texto_site,
     },
   ];
 
@@ -96,6 +104,33 @@ export default function RegulamentoPage() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Premiação e Certificado */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="p-6 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl space-y-2">
+          <div className="flex items-center gap-2">
+            <Award size={20} className="text-[var(--acao)]" />
+            <h3 className="font-bold text-base text-[var(--fg)]">Premiação</h3>
+          </div>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">{edicao.premiacao.texto_site}</p>
+        </div>
+        <div className="p-6 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl space-y-2">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 size={20} className="text-[var(--acao)]" />
+            <h3 className="font-bold text-base text-[var(--fg)]">Certificado de {edicao.certificado.horas} horas</h3>
+          </div>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">
+            {edicao.certificado.texto} Presença registrada por QR Code em {dataCurta(edicao.certificado.registro_presenca.data)}.
+          </p>
+        </div>
+        <div className="md:col-span-2 p-6 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl space-y-2">
+          <div className="flex items-center gap-2">
+            <MessageCircle size={20} className="text-[var(--acao)]" />
+            <h3 className="font-bold text-base text-[var(--fg)]">Mentorias a distância</h3>
+          </div>
+          <p className="text-sm text-[var(--fg-2)] leading-relaxed">{edicao.mentoria.texto}</p>
         </div>
       </section>
 

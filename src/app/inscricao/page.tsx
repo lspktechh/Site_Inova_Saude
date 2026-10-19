@@ -14,6 +14,7 @@ import {
   TrackId,
   TeamMember,
   FichaPrototipoOutput,
+  ods,
 } from "@/lib/config";
 import { submitInscription, InscriptionPayload, InscriptionResponse } from "@/lib/api";
 import {
@@ -37,6 +38,11 @@ import { QRCodeSVG } from "qrcode.react";
 import { StepProgressNav } from "@/components/StepProgressNav";
 import { PrinterBedVisualizer } from "@/components/PrinterBedVisualizer";
 import { OfficialVoucher } from "@/components/OfficialVoucher";
+
+const OPCOES_DISPONIBILIDADE: string[] =
+  formulario.etapas[1].campos.find((c: any) => c.id === "disponibilidade")?.opcoes || [];
+const CAMPO_ODS = formulario.etapas[7].campos.find((c: any) => c.id === "ods");
+const MAX_ODS: number = CAMPO_ODS?.max ?? edicao.ods.max_por_equipe;
 
 function InscriptionContent() {
   const searchParams = useSearchParams();
@@ -64,7 +70,7 @@ function InscriptionContent() {
       telefone: "",
       vinculo: "Aluno de graduacao",
       curso: "",
-      disponibilidade: ["Sabado 31/10 de manha, oficina", "Quinta 05/11 a noite, Pitch Final"],
+      disponibilidade: [...OPCOES_DISPONIBILIDADE],
       competencias: [],
       papel: "Coordenar a equipe",
     },
@@ -112,6 +118,7 @@ function InscriptionContent() {
   const [maiorDuvida, setMaiorDuvida] = useState<string>("");
   const [abertaANovos, setAbertaANovos] = useState<boolean>(true);
   const [aceites, setAceites] = useState<string[]>([]);
+  const [odsSelecionadas, setOdsSelecionadas] = useState<number[]>([]);
 
   // Etapa 8: Formas de Protótipo
   const [formasSelecionadas, setFormasSelecionadas] = useState<string[]>(["forma_a"]);
@@ -187,6 +194,7 @@ function InscriptionContent() {
         maiorDuvida,
         abertaANovos,
         aceites,
+        odsSelecionadas,
         formasSelecionadas,
         formaPrincipal,
         softUsuario,
@@ -259,6 +267,7 @@ function InscriptionContent() {
         if (data.maiorDuvida) setMaiorDuvida(data.maiorDuvida);
         if (typeof data.abertaANovos === "boolean") setAbertaANovos(data.abertaANovos);
         if (data.aceites) setAceites(data.aceites);
+        if (Array.isArray(data.odsSelecionadas)) setOdsSelecionadas(data.odsSelecionadas.slice(0, MAX_ODS));
         if (data.formasSelecionadas) setFormasSelecionadas(data.formasSelecionadas);
         if (data.formaPrincipal) setFormaPrincipal(data.formaPrincipal);
         if (data.softUsuario) setSoftUsuario(data.softUsuario);
@@ -336,6 +345,7 @@ function InscriptionContent() {
     maiorDuvida,
     abertaANovos,
     aceites,
+    odsSelecionadas,
     formasSelecionadas,
     formaPrincipal,
     softUsuario,
@@ -489,6 +499,7 @@ function InscriptionContent() {
         formasSelecionadas.includes("forma_c") ||
         formasSelecionadas.includes("forma_d") ||
         !envelopeCheck.cabeNaMesa,
+      ods: trilha === "sem_ideia" ? undefined : odsSelecionadas,
       status: "pronta_para_geracao",
     };
   }, [
@@ -545,7 +556,7 @@ function InscriptionContent() {
         telefone: "",
         vinculo: "Aluno de graduacao",
         curso: "",
-        disponibilidade: ["Sabado 31/10 de manha, oficina", "Quinta 05/11 a noite, Pitch Final"],
+        disponibilidade: [...OPCOES_DISPONIBILIDADE],
         competencias: [],
         papel: "Construir a solucao",
       },
@@ -563,8 +574,34 @@ function InscriptionContent() {
     setMembros(updated);
   };
 
+  // Validação do que a Comissão exige para seguir
+  const validarEtapa = (etapa: number): string | null => {
+    if (etapa === 1) {
+      const lider = membros[0];
+      if (!lider?.nome.trim()) return "Preencha o nome completo do responsável pela equipe.";
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(lider.email.trim()))
+        return "Informe um e-mail válido do responsável. É por ele que o mentor entra em contato.";
+      const digitos = lider.telefone.replace(/\D/g, "");
+      if (digitos.length < 10 || digitos.length > 13)
+        return "Informe o WhatsApp do responsável com DDD. É por ele que o mentor entra em contato.";
+    }
+    if (etapa === 7) {
+      if (trilha !== "sem_ideia" && (odsSelecionadas.length < 1 || odsSelecionadas.length > MAX_ODS))
+        return `Marque de 1 a ${MAX_ODS} ODS que a solução espera atender.`;
+      const opcoesAceite: string[] = formulario.etapas[7].campos.find((c: any) => c.id === "aceites")?.opcoes || [];
+      if (!opcoesAceite.every((o) => aceites.includes(o)))
+        return "Para enviar, é preciso marcar todas as declarações de aceite.";
+    }
+    return null;
+  };
+
   // Navegação entre etapas
   const handleNext = () => {
+    const erro = validarEtapa(currentStep);
+    if (erro) {
+      alert(erro);
+      return;
+    }
     const currentIndex = availableSteps.indexOf(currentStep);
     if (currentIndex < availableSteps.length - 1) {
       setCurrentStep(availableSteps[currentIndex + 1]);
@@ -582,6 +619,15 @@ function InscriptionContent() {
 
   // Submissão final
   const handleSubmit = async () => {
+    for (const etapa of [1, 7]) {
+      const erro = availableSteps.includes(etapa) ? validarEtapa(etapa) : null;
+      if (erro) {
+        alert(erro);
+        setCurrentStep(etapa);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+    }
     setIsSubmitting(true);
     try {
       const payload: InscriptionPayload = {
@@ -609,6 +655,7 @@ function InscriptionContent() {
           maior_duvida: maiorDuvida,
           aberta_a_novos: abertaANovos,
           aceites,
+          ods: trilha === "sem_ideia" ? [] : odsSelecionadas,
         },
         forma: {
           formas: formasSelecionadas,
@@ -818,7 +865,9 @@ function InscriptionContent() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-semibold text-[var(--fg)]">E-mail institucional ou pessoal *</label>
+                      <label className="text-xs font-semibold text-[var(--fg)]">
+                        {index === 0 ? "E-mail do responsável pela equipe *" : "E-mail"}
+                      </label>
                       <input
                         type="email"
                         value={membro.email}
@@ -829,7 +878,9 @@ function InscriptionContent() {
                     </div>
 
                     <div className="space-y-1">
-                      <label className="text-xs font-semibold text-[var(--fg)]">Telefone ou WhatsApp *</label>
+                      <label className="text-xs font-semibold text-[var(--fg)]">
+                        {index === 0 ? "WhatsApp do responsável pela equipe *" : "WhatsApp"}
+                      </label>
                       <input
                         type="tel"
                         value={membro.telefone}
@@ -837,6 +888,9 @@ function InscriptionContent() {
                         placeholder="(43) 99999-9999"
                         className="w-full bg-[var(--bg)] border border-[var(--borda)] rounded-lg px-3 py-2 text-sm focus:border-[var(--acao)] focus:outline-hidden"
                       />
+                      {index === 0 && (
+                        <p className="text-[11px] text-[var(--fg-2)]">{formulario.etapas[1].campos[2].ajuda}</p>
+                      )}
                     </div>
 
                     <div className="space-y-1">
@@ -1449,6 +1503,51 @@ function InscriptionContent() {
               </>
             )}
 
+            {trilha !== "sem_ideia" && (
+              <div className="space-y-3">
+                <div className="flex items-baseline justify-between gap-2">
+                  <label className="text-sm font-bold text-[var(--fg)]">{CAMPO_ODS.rotulo} *</label>
+                  <span className="text-xs font-mono text-[var(--fg-2)] shrink-0">
+                    {odsSelecionadas.length}/{MAX_ODS}
+                  </span>
+                </div>
+                <p className="text-xs text-[var(--fg-2)]">{CAMPO_ODS.ajuda}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {ods.lista.map((o) => {
+                    const marcada = odsSelecionadas.includes(o.numero);
+                    const bloqueada = !marcada && odsSelecionadas.length >= MAX_ODS;
+                    return (
+                      <button
+                        key={o.numero}
+                        type="button"
+                        aria-pressed={marcada}
+                        disabled={bloqueada}
+                        onClick={() =>
+                          setOdsSelecionadas(
+                            marcada ? odsSelecionadas.filter((n) => n !== o.numero) : [...odsSelecionadas, o.numero]
+                          )
+                        }
+                        className={`flex items-center gap-3 p-2 pr-3 rounded-lg border text-left transition-all ${
+                          marcada
+                            ? "border-[var(--acao)] bg-[var(--acao)]/10"
+                            : "border-[var(--borda)] bg-[var(--surf)] hover:bg-[var(--surf-2)]"
+                        } ${bloqueada ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                      >
+                        <span
+                          className="w-9 h-9 shrink-0 rounded-md flex items-center justify-center text-white font-black text-sm"
+                          style={{ background: o.cor }}
+                        >
+                          {o.numero}
+                        </span>
+                        <span className="text-xs font-medium text-[var(--fg)] leading-snug flex-1">{o.nome}</span>
+                        {marcada && <CheckCircle size={16} className="text-[var(--acao)] shrink-0" />}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Aceites obrigatórios */}
             <div className="space-y-3 pt-4 border-t border-[var(--borda)]">
               <label className="text-sm font-bold text-[var(--fg)]">
@@ -1680,7 +1779,7 @@ function InscriptionContent() {
                     <div className="flex items-center gap-2 text-xs font-bold text-[var(--marca)]">
                       <span>Material sugerido:</span>
                       <span className="uppercase font-mono bg-[var(--surf-2)] px-2 py-0.5 rounded text-[var(--acao)]">
-                        {sugestaoMaterial.materialId || "Conversa com comissão"}
+                        {sugestaoMaterial.materialId || "Conversa com o mentor"}
                       </span>
                     </div>
                     <p className="text-xs text-[var(--fg-2)]">

@@ -1,7 +1,9 @@
 import Link from "next/link";
-import { edicao, formulario } from "@/lib/config";
+import { edicao, formulario, dataCurta } from "@/lib/config";
 import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
 import { HeroCountdown } from "@/components/HeroCountdown";
+import { VideoSection } from "@/components/VideoSection";
+import { OdsSection } from "@/components/OdsSection";
 
 export default function HomePage() {
   const trilhas = (formulario.etapas[0] as any).opcoes || [];
@@ -104,15 +106,19 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-2 pt-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Oficina Presencial: 31/10</span>
-              </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
-                <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Classificação: 03/11</span>
+                <span>Classificação: {dataCurta(edicao.datas.avaliacao_classificatoria.data)}</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Award size={13} className="text-[var(--acento)]" />
-                <span>Pitch Final: 05/11</span>
+                <span>{edicao.rotulos.evento_final} presencial: {dataCurta(edicao.datas.pitch_final.data)}</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
+                <CheckCircle2 size={13} className="text-[var(--acento)]" />
+                <span>Certificado de {edicao.certificado.horas}h</span>
+              </div>
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
+                <Award size={13} className="text-[var(--acento)]" />
+                <span>Com premiação</span>
               </div>
             </div>
           </div>
@@ -123,6 +129,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ──── VÍDEOS (aparece quando houver vídeo configurado) ──── */}
+      <VideoSection />
 
       {/* ──── TRÊS FORMAS DE PARTICIPAR (ESTILIZADAS E RESPONSIVAS) ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
@@ -270,6 +279,9 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* ──── ODS DA ONU ──── */}
+      <OdsSection />
+
       {/* ──── METODOLOGIA DE DESIGN THINKING & CREDENCIAMENTO ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
         <div className="health-card p-7 sm:p-9 space-y-4 relative overflow-hidden">
@@ -302,7 +314,10 @@ export default function HomePage() {
             QR Code Oficial & Controle de Presença
           </h3>
           <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            Ao finalizar o envio, o participante é imediatamente cadastrado no sistema central de credenciamento. Cada membro recebe um voucher com QR Code de alta entropia para leitura nos terminais nos dias 31/10 (Oficina) e 05/11 (Pitch Final), garantindo a emissão do certificado oficial de 20 horas.
+            Ao finalizar o envio, o participante é cadastrado no sistema central de credenciamento e recebe um voucher com QR Code.
+            As mentorias acontecem a distância: o mentor fala com o responsável pela equipe pelo WhatsApp ou e-mail cadastrados.
+            No dia {dataCurta(edicao.datas.pitch_final.data)}, a leitura do QR Code no evento presencial registra a presença e
+            libera o certificado de {edicao.certificado.horas} horas complementares.
           </p>
           <div className="pt-3 flex items-center gap-3">
             <Link
@@ -324,7 +339,7 @@ export default function HomePage() {
               <Award size={30} />
             </div>
             <div className="space-y-1">
-              <h4 className="text-xl sm:text-2xl font-extrabold text-white">Premiação para Equipes Finalistas</h4>
+              <h4 className="text-xl sm:text-2xl font-extrabold text-white">Haverá premiação para as equipes finalistas</h4>
               <p className="text-sm text-white/80 max-w-2xl leading-relaxed">
                 {edicao.premiacao.texto_site}
               </p>

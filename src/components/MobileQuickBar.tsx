@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { edicao, dataCurta, encerramentoVisivel } from "@/lib/config";
 
 export function MobileQuickBar() {
   const pathname = usePathname();
@@ -21,7 +22,9 @@ export function MobileQuickBar() {
             Inscrições Abertas
           </span>
           <span className="text-xs font-bold text-[var(--fg)]">
-            Encerram em 23/10
+            {encerramentoVisivel()
+              ? `Encerram em ${dataCurta(encerramentoVisivel()!)}`
+              : `Gratuitas · certificado de ${edicao.certificado.horas}h`}
           </span>
         </div>
 

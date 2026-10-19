@@ -4,6 +4,7 @@ import competenciasJson from "../config/competencias.json";
 import formasPrototipoJson from "../config/formas-prototipo.json";
 import avaliacaoJson from "../config/avaliacao.json";
 import fichaSchemaJson from "../config/ficha-prototipo.schema.json";
+import odsJson from "../config/ods.json";
 
 export const edicao = edicaoJson;
 export const formulario = formularioJson as any;
@@ -11,6 +12,7 @@ export const competencias = competenciasJson as any;
 export const formasPrototipo = formasPrototipoJson as any;
 export const avaliacao = avaliacaoJson as any;
 export const fichaSchema = fichaSchemaJson as any;
+export const ods = odsJson as { titulo_secao: string; texto_secao: string; lista: Ods[] };
 
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -94,6 +96,7 @@ export interface FichaPrototipoOutput {
   falta_na_equipe: string[];
   fila_comissao: boolean;
   conversa_agendada?: string | null;
+  ods?: number[];
   geracao_ia?: {
     produzida_em?: string | null;
     ferramenta?: string | null;
@@ -175,4 +178,23 @@ export function checkBedEnvelope(
     limites,
     violacoes,
   };
+}
+
+/** "2026-10-23" → "23/10" */
+export function dataCurta(iso: string): string {
+  const [, mes, dia] = iso.split("-");
+  return `${dia}/${mes}`;
+}
+
+/** Prazo de encerramento das inscrições, só quando a Comissão decidiu exibi-lo */
+export function encerramentoVisivel(): string | null {
+  const insc = edicaoJson.datas.inscricoes as { encerramento: string | null; exibir_encerramento?: boolean };
+  return insc.exibir_encerramento && insc.encerramento ? insc.encerramento : null;
+}
+
+export interface Ods {
+  numero: number;
+  nome: string;
+  cor: string;
+  porque?: string;
 }

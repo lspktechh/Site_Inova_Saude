@@ -511,7 +511,7 @@ export default function BancoDeTalentosPage() {
                   : `Convidar ${modalContato.destinatarioNome}`}
               </h3>
               <p className="text-xs text-[var(--fg-2)]">
-                Envie uma mensagem direta para a pessoa de contato para alinhar a entrada na equipe antes da oficina do dia 31/10.
+                Envie uma mensagem direta para a pessoa de contato para alinhar a entrada na equipe o quanto antes.
               </p>
             </div>
 
@@ -568,7 +568,7 @@ export default function BancoDeTalentosPage() {
             Ainda não cadastrou seu perfil ou equipe?
           </h3>
           <p className="text-sm text-white/80 max-w-xl">
-            Escolha a trilha correspondente no formulário guiado. O sistema publica seu perfil aqui automaticamente para pareamento até 30/10.
+            Escolha a trilha correspondente no formulário guiado. O sistema publica seu perfil aqui automaticamente para pareamento enquanto as inscrições estiverem abertas.
           </p>
         </div>
         <Link
