@@ -1,9 +1,9 @@
-import { FichaPrototipoOutput, TeamMember } from "./config";
+import { FichaPrototipoOutput, TeamMember, edicao } from "./config";
 
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
 
-const DEFAULT_EVENT_SLUG = "inova-saude-2026";
+const DEFAULT_EVENT_SLUG = edicao.credenciamento.slug_evento;
 
 export interface InscriptionPayload {
   trilha: string;
@@ -128,65 +128,66 @@ export async function submitInscription(
 
   let eventId = targetEventId;
 
-  // Se não recebemos o ID do evento, tenta buscar pelo slug
+  // Se não recebemos o ID do evento, busca pelo slug
   if (!eventId) {
     const event = await getEventBySlug(DEFAULT_EVENT_SLUG);
-    if (event?.id) {
-      eventId = event.id;
+    if (!event?.id) {
+      throw new Error(
+        "Não foi possível conectar ao sistema de credenciamento. Seu rascunho está salvo; tente novamente em alguns minutos."
+      );
     }
+    if (event.registrationsOpen === false) {
+      throw new Error("As inscrições para este evento estão encerradas no sistema de credenciamento.");
+    }
+    eventId = event.id as string;
   }
 
-  // Tenta enviar para o backend do credenciamento
-  if (eventId) {
-    try {
-      const res = await fetch(`${API_BASE_URL}/events/${eventId}/inscriptions`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-
-      if (res.ok) {
-        const json = await res.json();
-        if (json.success && json.data) {
-          const result: InscriptionResponse = {
-            id: json.data.id,
-            eventId: json.data.eventId,
-            name: json.data.name,
-            email: json.data.email,
-            status: json.data.status,
-            participantId: json.data.participantId,
-            qrToken: json.data.qrToken || `QR-INSC-${json.data.id.substring(0, 8)}`,
-            ficha_prototipo: payload.ficha_prototipo,
-            createdAt: new Date().toISOString(),
-          };
-          saveLocalInscription(result);
-          return result;
-        }
-      }
-    } catch (err) {
-      console.warn("Falha de rede ao conectar com backend de credenciamento. Salvando localmente...", err);
-    }
+  // Sem fallback local: a inscrição só é confirmada se o credenciamento registrar.
+  // Um voucher gerado no navegador não existiria no painel e seria recusado no check-in.
+  let res: Response;
+  try {
+    res = await fetch(`${API_BASE_URL}/events/${eventId}/inscriptions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  } catch (err) {
+    console.warn("Falha de rede ao conectar com o credenciamento:", err);
+    throw new Error("Sem conexão com o sistema de credenciamento. Seu rascunho está salvo; tente novamente.");
   }
 
-  // Fallback seguro: se o backend não responder ou não estiver rodando no momento,
-  // gera o voucher com hash seguro de alta entropia e salva no storage local
-  const simulatedId = "inova-" + Math.random().toString(36).substring(2, 10);
-  const simulatedToken = "TOKEN-" + Math.random().toString(36).substring(2, 14).toUpperCase();
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.success || !json.data) {
+    throw new Error(describeApiError(json) || `O credenciamento recusou a inscrição (erro ${res.status}).`);
+  }
 
-  const fallbackResult: InscriptionResponse = {
-    id: simulatedId,
-    eventId: eventId || "inova-saude-2026",
-    name: lider.nome,
-    email: lider.email,
-    status: "CONFIRMED",
-    participantId: "part-" + simulatedId,
-    qrToken: simulatedToken,
+  const result: InscriptionResponse = {
+    id: json.data.id,
+    eventId: json.data.eventId,
+    name: json.data.name,
+    email: json.data.email,
+    status: json.data.status,
+    participantId: json.data.participantId ?? null,
+    qrToken: json.data.qrToken ?? null,
     ficha_prototipo: payload.ficha_prototipo,
-    createdAt: new Date().toISOString(),
+    createdAt: json.data.createdAt || new Date().toISOString(),
   };
+  saveLocalInscription(result);
+  return result;
+}
 
-  saveLocalInscription(fallbackResult);
-  return fallbackResult;
+/**
+ * Monta uma mensagem legível a partir do erro de validação do event-checkin
+ */
+function describeApiError(json: any): string | null {
+  const error = json?.error;
+  if (!error) return null;
+  const fieldErrors = error.details?.fieldErrors as Record<string, string[]> | undefined;
+  if (fieldErrors && Object.keys(fieldErrors).length > 0) {
+    const detalhes = Object.values(fieldErrors).flat().join("; ");
+    return `${error.message || "Dados inválidos"}: ${detalhes}`;
+  }
+  return error.message || null;
 }
 
 /**
