@@ -820,6 +820,34 @@ function InscriptionContent() {
               </p>
             </div>
 
+            {/* Aviso Obrigatório: Grupo do WhatsApp & Edital */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="space-y-1">
+                <span className="font-mono uppercase tracking-wider font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                  Grupo Oficial do WhatsApp (Obrigatório)
+                </span>
+                <p className="text-[var(--fg)]">
+                  Após concluir sua inscrição, todos os integrantes devem entrar no grupo oficial:{" "}
+                  <strong className="text-emerald-700 dark:text-emerald-400">chat.whatsapp.com/IBDoKA6L0Sk9cpn0efoFWa</strong>. As mentorias e avisos da banca serão repassados por lá.
+                </p>
+                <p className="text-[var(--fg-2)] pt-0.5">
+                  Inscrições até 02/11 · Demoday em 05/11 · Consulte o{" "}
+                  <Link href="/edital" target="_blank" className="text-[var(--acao)] underline font-bold">
+                    Edital Oficial do INOVA SAÚDE 2026
+                  </Link>.
+                </p>
+              </div>
+              <a
+                href={edicao.whatsapp_grupo.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="shrink-0 inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-black font-extrabold px-3.5 py-2 rounded-xl text-xs whitespace-nowrap shadow-xs"
+              >
+                <span>Acessar WhatsApp</span>
+              </a>
+            </div>
+
             {trilha === "equipe_com_ideia" && (
               <div className="space-y-1.5 p-4 bg-[var(--surf-2)] rounded-xl border border-[var(--borda)]">
                 <label className="text-sm font-bold text-[var(--fg)]">Nome da Equipe</label>
@@ -1552,6 +1580,22 @@ function InscriptionContent() {
               </div>
             )}
 
+            {/* Edital Oficial e Regras */}
+            <div className="p-4 rounded-xl bg-[var(--surf-2)] border border-[var(--borda)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+              <div className="space-y-0.5">
+                <span className="font-bold text-[var(--fg)] block">Edital Oficial do INOVA SAÚDE 2026</span>
+                <span className="text-[var(--fg-2)]">Consulte todas as regras, critérios de avaliação (5 critérios, peso 2), prazos e disposições legais.</span>
+              </div>
+              <Link
+                href="/edital"
+                target="_blank"
+                className="shrink-0 font-mono font-bold text-xs text-[var(--marca)] hover:underline inline-flex items-center gap-1"
+              >
+                <span>Ler Edital Oficial</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+
             {/* Aceites obrigatórios */}
             <div className="space-y-3 pt-4 border-t border-[var(--borda)]">
               <label className="text-sm font-bold text-[var(--fg)]">
@@ -1873,12 +1917,27 @@ function InscriptionContent() {
                 onDownloadJson={handleDownloadFicha}
               />
             ) : (
-              <div className="p-5 rounded-2xl border border-[var(--borda)] bg-[var(--surf)] text-sm text-[var(--fg-2)] text-center space-y-1">
-                <p className="font-bold text-[var(--fg)]">Inscrição registrada no credenciamento</p>
-                <p>
-                  Protocolo <span className="font-mono">{submissionResult?.id}</span>. O QR Code de acesso será enviado
-                  para {membros[0]?.email || "o e-mail do líder"}.
-                </p>
+              <div className="p-6 rounded-2xl border border-[var(--borda)] bg-[var(--surf)] text-sm text-[var(--fg-2)] text-center space-y-4">
+                <div className="space-y-1">
+                  <p className="font-bold text-[var(--fg)] text-base">Inscrição registrada no credenciamento</p>
+                  <p>
+                    Protocolo <span className="font-mono">{submissionResult?.id}</span>. O QR Code de acesso será enviado
+                    para {membros[0]?.email || "o e-mail do líder"}.
+                  </p>
+                </div>
+                <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-xl space-y-2 max-w-md mx-auto">
+                  <p className="text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                    Passo Obrigatório: Entre no Grupo Oficial do WhatsApp
+                  </p>
+                  <a
+                    href={edicao.whatsapp_grupo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-black font-extrabold text-xs px-4 py-2.5 rounded-lg shadow-sm"
+                  >
+                    <span>Entrar no Grupo do WhatsApp</span>
+                  </a>
+                </div>
               </div>
             )}
 

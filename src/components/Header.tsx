@@ -16,6 +16,8 @@ export function Header() {
     { label: "Desafios", href: "/desafios" },
     { label: "Programação", href: "/programacao" },
     { label: "Regulamento", href: "/regulamento" },
+    { label: "Edital", href: "/edital" },
+    { label: "Envio", href: "/envio" },
   ];
 
   return (

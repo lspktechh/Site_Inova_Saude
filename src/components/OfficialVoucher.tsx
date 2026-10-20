@@ -1,7 +1,7 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
-import { CheckCircle, Printer, Download, Sparkles, ShieldCheck, MapPin, Calendar, Users } from "lucide-react";
+import { CheckCircle, Printer, Download, Sparkles, ShieldCheck, MapPin, Calendar, Users, MessageCircle } from "lucide-react";
 import { asset, edicao, dataCurta } from "@/lib/config";
 
 interface OfficialVoucherProps {
@@ -33,6 +33,35 @@ export function OfficialVoucher({
 
   return (
     <div className="space-y-6">
+      {/* ──── AVISO OBRIGATÓRIO: GRUPO DO WHATSAPP ──── */}
+      <div className="bg-emerald-500/15 border-2 border-emerald-500/40 rounded-2xl p-5 sm:p-6 text-white space-y-3 print:hidden">
+        <div className="flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
+              <span className="font-mono text-xs font-black uppercase tracking-wider text-emerald-400">
+                Passo Obrigatório · Grupo Oficial no WhatsApp
+              </span>
+            </div>
+            <h4 className="text-lg font-bold text-white">
+              Entre agora no Grupo de Participantes do INOVA SAÚDE 2026
+            </h4>
+            <p className="text-xs sm:text-sm text-white/80 leading-relaxed max-w-xl">
+              É pelo grupo oficial que a coordenação repassa mentorias, prazos de envio de links de vídeo e protótipo (junto com a inscrição, até 02/11) e a lista dos 10 finalistas para o Demoday. A entrada de todos os integrantes é <strong>obrigatória</strong>.
+            </p>
+          </div>
+          <a
+            href={edicao.whatsapp_grupo.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba59] text-black font-extrabold text-sm px-6 py-3.5 rounded-xl shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer"
+          >
+            <MessageCircle size={18} />
+            <span>Entrar no Grupo Oficial</span>
+          </a>
+        </div>
+      </div>
+
       {/* ──── O PASSE FÍSICO / VOUCHER DE CREDENCIAMENTO ──── */}
       <div className="relative bg-gradient-to-br from-[#072F56] via-[#093d6f] to-[#041B32] text-white rounded-3xl overflow-hidden shadow-2xl border border-white/20 print:border-black print:text-black print:bg-white print:shadow-none">
         {/* Marca d'água de segurança de fundo */}
@@ -87,12 +116,14 @@ export function OfficialVoucher({
               <div className="col-span-2 bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
                 <div className="flex items-center gap-1.5 text-white/70 font-mono mb-1">
                   <Calendar size={13} className="text-[var(--acento)]" />
-                  <span>{edicao.rotulos.evento_final} · registro de presença</span>
+                  <span>{edicao.rotulos.evento_final} (10 equipes finalistas) · registro de presença</span>
                 </div>
                 <strong className="text-white text-sm block">
-                  {dataCurta(edicao.datas.pitch_final.data)} · {edicao.datas.pitch_final.inicio.replace(":", "h")}
+                  {dataCurta(edicao.datas.pitch_final.data)} · {edicao.datas.pitch_final.inicio.replace(":", "h")} às {edicao.datas.pitch_final.fim.replace(":", "h")}
                 </strong>
-                <span className="text-[11px] text-white/60">Apresente este QR Code na entrada</span>
+                <span className="text-[11px] text-white/80">
+                  {edicao.datas.pitch_final.local}
+                </span>
               </div>
 
               <div className="bg-white/10 backdrop-blur-xs p-3 rounded-xl border border-white/10">
@@ -109,8 +140,8 @@ export function OfficialVoucher({
                   <ShieldCheck size={13} className="text-[var(--acento)]" />
                   <span>Certificação</span>
                 </div>
-                <strong className="text-white text-sm block">{edicao.certificado.horas} Horas</strong>
-                <span className="text-[11px] text-white/60">Ativ. Complementares</span>
+                <strong className="text-white text-sm block">8h e 16h</strong>
+                <span className="text-[11px] text-white/70">8h inscrição / 16h Demoday</span>
               </div>
             </div>
 
@@ -160,9 +191,9 @@ export function OfficialVoucher({
         </div>
 
         {/* Rodapé com conformidade institucional legal */}
-        <div className="px-6 sm:px-8 py-3.5 bg-black/25 border-t border-white/10 flex flex-wrap items-center justify-between text-[11px] font-mono text-white/70">
-          <span>Realização: ICS · ecohub · Universidade Positivo</span>
-          <span>Apoio: Fundação Araucária & SETI (Art. 11 Edital nº 4/2026)</span>
+        <div className="px-6 sm:px-8 py-3.5 bg-black/25 border-t border-white/10 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-white/70">
+          <span>Promoção: Instituto Cruzeiro do Sul · Realização: ecohub Londrina · Parceria: Universidade Positivo</span>
+          <span>Apoio financeiro: Fundação Araucária e SETI, Gov. do Estado do Paraná</span>
         </div>
       </div>
 

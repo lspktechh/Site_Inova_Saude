@@ -9,45 +9,55 @@ export default function ProgramacaoPage() {
 
   const etapas = [
     {
-      data: prazo
-        ? `${dataCurta(datas.inscricoes.abertura)} a ${dataCurta(prazo)}`
-        : `A partir de ${dataCurta(datas.inscricoes.abertura)}`,
+      data: "20/10 a 02/11/2026",
       status: "ativo",
       titulo: "Inscrições Online",
       descricao:
-        "Formulário guiado em três trilhas. As equipes submetem o problema recortado e especificam a forma do protótipo (Software, 3D, Dispositivo ou Serviço). Quem não tem equipe entra no Banco de Talentos.",
-      destaque: "WhatsApp e e-mail do responsável pela equipe são obrigatórios",
+        "Formulário guiado em três trilhas (equipe com ideia, ideia sem equipe e banco de talentos). Equipes de 3 a 6 pessoas de qualquer curso ou comunidade externa.",
+      destaque: "WhatsApp e e-mail do responsável obrigatórios para mentorias",
       tipo: "online",
-      horario: prazo ? `Até 23h59 de ${dataCurta(prazo)}` : "Encerramento a ser divulgado",
+      horario: "Até 23h59 de 02/11/2026",
     },
     {
-      data: "Após a inscrição",
-      status: "futuro",
+      data: "Da inscrição até 02/11/2026",
+      status: "ativo",
       titulo: "Mentorias a Distância",
-      descricao: edicao.mentoria.texto,
-      destaque: "Fique atento ao WhatsApp e ao e-mail cadastrados",
-      tipo: "online",
-      horario: "Contato pelo mentor",
-    },
-    {
-      data: `${dataCurta(datas.avaliacao_classificatoria.data)} · Terça`,
-      status: "futuro",
-      titulo: "Avaliação Classificatória Independente",
       descricao:
-        "Banca independente de avaliadores pontua as propostas pelas 3 Lentes da Inovação (Desejabilidade, Viabilidade, Exequibilidade) e afere o TRL. Os 7 projetos com maior pontuação avançam.",
-      destaque: `Divulgação dos 7 times finalistas do ${rotulos.evento_final}`,
-      tipo: "avaliacao",
-      horario: "Divulgação às 18h00",
+        "A organização entra em contato com cada equipe inscrita pelo WhatsApp ou e-mail cadastrado para agendar mentorias a partir da ideia enviada, refinando o problema, solução e protótipo.",
+      destaque: "Mentores entram em contato pelo WhatsApp e e-mail",
+      tipo: "online",
+      horario: "Horários agendados com a equipe",
     },
     {
-      data: `${dataCurta(pitch.data)} · Quinta`,
+      data: "Junto com a inscrição, até 02/11",
+      status: "ativo",
+      titulo: "Envio dos Links do Vídeo e do Protótipo",
+      descricao:
+        "Envio de vídeo explicativo e protótipo (físico ou digital) por links com acesso público ou liberado (YouTube, Drive, Figma ou site). A equipe pode atualizar quantas vezes precisar até o prazo.",
+      destaque: "Até 3 itens; link liberado para a banca examinadora",
+      tipo: "online",
+      horario: "Até 23h59 de 02/11/2026",
+    },
+    {
+      data: "03/11/2026 · Segunda",
       status: "futuro",
-      titulo: `Evento Presencial: ${rotulos.evento_final} & Premiação`,
-      descricao: `Apresentação das 7 equipes finalistas perante a banca examinadora, convidados do ecossistema de saúde e parceiros institucionais. Entrega da premiação. ${certificado.registro_presenca.como}`,
-      destaque: `Registro de presença por QR Code libera o certificado de ${certificado.horas} horas`,
+      titulo: "Divulgação dos 10 Finalistas",
+      descricao:
+        "Banca avaliadora pontua as propostas e seleciona as 10 equipes com maior pontuação para se apresentarem presencialmente no Demoday.",
+      destaque: "Divulgação oficial das 10 equipes classificadas",
+      tipo: "avaliacao",
+      horario: "Pelos canais oficiais do evento",
+    },
+    {
+      data: "05/11/2026 · Quinta",
+      status: "futuro",
+      titulo: "Demoday no 3º COPOL & Premiação",
+      descricao:
+        "Apresentação presencial dos 10 finalistas perante a banca examinadora (5 min de apresentação + 5 min de considerações) no Congresso Odontológico Positivo Londrinense. Às 19h abertura; 19h30 apresentações; ao final, anúncio da premiação.",
+      destaque: "Presença com QR Code libera certificado de 16h",
       tipo: "presencial",
-      horario: `${pitch.inicio.replace(":", "h")} às ${pitch.fim.replace(":", "h")}`,
-      local: "Auditório Principal UP",
+      horario: "19h00 às 22h30",
+      local: "Auditório 108E, Bloco E · Universidade Positivo Londrina (3º COPOL)",
     },
   ];
 
@@ -63,8 +73,7 @@ export default function ProgramacaoPage() {
           Programação do Evento
         </h1>
         <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Confira as datas de cada marco da maratona. {certificado.texto} No dia {dataCurta(pitch.data)}, a presença é
-          registrada pela leitura do QR Code individual.
+          Confira as datas oficiais conforme o Edital. Certificado de 8h para quem cumprir os requisitos da inscrição e de 16h para os presentes no Demoday em 05/11 (Auditório 108E, Bloco E, UP Londrina).
         </p>
       </div>
 

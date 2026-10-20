@@ -15,27 +15,40 @@
     },
     "inscricoes": {
       "abertura": "2026-10-20",
-      "encerramento": null,
-      "exibir_encerramento": false,
-      "_comentario": "Prazo final ainda nao definido pela Comissao. Quando definir, preencha 'encerramento' (AAAA-MM-DD) e mude 'exibir_encerramento' para true: a contagem e os avisos de prazo aparecem sozinhos."
+      "encerramento": "2026-11-02",
+      "exibir_encerramento": true,
+      "_comentario": "Inscrições oficiais de 20/10 a 02/11/2026 às 23h59."
     },
-    "pareamento": {
-      "inicio": "2026-10-24",
-      "fim": "2026-10-30"
+    "mentorias": {
+      "inicio": "2026-10-20",
+      "fim": "2026-11-02",
+      "descricao": "Da inscrição até 02/11/2026, a distância pelo WhatsApp ou e-mail cadastrado."
+    },
+    "envio_trabalho": {
+      "inicio": "2026-10-20",
+      "fim": "2026-11-02",
+      "horario_fim": "23:59",
+      "descricao": "Envio dos links do vídeo e do protótipo junto com a inscrição, até 02/11/2026 às 23h59.",
+      "limite_itens": 3,
+      "formatos_arquivos": ["PDF", "PPTX", "JPG", "PNG"],
+      "formatos_links": ["YouTube", "Google Drive", "Figma", "Site"]
     },
     "avaliacao_classificatoria": {
-      "data": "2026-11-03"
+      "data": "2026-11-03",
+      "descricao": "Divulgação das 10 equipes finalistas"
     },
     "pitch_final": {
       "data": "2026-11-05",
       "inicio": "19:00",
-      "fim": "22:00",
-      "local": "Auditório Principal da Universidade Positivo Londrina"
+      "fim": "22:30",
+      "local": "Auditório 108E, Bloco E · Universidade Positivo Londrina",
+      "endereco": "R. João Rogério Ribeiro Bonesi, 150",
+      "contexto": "Demoday no 3º COPOL (Congresso Odontológico Positivo Londrinense)"
     }
   },
   "rotulos": {
-    "_comentario": "O evento final mudou de nome entre edicoes. Nunca escreva o nome direto na tela.",
-    "evento_final": "Pitch Final",
+    "_comentario": "O evento final oficial desta edição chama-se Demoday.",
+    "evento_final": "Demoday",
     "banco_talentos": "Banco de Talentos",
     "ficha": "Ficha de prototipo"
   },
@@ -46,30 +59,37 @@
   "limites": {
     "inscricoes_minimas_para_realizar": 30,
     "equipes_min": 7,
-    "equipes_max": 15,
-    "finalistas_pitch": 7,
+    "equipes_max": 20,
+    "finalistas_pitch": 10,
     "publico_estimado_min": 50,
-    "publico_estimado_max": 120
+    "publico_estimado_max": 150
   },
   "premiacao": {
     "havera": true,
     "divulgar_valores": false,
-    "texto_site": "Haverá premiação para as equipes finalistas do Pitch Final. Os valores serão divulgados oportunamente pela Comissão Organizadora."
+    "texto_site": "As 3 equipes mais bem classificadas no Demoday recebem premiação. O resultado é anunciado ao fim do evento em 05/11. Os prêmios serão divulgados nos próximos dias pelos canais oficiais."
   },
   "certificado": {
     "horas": 16,
-    "texto": "Quem completar a inscrição e comparecer ao evento presencial recebe certificado de 16 horas complementares.",
+    "horas_inscricao": 8,
+    "horas_demoday": 16,
+    "texto": "Certificado de 8h para quem cumprir os requisitos da inscrição e de 16h para os presentes no Demoday.",
     "registro_presenca": {
       "data": "2026-11-05",
-      "como": "Leitura do QR Code individual na entrada do Pitch Final. É esse registro que libera o certificado."
+      "como": "Leitura do QR Code individual no credenciamento de entrada do Demoday (Auditório 108E, Bloco E). É esse registro que libera o certificado de 16 horas."
     }
   },
   "mentoria": {
-    "texto": "As mentorias são feitas a distância: o mentor entra em contato com a equipe pelo WhatsApp ou e-mail do responsável cadastrados na inscrição.",
+    "texto": "As mentorias acontecem da inscrição até 02/11/2026 a distância: o mentor entra em contato com a equipe pelo WhatsApp ou e-mail do responsável cadastrados na inscrição.",
     "canais": [
       "WhatsApp",
       "E-mail"
     ]
+  },
+  "whatsapp_grupo": {
+    "url": "https://chat.whatsapp.com/IBDoKA6L0Sk9cpn0efoFWa",
+    "obrigatorio": true,
+    "texto": "Grupo de orientações oficial do INOVA SAÚDE 2026. A entrada de todos os integrantes é obrigatória."
   },
   "ods": {
     "_comentario": "Numeros das ODS da ONU que o evento envolve. Os nomes e cores das 17 ficam em ods.json.",
@@ -82,11 +102,11 @@
     "max_por_equipe": 3
   },
   "videos": {
-    "_comentario": "Secao de videos da home. Aceita link do YouTube (inclusive Shorts) ou arquivo .mp4 em /public/videos. formato: 'vertical' (celular, 9:16) ou 'horizontal' (16:9). Basta colar o link na propriedade 'url'.",
+    "_comentario": "Secao de videos da home. Aceita link do YouTube (inclusive Shorts) ou arquivo .mp4 em /public/videos. formato: 'vertical' (celular, 9:16) ou 'horizontal' (16:9).",
     "titulo": "Vídeos & Divulgação",
     "destaque": {
       "titulo": "Chamada Oficial · INOVA SAÚDE 2026",
-      "url": "",
+      "url": "https://youtube.com/shorts/mIxEvTEUBqs",
       "formato": "vertical"
     },
     "demais": [
@@ -227,14 +247,15 @@
         "obrigatoria_art11": true
       }
     ],
-    "frase_apoio": "Realizacao: Instituto Cruzeiro do Sul, com o ecohub Londrina, em parceria com a Universidade Positivo, nos termos do Termo de Cooperacao Tecnico-Cientifica. Apoio: Instituto Cruzeiro do Sul, Fundacao Araucaria e Secretaria de Ciencia, Tecnologia e Ensino Superior do Parana."
+    "frase_apoio": "Promoção: Instituto Cruzeiro do Sul · Realização: ecohub Londrina · Parceria: Universidade Positivo · Apoio financeiro: Fundação Araucária e SETI, Governo do Estado do Paraná."
   },
   "credenciamento": {
     "_comentario": "Evento correspondente no sistema de credenciamento (event-checkin). A URL da API vem da variavel NEXT_PUBLIC_API_URL no deploy.",
     "slug_evento": "inova-saude-2026"
   },
   "contato": {
-    "email_evento": "ecohub@up.edu.br",
-    "responsavel_comissao": "Comissao Organizadora do INOVA SAUDE 2026"
+    "email_evento": "helton.azevedo@up.edu.br",
+    "email_secundario": "ecohub@up.edu.br",
+    "responsavel_comissao": "Comissão Organizadora do INOVA SAÚDE 2026"
   }
 }

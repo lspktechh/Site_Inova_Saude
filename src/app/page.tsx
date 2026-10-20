@@ -94,11 +94,17 @@ export default function HomePage() {
                 <ArrowRight size={18} />
               </Link>
               <Link
-                href="/banco-de-talentos"
+                href="/edital"
                 className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/15 text-white font-medium text-base px-6 py-4 rounded-xl border border-white/20 transition-all text-center"
               >
+                <span>Ler Edital Oficial</span>
+              </Link>
+              <Link
+                href="/banco-de-talentos"
+                className="inline-flex items-center justify-center gap-1.5 text-white/80 hover:text-white font-medium text-sm px-3 py-3 transition-all text-center"
+              >
+                <Users size={16} />
                 <span>Banco de Talentos</span>
-                <Users size={18} />
               </Link>
             </div>
 
@@ -106,19 +112,19 @@ export default function HomePage() {
             <div className="flex flex-wrap gap-2 pt-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Classificação: {dataCurta(edicao.datas.avaliacao_classificatoria.data)}</span>
+                <span>Inscrições até 02/11</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Award size={13} className="text-[var(--acento)]" />
-                <span>{edicao.rotulos.evento_final} presencial: {dataCurta(edicao.datas.pitch_final.data)}</span>
+                <span>{edicao.rotulos.evento_final}: 05/11 às 19h (Auditório 108E)</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <CheckCircle2 size={13} className="text-[var(--acento)]" />
-                <span>Certificado de {edicao.certificado.horas}h</span>
+                <span>Certificados de 8h e 16h</span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Award size={13} className="text-[var(--acento)]" />
-                <span>Com premiação</span>
+                <span>Com premiação (10 finalistas)</span>
               </div>
             </div>
           </div>
@@ -314,10 +320,7 @@ export default function HomePage() {
             QR Code Oficial & Controle de Presença
           </h3>
           <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            Ao finalizar o envio, o participante é cadastrado no sistema central de credenciamento e recebe um voucher com QR Code.
-            As mentorias acontecem a distância: o mentor fala com o responsável pela equipe pelo WhatsApp ou e-mail cadastrados.
-            No dia {dataCurta(edicao.datas.pitch_final.data)}, a leitura do QR Code no evento presencial registra a presença e
-            libera o certificado de {edicao.certificado.horas} horas complementares.
+            Ao finalizar a inscrição, o participante recebe seu voucher com QR Code. As mentorias ocorrem a distância pelo WhatsApp e e-mail cadastrados. O envio dos links de protótipo e vídeo é feito até 02/11. No dia {dataCurta(edicao.datas.pitch_final.data)}, os 10 finalistas apresentam-se no Demoday (Auditório 108E, Bloco E, UP Londrina). Certificado de 8h pelo cumprimento dos requisitos e de 16h para quem comparecer ao evento.
           </p>
           <div className="pt-3 flex items-center gap-3">
             <Link

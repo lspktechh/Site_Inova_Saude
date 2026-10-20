@@ -30,11 +30,15 @@ export default function RegulamentoPage() {
     },
     {
       p: "Como funciona a emissão de certificados?",
-      r: `${edicao.certificado.texto} A presença é registrada pela leitura do QR Code individual no dia ${dataCurta(edicao.certificado.registro_presenca.data)}, e é esse registro que libera o certificado.`,
+      r: "O certificado de 8 horas complementares é conferido aos integrantes das equipes que cumprirem todos os requisitos da inscrição e envio de protótipo. O certificado de 16 horas é emitido para quem comparecer presencialmente ao Demoday em 5 de novembro (Auditório 108E, Bloco E, UP Londrina), mediante leitura do QR Code individual no credenciamento.",
     },
     {
       p: "Como funcionam as mentorias?",
-      r: edicao.mentoria.texto + " Por isso o WhatsApp e o e-mail do responsável pela equipe são obrigatórios na inscrição.",
+      r: "A organização entra em contato com cada equipe inscrita pelo WhatsApp ou e-mail cadastrado do líder para agendar mentorias a partir da ideia enviada. As mentorias acontecem até 2 de novembro a distância.",
+    },
+    {
+      p: "Como e quando enviar o protótipo e o vídeo?",
+      r: "O vídeo e os demais artefatos criados são enviados por link liberado (YouTube, Google Drive, Figma ou site) junto com a inscrição, até 2 de novembro de 2026. A equipe pode atualizar quantas vezes precisar até o prazo final; vale o último envio.",
     },
     {
       p: "Haverá premiação?",
@@ -45,16 +49,26 @@ export default function RegulamentoPage() {
   return (
     <div className="w-full max-w-5xl min-w-0 mx-auto px-3 sm:px-6 py-8 sm:py-16 space-y-10 sm:space-y-14">
       <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 max-w-full px-3 py-1 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-semibold">
-          <Scale size={14} className="shrink-0" />
-          <span className="truncate">Normas & Critérios de Avaliação</span>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="inline-flex items-center gap-2 max-w-full px-3 py-1 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-xs font-mono font-semibold">
+            <Scale size={14} className="shrink-0" />
+            <span className="truncate">Normas & Critérios de Avaliação</span>
+          </div>
+
+          <Link
+            href="/edital"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-bold bg-[var(--acao)] text-white px-3.5 py-1.5 rounded-xl hover:brightness-105 transition-all shadow-xs"
+          >
+            <span>Ver Edital Oficial na Íntegra</span>
+            <ArrowRight size={13} />
+          </Link>
         </div>
+
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">
           Regulamento & Critérios
         </h1>
         <p className="text-base text-[var(--fg-2)] max-w-3xl leading-relaxed">
-          Transparência total desde a inscrição: conheça como sua solução será avaliada pelas três lentes da
-          inovação, os requisitos de idoneidade da banca e tire suas dúvidas.
+          Transparência total desde a inscrição: conheça como sua solução será avaliada pela banca examinadora, os 5 critérios oficiais do Edital (peso 2 cada) e tire suas dúvidas.
         </p>
       </div>
 
@@ -119,10 +133,10 @@ export default function RegulamentoPage() {
         <div className="p-6 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl space-y-2">
           <div className="flex items-center gap-2">
             <CheckCircle2 size={20} className="text-[var(--acao)]" />
-            <h3 className="font-bold text-base text-[var(--fg)]">Certificado de {edicao.certificado.horas} horas</h3>
+            <h3 className="font-bold text-base text-[var(--fg)]">Certificados de 8h e 16h</h3>
           </div>
           <p className="text-sm text-[var(--fg-2)] leading-relaxed">
-            {edicao.certificado.texto} Presença registrada por QR Code em {dataCurta(edicao.certificado.registro_presenca.data)}.
+            Certificado de 8 horas complementares para integrantes que cumprirem todos os requisitos da inscrição. Certificado de 16 horas para presentes no Demoday em 5 de novembro com credenciamento e presença registrados via QR Code.
           </p>
         </div>
         <div className="md:col-span-2 p-6 bg-[var(--surf)] border border-[var(--borda)] rounded-2xl space-y-2">
