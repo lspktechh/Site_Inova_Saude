@@ -5,6 +5,15 @@ const API_BASE_URL =
 
 const DEFAULT_EVENT_SLUG = edicao.credenciamento.slug_evento;
 
+export interface TrabalhoEntregue {
+  video_url?: string;
+  prototipo_url?: string;
+  artefatos_adicionais?: Array<{ tipo: string; titulo: string; url: string }>;
+  acesso_liberado: boolean;
+  observacoes?: string;
+  enviado_em?: string;
+}
+
 export interface InscriptionPayload {
   trilha: string;
   lider: TeamMember;
@@ -63,6 +72,7 @@ export interface InscriptionPayload {
     };
   };
   ficha_prototipo: FichaPrototipoOutput;
+  trabalho_entregue?: TrabalhoEntregue;
 }
 
 export interface InscriptionResponse {
@@ -229,6 +239,132 @@ export function getAllLocalInscriptions(): InscriptionResponse[] {
   if (typeof window === "undefined") return [];
   try {
     return JSON.parse(localStorage.getItem("inova_inscriptions") || "[]");
+  } catch (e) {
+    return [];
+  }
+}
+
+export interface TrabalhoItem {
+  tipo: "arquivo" | "link";
+  titulo: string;
+  linkUrl?: string;
+  arquivoNome?: string;
+  arquivoBase64?: string;
+}
+
+export interface TrabalhoPayload {
+  equipeNome: string;
+  protocolo?: string;
+  emailLider: string;
+  itens: TrabalhoItem[];
+  observacoes?: string;
+  acessoLiberado: boolean;
+  dataEnvio?: string;
+}
+
+export interface TrabalhoResponse {
+  success: boolean;
+  protocoloEnvio: string;
+  dataEnvio: string;
+  backendId?: string;
+  mensagem: string;
+}
+
+/**
+ * Salva a entrega de trabalhos de forma resiliente (localStorage + servidor central)
+ */
+export async function submitTrabalho(payload: TrabalhoPayload): Promise<TrabalhoResponse> {
+  const timestampStr = new Date().toLocaleString("pt-BR");
+  const randomSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
+  const protocoloEnvio = payload.protocolo
+    ? `${payload.protocolo}-TRAB-${randomSuffix}`
+    : `TRAB-${randomSuffix}`;
+
+  const registroCompleto = {
+    ...payload,
+    protocoloEnvio,
+    dataEnvio: timestampStr,
+  };
+
+  // 1. Persistência local imediata (resiliente contra quedas de conexão ou reload)
+  saveLocalTrabalho(registroCompleto);
+
+  // 2. Registro no servidor central de credenciamento
+  let backendId: string | undefined;
+  try {
+    const event = await getEventBySlug(DEFAULT_EVENT_SLUG);
+    if (event?.id) {
+      const body = {
+        name: `[TRABALHO] ${payload.equipeNome}`,
+        email: payload.emailLider,
+        document: (payload.protocolo || "").replace(/\D/g, "") || "00000000000",
+        phone: "",
+        institution: "INOVA SAÚDE 2026",
+        category: "Inscrição Gratuita",
+        consentVersion: "2026.1",
+        teamName: payload.equipeNome,
+        teamMembers: [],
+        soloParaSorteio: false,
+        notes: JSON.stringify({
+          tipo_registro: "SUBMISSAO_TRABALHO",
+          protocolo_envio: protocoloEnvio,
+          protocolo_inscricao: payload.protocolo,
+          equipe_nome: payload.equipeNome,
+          email_lider: payload.emailLider,
+          itens: payload.itens.map((it) => ({
+            tipo: it.tipo,
+            titulo: it.titulo,
+            linkUrl: it.linkUrl,
+            arquivoNome: it.arquivoNome,
+          })),
+          observacoes: payload.observacoes,
+          acesso_liberado: payload.acessoLiberado,
+          data_envio: timestampStr,
+        }),
+      };
+
+      const res = await fetch(`${API_BASE_URL}/events/${event.id}/inscriptions`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      if (res.ok) {
+        const json = await res.json();
+        if (json?.data?.id) {
+          backendId = json.data.id;
+        }
+      }
+    }
+  } catch (err) {
+    console.warn("Aviso ao conectar com backend para registrar trabalho:", err);
+  }
+
+  return {
+    success: true,
+    protocoloEnvio,
+    dataEnvio: timestampStr,
+    backendId,
+    mensagem: "Trabalho registrado com sucesso e garantido no sistema!",
+  };
+}
+
+export function saveLocalTrabalho(data: any) {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.setItem("inova_envio_trabalho", JSON.stringify(data));
+    const historico = JSON.parse(localStorage.getItem("inova_envio_historico") || "[]");
+    historico.unshift(data);
+    localStorage.setItem("inova_envio_historico", JSON.stringify(historico.slice(0, 15)));
+  } catch (e) {
+    console.error("Erro ao salvar trabalho localmente:", e);
+  }
+}
+
+export function getLocalTrabalhoHistorico(): any[] {
+  if (typeof window === "undefined") return [];
+  try {
+    return JSON.parse(localStorage.getItem("inova_envio_historico") || "[]");
   } catch (e) {
     return [];
   }

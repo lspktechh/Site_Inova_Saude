@@ -16,7 +16,7 @@ import {
   FichaPrototipoOutput,
   ods,
 } from "@/lib/config";
-import { submitInscription, InscriptionPayload, InscriptionResponse } from "@/lib/api";
+import { submitInscription, saveLocalTrabalho, InscriptionPayload, InscriptionResponse } from "@/lib/api";
 import {
   CheckCircle,
   CheckCircle2,
@@ -33,6 +33,9 @@ import {
   QrCode,
   ShieldAlert,
   RotateCcw,
+  Video,
+  Link as LinkIcon,
+  UploadCloud,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { StepProgressNav } from "@/components/StepProgressNav";
@@ -165,6 +168,13 @@ function InscriptionContent() {
   // Trava sanitária
   const [travaSanitaria, setTravaSanitaria] = useState<string[]>([]);
 
+  // Submissão de Trabalho / Protótipo (Edital: vídeos e protótipos por link; até 3 itens)
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [prototipoUrl, setPrototipoUrl] = useState<string>("");
+  const [artefatoUrl, setArtefatoUrl] = useState<string>("");
+  const [linksAcessoLiberado, setLinksAcessoLiberado] = useState<boolean>(true);
+  const [trabalhoObs, setTrabalhoObs] = useState<string>("");
+
   // Função central para persistir todos os campos no localStorage
   const saveDraftToStorage = () => {
     try {
@@ -224,6 +234,11 @@ function InscriptionContent() {
         servArtefato,
         servQuemValida,
         travaSanitaria,
+        videoUrl,
+        prototipoUrl,
+        artefatoUrl,
+        linksAcessoLiberado,
+        trabalhoObs,
       };
       localStorage.setItem("inova_form_draft", JSON.stringify(draft));
       const now = new Date();
@@ -297,6 +312,11 @@ function InscriptionContent() {
         if (data.servArtefato) setServArtefato(data.servArtefato);
         if (data.servQuemValida) setServQuemValida(data.servQuemValida);
         if (data.travaSanitaria) setTravaSanitaria(data.travaSanitaria);
+        if (data.videoUrl) setVideoUrl(data.videoUrl);
+        if (data.prototipoUrl) setPrototipoUrl(data.prototipoUrl);
+        if (data.artefatoUrl) setArtefatoUrl(data.artefatoUrl);
+        if (typeof data.linksAcessoLiberado === "boolean") setLinksAcessoLiberado(data.linksAcessoLiberado);
+        if (data.trabalhoObs) setTrabalhoObs(data.trabalhoObs);
 
         if (data.updatedAt) {
           const date = new Date(data.updatedAt);
@@ -375,6 +395,11 @@ function InscriptionContent() {
     servArtefato,
     servQuemValida,
     travaSanitaria,
+    videoUrl,
+    prototipoUrl,
+    artefatoUrl,
+    linksAcessoLiberado,
+    trabalhoObs,
   ]);
 
   // Função para salvar rascunho manualmente com feedback imediato
@@ -671,8 +696,42 @@ function InscriptionContent() {
         ficha_prototipo: fichaGerada,
       };
 
+      // Se a equipe forneceu links do trabalho / protótipo já na inscrição
+      const temTrabalho = Boolean(videoUrl.trim() || prototipoUrl.trim() || artefatoUrl.trim());
+      if (temTrabalho) {
+        payload.trabalho_entregue = {
+          video_url: videoUrl.trim() || undefined,
+          prototipo_url: prototipoUrl.trim() || undefined,
+          artefatos_adicionais: artefatoUrl.trim()
+            ? [{ tipo: "link", titulo: "Artefato / Documento Complementar", url: artefatoUrl.trim() }]
+            : undefined,
+          acesso_liberado: linksAcessoLiberado,
+          observacoes: trabalhoObs.trim() || undefined,
+          enviado_em: new Date().toLocaleString("pt-BR"),
+        };
+      }
+
       const result = await submitInscription(payload);
       setSubmissionResult(result);
+
+      if (temTrabalho) {
+        const itensTrabalho: Array<{ tipo: "link"; titulo: string; linkUrl: string }> = [];
+        if (videoUrl.trim()) itensTrabalho.push({ tipo: "link", titulo: "Vídeo do Protótipo", linkUrl: videoUrl.trim() });
+        if (prototipoUrl.trim()) itensTrabalho.push({ tipo: "link", titulo: "Link do Protótipo", linkUrl: prototipoUrl.trim() });
+        if (artefatoUrl.trim()) itensTrabalho.push({ tipo: "link", titulo: "Artefato Complementar / Slides", linkUrl: artefatoUrl.trim() });
+
+        saveLocalTrabalho({
+          equipeNome: equipeNome || "Equipe",
+          protocolo: result.id,
+          emailLider: membros[0]?.email || "",
+          itens: itensTrabalho,
+          observacoes: trabalhoObs,
+          acessoLiberado: linksAcessoLiberado,
+          protocoloEnvio: `TRAB-${result.id}`,
+          dataEnvio: new Date().toLocaleString("pt-BR"),
+        });
+      }
+
       setCurrentStep(9); // Tela final
     } catch (err) {
       console.error("Erro ao enviar inscrição:", err);
@@ -1885,6 +1944,111 @@ function InscriptionContent() {
                 </div>
               )}
             </div>
+
+            {/* SUBMISSÃO DE TRABALHO / PROTÓTIPO (EDITAL) */}
+            <div className="p-5 sm:p-6 bg-[var(--surf-2)] border-2 border-[var(--marca)]/30 rounded-2xl space-y-5">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[var(--borda)] pb-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-[var(--marca)]/10 text-[var(--marca)] flex items-center justify-center shrink-0">
+                    <UploadCloud size={18} />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-base text-[var(--fg)] flex items-center gap-2">
+                      <span>Envio dos Links do Protótipo e Vídeo</span>
+                      <span className="text-[10px] font-mono font-bold uppercase bg-[var(--marca)]/15 text-[var(--marca)] px-2 py-0.5 rounded-full">
+                        Até 3 itens · Edital
+                      </span>
+                    </h4>
+                    <p className="text-xs text-[var(--fg-2)]">
+                      Você pode informar os links agora ou submetê-los/atualizá-los até <strong>02/11/2026 às 23h59</strong> na página{" "}
+                      <Link href="/envio" target="_blank" className="text-[var(--acao)] underline font-medium">
+                        Envio do Trabalho
+                      </Link>.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-1.5">
+                    <Video size={14} className="text-[var(--marca)]" />
+                    <span>Link do Vídeo do Protótipo (YouTube ou Google Drive)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={videoUrl}
+                    onChange={(e) => setVideoUrl(e.target.value)}
+                    placeholder="https://youtube.com/watch?v=... ou link público do Drive"
+                    className="w-full bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3.5 py-2 text-xs font-mono focus:border-[var(--acao)] focus:outline-hidden"
+                  />
+                  <p className="text-[10px] text-[var(--fg-2)]">
+                    Recomendado para demonstração funcional da solução, pitch gravado ou aplicativo em execução.
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-1.5">
+                    <LinkIcon size={14} className="text-[var(--acao)]" />
+                    <span>Link do Protótipo (Figma, Website ou Drive)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={prototipoUrl}
+                    onChange={(e) => setPrototipoUrl(e.target.value)}
+                    placeholder="https://figma.com/file/... ou URL do protótipo no ar"
+                    className="w-full bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3.5 py-2 text-xs font-mono focus:border-[var(--acao)] focus:outline-hidden"
+                  />
+                  <p className="text-[10px] text-[var(--fg-2)]">
+                    Link com navegação interativa ou protótipo digital da solução.
+                  </p>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-1.5">
+                    <UploadCloud size={14} className="text-[var(--marca)]" />
+                    <span>Artefato Adicional ou Slides (Link do Drive/Canva)</span>
+                  </label>
+                  <input
+                    type="url"
+                    value={artefatoUrl}
+                    onChange={(e) => setArtefatoUrl(e.target.value)}
+                    placeholder="https://drive.google.com/... ou link de slides/PDF"
+                    className="w-full bg-[var(--surf)] border border-[var(--borda)] rounded-lg px-3.5 py-2 text-xs font-mono focus:border-[var(--acao)] focus:outline-hidden"
+                  />
+                  <p className="text-[10px] text-[var(--fg-2)]">
+                    Apresentação em slides, PDF de documentação técnica ou modelo 3D.
+                  </p>
+                </div>
+
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="text-xs font-bold text-[var(--fg)]">
+                    Observações para a Banca Avaliadora (Opcional)
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={trabalhoObs}
+                    onChange={(e) => setTrabalhoObs(e.target.value)}
+                    placeholder="Instruções de acesso, senhas de teste se houver, ou destaques para os jurados..."
+                    className="w-full bg-[var(--surf)] border border-[var(--borda)] rounded-lg p-2.5 text-xs focus:border-[var(--acao)] focus:outline-hidden"
+                  />
+                </div>
+
+                <div className="sm:col-span-2 p-3 bg-white/70 dark:bg-white/5 border border-[var(--borda)] rounded-xl">
+                  <label className="flex items-start gap-2.5 cursor-pointer text-xs text-[var(--fg)]">
+                    <input
+                      type="checkbox"
+                      checked={linksAcessoLiberado}
+                      onChange={(e) => setLinksAcessoLiberado(e.target.checked)}
+                      className="h-4 w-4 rounded border-gray-300 text-[var(--acao)] focus:ring-[var(--acao)] shrink-0 mt-0.5"
+                    />
+                    <span>
+                      <strong>Acesso público confirmado:</strong> Garanto que os links acima possuem permissão liberada para qualquer pessoa com o link, permitindo visualização imediata pelos avaliadores do Demoday.
+                    </span>
+                  </label>
+                </div>
+              </div>
+            </div>
           </div>
         )}
 
@@ -1960,6 +2124,29 @@ function InscriptionContent() {
               <pre className="p-4 sm:p-5 bg-black/90 text-green-400 font-mono text-xs rounded-xl overflow-x-auto leading-relaxed border border-gray-800">
                 {JSON.stringify(fichaGerada, null, 2)}
               </pre>
+            </div>
+
+            {/* Lembrete de Envio de Trabalhos */}
+            <div className="p-5 rounded-2xl bg-gradient-to-r from-[var(--marca)]/10 via-[var(--acao)]/10 to-transparent border border-[var(--marca)]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <span className="font-mono text-[10px] uppercase tracking-wider font-bold text-[var(--acao)] flex items-center gap-1.5">
+                  <UploadCloud size={14} />
+                  Etapa do Demoday · 05/11
+                </span>
+                <h4 className="font-bold text-sm text-[var(--fg)]">
+                  Envio e Atualização de Trabalhos até 02/11 às 23h59
+                </h4>
+                <p className="text-xs text-[var(--fg-2)] max-w-xl">
+                  Mesmo após concluir sua inscrição, a equipe pode enviar ou atualizar os links de vídeos e protótipos digitais até o prazo final. Vale sempre o último envio.
+                </p>
+              </div>
+              <Link
+                href="/envio"
+                className="shrink-0 inline-flex items-center gap-2 bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white text-xs font-bold px-4 py-2.5 rounded-xl shadow-xs transition-all"
+              >
+                <span>Acessar Área de Envio</span>
+                <ArrowRight size={14} />
+              </Link>
             </div>
 
             <div className="flex flex-wrap justify-between items-center gap-4 pt-4 border-t border-[var(--borda)]">
