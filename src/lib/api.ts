@@ -276,24 +276,72 @@ export interface TrabalhoResponse {
 export async function submitTrabalho(payload: TrabalhoPayload): Promise<TrabalhoResponse> {
   const timestampStr = new Date().toLocaleString("pt-BR");
   const randomSuffix = Math.random().toString(36).substring(2, 7).toUpperCase();
-  const protocoloEnvio = payload.protocolo
+  let protocoloEnvio = payload.protocolo
     ? `${payload.protocolo}-TRAB-${randomSuffix}`
     : `TRAB-${randomSuffix}`;
 
-  const registroCompleto = {
+  // 1. Persistência local imediata (resiliente contra quedas de conexão ou reload)
+  saveLocalTrabalho({
     ...payload,
     protocoloEnvio,
     dataEnvio: timestampStr,
-  };
+  });
 
-  // 1. Persistência local imediata (resiliente contra quedas de conexão ou reload)
-  saveLocalTrabalho(registroCompleto);
-
-  // 2. Registro no servidor central de credenciamento
+  // 2. Registro no servidor central
   let backendId: string | undefined;
   try {
     const event = await getEventBySlug(DEFAULT_EVENT_SLUG);
     if (event?.id) {
+      // 2A. Registro na aba "Trabalhos" (tabela Submission) do painel admin
+      try {
+        const resumoItens = payload.itens
+          .map((it, idx) => `Item ${idx + 1} (${it.tipo}): ${it.titulo}${it.linkUrl ? ` -> ${it.linkUrl}` : ""}${it.arquivoNome ? ` [${it.arquivoNome}]` : ""}`)
+          .join("\n");
+
+        const abstractText = `Submissão oficial de protótipo e vídeo da equipe ${payload.equipeNome} para o Demoday do INOVA SAÚDE 2026.\n\n` +
+          `Itens entregues:\n${resumoItens}\n\n` +
+          (payload.observacoes ? `Observações da equipe: ${payload.observacoes}\n\n` : "") +
+          `Declaração de acesso público liberado: ${payload.acessoLiberado ? "Sim" : "Não"}.\n` +
+          `Data de envio: ${timestampStr}. Protocolo de inscrição: ${payload.protocolo || "Não informado"}.`;
+
+        const itemComArquivo = payload.itens.find((it) => it.tipo === "arquivo" && it.arquivoBase64);
+        const fileName = (itemComArquivo?.arquivoNome?.replace(/[^a-zA-Z0-9._-]/g, "_") || "ficha-submissao.pdf");
+        const dataBase64 = itemComArquivo?.arquivoBase64?.split(",")[1] ||
+          "JVBERi0xLjQKJcTl8uXrCjEgMCBvYmoKPDwKL1R5cGUgL0NhdGFsb2cKL1BhZ2VzIDIgMCBSCj4+CmVuZG9iagoyIDAgb2JqCjw8Ci9UeXBlIC9QYWdlcwovS2lkcyBbMyAwIFJdCi9Db3VudCAxCj4+CmVuZG9iagozIDAgb2JqCjw8Ci9UeXBlIC9QYWdlCi9QYXJlbnQgMiAwIFIKL01lZGlhQm94IFswIDAgNjEyIDc5Ml0KPj4KZW5kb2JqCnhyZWYKMCA0CjAwMDAwMDAwMDAgNjU1MzUgZiAKMDAwMDAwMDAxNSAwMDAwMCBuIAowMDAwMDAwMDY4IDAwMDAwIG4gCjAwMDAwMDAxMjUgMDAwMDAgbiAKdHJhaWxlcgo8PAovU2l6ZSA0Ci9Sb290IDEgMCBSCj4+CnN0YXJ0eHJlZgoyMDkKJSVFT0YK";
+
+        const subBody = {
+          title: `Equipe ${payload.equipeNome} - Protótipo Demoday`,
+          abstract: abstractText,
+          keywords: ["INOVA SAÚDE", "Protótipo", "Demoday", "Saúde"],
+          authors: [
+            {
+              name: `Equipe ${payload.equipeNome}`,
+              email: payload.emailLider,
+              isPresenter: true,
+            },
+          ],
+          fileName,
+          dataBase64,
+        };
+
+        const resSub = await fetch(`${API_BASE_URL}/public/events/${event.id}/submissions`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(subBody),
+        });
+
+        if (resSub.ok) {
+          const jsonSub = await resSub.json();
+          if (jsonSub?.data?.code) {
+            protocoloEnvio = jsonSub.data.code;
+            backendId = jsonSub.data.id;
+          }
+        }
+      } catch (errSub) {
+        console.warn("Aviso ao registrar na chamada de Trabalhos:", errSub);
+      }
+
+      // 2B. Registro complementar na aba "Inscritos" (tabela Inscription) do painel admin
       const body = {
         name: `[TRABALHO] ${payload.equipeNome}`,
         email: payload.emailLider,
@@ -323,22 +371,30 @@ export async function submitTrabalho(payload: TrabalhoPayload): Promise<Trabalho
         }),
       };
 
-      const res = await fetch(`${API_BASE_URL}/events/${event.id}/inscriptions`, {
+      const resInsc = await fetch(`${API_BASE_URL}/events/${event.id}/inscriptions`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
-      if (res.ok) {
-        const json = await res.json();
-        if (json?.data?.id) {
-          backendId = json.data.id;
+      if (resInsc.ok) {
+        const jsonInsc = await resInsc.json();
+        if (jsonInsc?.data?.id && !backendId) {
+          backendId = jsonInsc.data.id;
         }
       }
     }
   } catch (err) {
     console.warn("Aviso ao conectar com backend para registrar trabalho:", err);
   }
+
+  // Atualiza persistência local com o código oficial gerado
+  saveLocalTrabalho({
+    ...payload,
+    protocoloEnvio,
+    dataEnvio: timestampStr,
+    backendId,
+  });
 
   return {
     success: true,
