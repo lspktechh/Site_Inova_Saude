@@ -1,7 +1,7 @@
 "use client";
 
 import { QRCodeSVG } from "qrcode.react";
-import { CheckCircle, Printer, Download, Sparkles, ShieldCheck, MapPin, Calendar, Users, MessageCircle } from "lucide-react";
+import { CheckCircle, Printer, Sparkles, ShieldCheck, MapPin, Calendar, Users, MessageCircle } from "lucide-react";
 import { asset, edicao, dataCurta } from "@/lib/config";
 
 interface OfficialVoucherProps {
@@ -12,7 +12,6 @@ interface OfficialVoucherProps {
   membersCount: number;
   membersList?: Array<{ nome: string; curso?: string; papel?: string }>;
   submissionId: string;
-  onDownloadJson?: () => void;
 }
 
 export function OfficialVoucher({
@@ -23,7 +22,6 @@ export function OfficialVoucher({
   membersCount,
   membersList = [],
   submissionId,
-  onDownloadJson,
 }: OfficialVoucherProps) {
   const handlePrint = () => {
     if (typeof window !== "undefined") {
@@ -208,17 +206,6 @@ export function OfficialVoucher({
             <Printer size={16} />
             <span>Imprimir / Salvar PDF</span>
           </button>
-
-          {onDownloadJson && (
-            <button
-              type="button"
-              onClick={onDownloadJson}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-[var(--surf)] border border-[var(--borda)] text-sm font-bold text-[var(--fg)] hover:bg-[var(--surf-2)] transition-colors shadow-2xs cursor-pointer"
-            >
-              <Download size={16} />
-              <span>Baixar Ficha (.JSON)</span>
-            </button>
-          )}
         </div>
 
         <span className="text-xs font-mono text-[var(--ok)] font-semibold flex items-center gap-1.5">

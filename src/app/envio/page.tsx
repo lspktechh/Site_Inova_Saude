@@ -337,7 +337,7 @@ export default function EnvioTrabalhoPage() {
                 className="inline-flex items-center gap-1.5 bg-[var(--surf)] hover:bg-[var(--surf-2)] text-[var(--fg)] text-xs font-bold px-3.5 py-2 rounded-xl border border-[var(--borda)] shadow-xs transition-colors cursor-pointer"
               >
                 <Download size={14} />
-                <span>Baixar Comprovante (.JSON)</span>
+                <span>Baixar Comprovante de Envio</span>
               </button>
             </div>
           </div>

@@ -29,7 +29,6 @@ import {
   Trash2,
   Sparkles,
   Info,
-  Download,
   QrCode,
   ShieldAlert,
   RotateCcw,
@@ -743,17 +742,6 @@ function InscriptionContent() {
     } finally {
       setIsSubmitting(false);
     }
-  };
-
-  // Download do JSON da ficha estruturada
-  const handleDownloadFicha = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(fichaGerada, null, 2));
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `ficha-prototipo-${fichaGerada.equipe_id}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
   };
 
   return (
@@ -2078,7 +2066,6 @@ function InscriptionContent() {
                 membersCount={membros.length}
                 membersList={membros}
                 submissionId={submissionResult.id}
-                onDownloadJson={handleDownloadFicha}
               />
             ) : (
               <div className="p-6 rounded-2xl border border-[var(--borda)] bg-[var(--surf)] text-sm text-[var(--fg-2)] text-center space-y-4">
@@ -2104,27 +2091,6 @@ function InscriptionContent() {
                 </div>
               </div>
             )}
-
-            {/* Ficha de Protótipo Gerada (JSON Legível) */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <h4 className="font-bold text-base text-[var(--fg)]">
-                  Ficha de Protótipo Gerada (Schema Oficial)
-                </h4>
-                <button
-                  type="button"
-                  onClick={handleDownloadFicha}
-                  className="text-xs font-mono text-[var(--marca)] hover:underline inline-flex items-center gap-1.5"
-                >
-                  <Download size={14} />
-                  <span>Baixar JSON da Ficha</span>
-                </button>
-              </div>
-
-              <pre className="p-4 sm:p-5 bg-black/90 text-green-400 font-mono text-xs rounded-xl overflow-x-auto leading-relaxed border border-gray-800">
-                {JSON.stringify(fichaGerada, null, 2)}
-              </pre>
-            </div>
 
             {/* Lembrete de Envio de Trabalhos */}
             <div className="p-5 rounded-2xl bg-gradient-to-r from-[var(--marca)]/10 via-[var(--acao)]/10 to-transparent border border-[var(--marca)]/25 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
