@@ -1,7 +1,7 @@
 import { FichaPrototipoOutput, TeamMember, edicao } from "./config";
 
 const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000";
+  process.env.NEXT_PUBLIC_API_URL || "https://137-131-233-254.sslip.io";
 
 const DEFAULT_EVENT_SLUG = edicao.credenciamento.slug_evento;
 
