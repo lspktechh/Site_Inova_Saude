@@ -125,7 +125,7 @@ export async function submitInscription(
     institution: lider.curso || lider.vinculo,
     category: "Inscrição Gratuita",
     consentVersion: "2026.1",
-    teamName: isSolo ? null : (payload.equipeNome || "Equipe sem nome"),
+    teamName: isSolo ? undefined : (payload.equipeNome?.trim() || undefined),
     teamMembers: isSolo ? [] : teamMembers,
     soloParaSorteio: isSolo,
     notes: JSON.stringify({
