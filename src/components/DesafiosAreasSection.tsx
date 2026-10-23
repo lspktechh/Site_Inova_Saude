@@ -1,14 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Pill, Activity, Stethoscope, Microscope, Cpu, ArrowRight, Video, Sparkles, Play } from "lucide-react";
 import { edicao } from "@/lib/config";
 
-/** Converte links do YouTube (watch, shorts, embed, youtu.be) para o endereço de incorporação */
-function youtubeEmbed(url: string): string | null {
+/** Extrai o ID de 11 caracteres de um link do YouTube */
+function getYouTubeId(url: string): string | null {
   const match = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/);
-  return match ? `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0` : null;
+  return match ? match[1] : null;
+}
+
+/** Converte para o endereço de incorporação com parâmetros de alta performance */
+function youtubeEmbed(id: string): string {
+  return `https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1&modestbranding=1&enablejsapi=1`;
 }
 
 const ICONES: Record<string, any> = {
@@ -36,16 +41,97 @@ interface DesafioArea {
   videos?: VideoItem[];
 }
 
+interface VideoPlayerFrameProps {
+  url: string;
+  titulo: string;
+  isAtivo: boolean;
+  priority?: boolean;
+}
+
+function VideoPlayerFrame({ url, titulo, isAtivo, priority = false }: VideoPlayerFrameProps) {
+  const videoId = getYouTubeId(url);
+  const embed = videoId ? youtubeEmbed(videoId) : null;
+  const [isLoaded, setIsLoaded] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Thumbnail oficial do YouTube (carregamento instantâneo para eliminar 100% a tela preta)
+  const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
+
+  // Pausa automaticamente o vídeo se o usuário alternar para outra aba
+  useEffect(() => {
+    if (!isAtivo && iframeRef.current && isLoaded) {
+      try {
+        iframeRef.current.contentWindow?.postMessage(
+          JSON.stringify({ event: "command", func: "pauseVideo", args: "" }),
+          "*"
+        );
+      } catch {
+        // Fallback silencioso
+      }
+    }
+  }, [isAtivo, isLoaded]);
+
+  return (
+    <div
+      className={`absolute inset-0 w-full h-full transition-opacity duration-300 ${
+        isAtivo ? "opacity-100 z-10 pointer-events-auto" : "opacity-0 z-0 pointer-events-none"
+      }`}
+    >
+      {/* 1. Poster Thumbnail: renderizado no milissegundo 0 */}
+      {thumbnailUrl && (
+        <div
+          className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-500 ${
+            isLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+          }`}
+          style={{
+            backgroundImage: `url(${thumbnailUrl})`,
+            backgroundColor: "#061320",
+          }}
+        >
+          {/* Gradiente sutil para harmonização visual com a identidade do site */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/45" />
+        </div>
+      )}
+
+      {/* 2. Feedback de carregamento elegante enquanto o player inicializa */}
+      {!isLoaded && (
+        <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 pointer-events-none transition-opacity duration-300">
+          <div className="w-9 h-9 rounded-full border-2 border-white/20 border-t-[var(--acento)] animate-spin" />
+          <span className="text-white text-[11px] font-mono font-semibold mt-2.5 drop-shadow-md px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-xs">
+            Carregando vídeo...
+          </span>
+        </div>
+      )}
+
+      {/* 3. Iframe do YouTube */}
+      {embed ? (
+        <iframe
+          ref={iframeRef}
+          src={embed}
+          title={titulo}
+          onLoad={() => setIsLoaded(true)}
+          className={`w-full h-full relative z-10 transition-opacity duration-300 ${
+            isLoaded ? "opacity-100" : "opacity-0"
+          }`}
+          loading={priority ? "eager" : "lazy"}
+          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+        />
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center text-white bg-slate-900">
+          <Video size={32} className="text-white/60 mb-2" />
+          <span className="text-xs text-white/70">Vídeo explicativo</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function DesafioAreaCard({ desafio }: { desafio: DesafioArea }) {
   const Icon = ICONES[desafio.icone] || Sparkles;
   const cor = desafio.cor || "var(--marca)";
   const temMultiplosVideos = desafio.videos && desafio.videos.length > 1;
   const [videoAtivoIndex, setVideoAtivoIndex] = useState(0);
-
-  const urlAtual = temMultiplosVideos
-    ? desafio.videos![videoAtivoIndex]?.url || desafio.url
-    : desafio.url;
-  const embed = youtubeEmbed(urlAtual);
 
   return (
     <div
@@ -91,7 +177,7 @@ function DesafioAreaCard({ desafio }: { desafio: DesafioArea }) {
                   key={vid.url}
                   type="button"
                   onClick={() => setVideoAtivoIndex(idx)}
-                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold font-mono transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg text-xs font-bold font-mono transition-all cursor-pointer ${
                     ativo
                       ? "bg-[var(--surf)] text-[var(--fg)] shadow-xs border border-[var(--borda)]"
                       : "text-[var(--fg-2)] hover:text-[var(--fg)] hover:bg-[var(--surf)]/50"
@@ -106,24 +192,26 @@ function DesafioAreaCard({ desafio }: { desafio: DesafioArea }) {
           </div>
         )}
 
-        {/* Player Vertical Responsivo no formato Short (9:16) */}
+        {/* Player Vertical Responsivo no formato Short (9:16) com Pré-carregamento e Capa Instantânea */}
         <div className="py-1">
-          <div className="aspect-[9/16] w-full max-w-[260px] sm:max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-black shadow-lg border border-[var(--borda)] relative">
-            {embed ? (
-              <iframe
-                key={embed}
-                src={embed}
-                title={`${desafio.titulo} ${temMultiplosVideos ? `(Vídeo ${videoAtivoIndex + 1})` : ""} · INOVA SAÚDE 2026`}
-                className="w-full h-full"
-                loading="lazy"
-                allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
+          <div className="aspect-[9/16] w-full max-w-[260px] sm:max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-slate-950 shadow-lg border border-[var(--borda)] relative">
+            {temMultiplosVideos ? (
+              desafio.videos!.map((vid, idx) => (
+                <VideoPlayerFrame
+                  key={vid.url}
+                  url={vid.url}
+                  titulo={`${desafio.titulo} (${vid.titulo || `Vídeo ${idx + 1}`}) · INOVA SAÚDE 2026`}
+                  isAtivo={videoAtivoIndex === idx}
+                  priority={true}
+                />
+              ))
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center p-4 text-center text-white bg-slate-900">
-                <Video size={32} className="text-white/60 mb-2" />
-                <span className="text-xs text-white/70">Vídeo explicativo</span>
-              </div>
+              <VideoPlayerFrame
+                url={desafio.url}
+                titulo={`${desafio.titulo} · INOVA SAÚDE 2026`}
+                isAtivo={true}
+                priority={false}
+              />
             )}
           </div>
         </div>

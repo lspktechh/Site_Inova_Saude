@@ -1,19 +1,28 @@
 "use client";
 
+import { useState } from "react";
 import { edicao } from "@/lib/config";
 import { PlayCircle } from "lucide-react";
 
-/** Converte links do YouTube (watch, shorts, embed, youtu.be) para o endereço de incorporação */
-function youtubeEmbed(url: string): string | null {
+/** Extrai o ID de 11 caracteres de um link do YouTube */
+function getYouTubeId(url: string): string | null {
   const match = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/);
-  return match ? `https://www.youtube-nocookie.com/embed/${match[1]}?rel=0` : null;
+  return match ? match[1] : null;
+}
+
+/** Converte para o endereço de incorporação otimizado */
+function youtubeEmbed(id: string): string {
+  return `https://www.youtube-nocookie.com/embed/${id}?rel=0&playsinline=1&modestbranding=1`;
 }
 
 export function HeroVideo() {
   const video = edicao.videos?.destaque;
   const url = video?.url || "https://youtube.com/shorts/ICRkQAstx_c?feature=share";
-  const embed = youtubeEmbed(url);
+  const videoId = getYouTubeId(url);
+  const embed = videoId ? youtubeEmbed(videoId) : null;
   const titulo = video?.titulo || "Chamada Oficial · INOVA SAÚDE 2026";
+  const [isLoaded, setIsLoaded] = useState(false);
+  const thumbnailUrl = videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
 
   return (
     <div className="bg-black/40 border border-white/20 rounded-2xl sm:rounded-3xl p-3 sm:p-4 backdrop-blur-md shadow-2xl relative overflow-hidden group max-w-[320px] sm:max-w-[340px] mx-auto w-full">
@@ -35,12 +44,40 @@ export function HeroVideo() {
       </div>
 
       {/* Moldura vertical 9:16 do vídeo em destaque */}
-      <div className="aspect-[9/16] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-black shadow-lg border border-white/10 relative">
+      <div className="aspect-[9/16] w-full rounded-xl sm:rounded-2xl overflow-hidden bg-slate-950 shadow-lg border border-white/10 relative">
+        {/* Poster Thumbnail para eliminar 100% tela preta */}
+        {thumbnailUrl && (
+          <div
+            className={`absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-500 ${
+              isLoaded ? "opacity-0 pointer-events-none" : "opacity-100"
+            }`}
+            style={{
+              backgroundImage: `url(${thumbnailUrl})`,
+              backgroundColor: "#061320",
+            }}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40" />
+          </div>
+        )}
+
+        {/* Indicador de carregamento suave */}
+        {!isLoaded && (
+          <div className="absolute inset-0 z-20 flex flex-col items-center justify-center p-4 pointer-events-none transition-opacity duration-300">
+            <div className="w-10 h-10 rounded-full border-2 border-white/20 border-t-[var(--acento)] animate-spin" />
+            <span className="text-white text-xs font-mono font-medium mt-3 drop-shadow px-2.5 py-1 rounded-full bg-black/60 backdrop-blur-xs">
+              Carregando vídeo...
+            </span>
+          </div>
+        )}
+
         {embed ? (
           <iframe
             src={embed}
             title={titulo}
-            className="w-full h-full"
+            onLoad={() => setIsLoaded(true)}
+            className={`w-full h-full relative z-10 transition-opacity duration-300 ${
+              isLoaded ? "opacity-100" : "opacity-0"
+            }`}
             loading="eager"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
