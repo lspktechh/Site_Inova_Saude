@@ -120,8 +120,7 @@
       "descricao": "Dores reais no controle, dispensação, adesão terapêutica e rastreabilidade de medicamentos na atenção primária e hospitalar.",
       "icone": "Pill",
       "cor": "#10b981",
-      "url": "https://youtube.com/shorts/utVx_jMTkOw?feature=share",
-      "formato": "vertical"
+      "url": "https://youtube.com/shorts/utVx_jMTkOw?feature=share"
     },
     {
       "id": "fisioterapia",
@@ -131,8 +130,7 @@
       "descricao": "Soluções práticas para suporte postural, exercícios guiados, reabilitação física e adaptações ergonômicas funcionais.",
       "icone": "Activity",
       "cor": "#0284c7",
-      "url": "https://youtube.com/shorts/gPVeir4YaWM?feature=share",
-      "formato": "vertical"
+      "url": "https://youtube.com/shorts/gPVeir4YaWM?feature=share"
     },
     {
       "id": "enfermagem",
@@ -143,7 +141,36 @@
       "icone": "Stethoscope",
       "cor": "#f59e0b",
       "url": "https://youtube.com/shorts/rROBN6BZFhI?feature=share",
-      "formato": "vertical"
+      "videos": [
+        {
+          "titulo": "Vídeo 1",
+          "url": "https://youtube.com/shorts/rROBN6BZFhI?feature=share"
+        },
+        {
+          "titulo": "Vídeo 2",
+          "url": "https://youtube.com/shorts/nBOFtItbyKg"
+        }
+      ]
+    },
+    {
+      "id": "biomedicina",
+      "area": "Biomedicina",
+      "titulo": "Desafio de Biomedicina",
+      "subtitulo": "Diagnóstico Laboratorial & Análises Clínicas",
+      "descricao": "Inovações na triagem de amostras biológicas, automação de testes rápidos, segurança em biossegurança e precisão diagnóstica.",
+      "icone": "Microscope",
+      "cor": "#8b5cf6",
+      "url": "https://youtube.com/shorts/w-RRRFim4H8?feature=share"
+    },
+    {
+      "id": "computacao",
+      "area": "Computação",
+      "titulo": "Desafio de Computação",
+      "subtitulo": "Sistemas de Saúde, IA & Interoperabilidade",
+      "descricao": "Desenvolvimento de softwares clínicos, inteligência artificial aplicada, prontuários eletrônicos e integração de dados de saúde.",
+      "icone": "Cpu",
+      "cor": "#06b6d4",
+      "url": "https://youtube.com/shorts/0WbfOb8F1uQ?feature=share"
     }
   ],
   "eixos_tematicos": [
