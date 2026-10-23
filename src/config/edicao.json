@@ -106,22 +106,46 @@
     "titulo": "Vídeos & Divulgação",
     "destaque": {
       "titulo": "Chamada Oficial · INOVA SAÚDE 2026",
-      "url": "https://youtube.com/shorts/mIxEvTEUBqs",
+      "url": "https://youtube.com/shorts/ICRkQAstx_c?feature=share",
       "formato": "vertical"
     },
-    "demais": [
-      {
-        "titulo": "Como montar sua equipe e escolher um desafio",
-        "url": "",
-        "formato": "vertical"
-      },
-      {
-        "titulo": "Orientações sobre as Mentorias Online",
-        "url": "",
-        "formato": "vertical"
-      }
-    ]
+    "demais": []
   },
+  "desafios_areas": [
+    {
+      "id": "farmacia",
+      "area": "Farmácia",
+      "titulo": "Desafio de Farmácia",
+      "subtitulo": "Assistência Farmacêutica, Medicamentos & Segurança",
+      "descricao": "Dores reais no controle, dispensação, adesão terapêutica e rastreabilidade de medicamentos na atenção primária e hospitalar.",
+      "icone": "Pill",
+      "cor": "#10b981",
+      "url": "https://youtube.com/shorts/utVx_jMTkOw?feature=share",
+      "formato": "vertical"
+    },
+    {
+      "id": "fisioterapia",
+      "area": "Fisioterapia",
+      "titulo": "Desafio de Fisioterapia",
+      "subtitulo": "Reabilitação, Mobilidade & Tecnologia Assistiva",
+      "descricao": "Soluções práticas para suporte postural, exercícios guiados, reabilitação física e adaptações ergonômicas funcionais.",
+      "icone": "Activity",
+      "cor": "#0284c7",
+      "url": "https://youtube.com/shorts/gPVeir4YaWM?feature=share",
+      "formato": "vertical"
+    },
+    {
+      "id": "enfermagem",
+      "area": "Enfermagem",
+      "titulo": "Desafio de Enfermagem",
+      "subtitulo": "Cuidado Clínico, Rotina Hospitalar & Biossegurança",
+      "descricao": "Otimização de rotinas assistenciais, conforto do paciente, prevenção de erros em procedimentos e saúde dos profissionais.",
+      "icone": "Stethoscope",
+      "cor": "#f59e0b",
+      "url": "https://youtube.com/shorts/rROBN6BZFhI?feature=share",
+      "formato": "vertical"
+    }
+  ],
   "eixos_tematicos": [
     "Infraestrutura em Saude Digital",
     "Saude Mental e Bem-Estar",

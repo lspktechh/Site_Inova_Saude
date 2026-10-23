@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { edicao, formulario, dataCurta } from "@/lib/config";
 import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
-import { HeroCountdown } from "@/components/HeroCountdown";
-import { VideoSection } from "@/components/VideoSection";
+import { HeroVideo } from "@/components/HeroVideo";
+import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
 import { OdsSection } from "@/components/OdsSection";
 
 export default function HomePage() {
@@ -129,15 +129,15 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Card com o Timer Regressivo */}
-          <div className="lg:col-span-5">
-            <HeroCountdown />
+          {/* Vídeo Oficial no lugar do Contador de Dias */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end">
+            <HeroVideo />
           </div>
         </div>
       </section>
 
-      {/* ──── VÍDEOS (aparece quando houver vídeo configurado) ──── */}
-      <VideoSection />
+      {/* ──── DESAFIOS DAS ÁREAS (Farmácia, Fisioterapia, Enfermagem) COM VÍDEOS E ÍCONES ──── */}
+      <DesafiosAreasSection />
 
       {/* ──── TRÊS FORMAS DE PARTICIPAR (ESTILIZADAS E RESPONSIVAS) ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">

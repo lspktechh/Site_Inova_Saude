@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { edicao } from "@/lib/config";
 import { ArrowRight, Compass, ShieldCheck, Stethoscope, Activity, Cpu, Sparkles, MapPin } from "lucide-react";
+import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
 
 export default function DesafiosPage() {
   const eixos = [
@@ -92,6 +93,9 @@ export default function DesafiosPage() {
           assistencial ou operacional de saúde. Conheça as dores reais mapeadas no território para inspirar o projeto da sua equipe.
         </p>
       </div>
+
+      {/* ──── VÍDEOS DOS DESAFIOS DAS ÁREAS ──── */}
+      <DesafiosAreasSection />
 
       {/* ──── LISTA DOS 5 EIXOS COM DESIGN HOSPITALAR/MAKER ──── */}
       <div className="space-y-8">
