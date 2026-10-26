@@ -425,7 +425,6 @@ export function DesafiosAreasSection() {
                       <ItemIcon size={12} />
                       <span className="truncate">{item.videoBadge}</span>
                     </span>
-                    <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
                   </div>
 
                   {/* Player de Vídeo */}

@@ -275,7 +275,6 @@ export default function BancoDeTalentosPage() {
       {/* ──── HERO DO BANCO DE TALENTOS ──── */}
       <div className="space-y-4">
         <div className="inline-flex items-center gap-2 max-w-full px-3 py-1.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] text-[11px] sm:text-xs font-mono font-bold tracking-wider">
-          <span className="w-2 h-2 rounded-full bg-[var(--ok)] animate-pulse shrink-0" />
           <span className="truncate">Pareamento Dinâmico de Participantes · 2ª Edição</span>
         </div>
         <h1 className="text-3xl sm:text-5xl font-black text-[var(--fg)] tracking-tight">

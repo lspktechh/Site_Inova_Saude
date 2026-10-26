@@ -29,14 +29,11 @@ export function HeroVideo() {
       {/* Linha decorativa no topo com o espectro ecohub */}
       <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[var(--e1)] via-[var(--e3)] to-[var(--e6)]" />
 
-      {/* Topo do card com badge e pulso */}
+      {/* Topo do card com badge */}
       <div className="flex items-center justify-between gap-2 mb-3 px-1 pt-1">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
-            Chamada Oficial
-          </span>
-        </div>
+        <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
+          Chamada Oficial
+        </span>
         <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded-full bg-white/10 text-white/80 border border-white/15 flex items-center gap-1">
           <PlayCircle size={12} className="text-[var(--acento)]" />
           <span>Vídeo</span>

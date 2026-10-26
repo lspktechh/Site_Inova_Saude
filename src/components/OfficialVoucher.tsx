@@ -36,7 +36,6 @@ export function OfficialVoucher({
         <div className="flex items-start sm:items-center justify-between gap-4 flex-col sm:flex-row">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
               <span className="font-mono text-xs font-black uppercase tracking-wider text-emerald-400">
                 Passo Obrigatório · Grupo Oficial no WhatsApp
               </span>
@@ -86,7 +85,6 @@ export function OfficialVoucher({
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping" />
             <span className="font-mono text-xs font-bold uppercase tracking-wider text-emerald-300 bg-emerald-500/20 px-3 py-1 rounded-full border border-emerald-400/30">
               Credenciamento Homologado
             </span>

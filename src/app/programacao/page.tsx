@@ -94,9 +94,7 @@ export default function ProgramacaoPage() {
                     ? "bg-[var(--alerta)]"
                     : "bg-[var(--borda)]"
                 }`}
-              >
-                {isAtivo && <span className="w-2 h-2 rounded-full bg-white animate-ping" />}
-              </div>
+              />
 
               <div
                 className={`bg-[var(--surf)] border rounded-2xl p-4 sm:p-7 space-y-3.5 transition-all shadow-xs ${
@@ -112,7 +110,6 @@ export default function ProgramacaoPage() {
                     </span>
                     {isAtivo && (
                       <span className="inline-flex items-center gap-1 text-[11px] font-mono font-bold text-white bg-[var(--acao)] px-2.5 py-0.5 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                         <span>Fase Atual</span>
                       </span>
                     )}

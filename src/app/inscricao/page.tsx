@@ -871,7 +871,6 @@ function InscriptionContent() {
             <div className="p-4 sm:p-5 rounded-2xl bg-emerald-500/10 border-2 border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
               <div className="space-y-1">
                 <span className="font-mono uppercase tracking-wider font-bold text-emerald-700 dark:text-emerald-400 flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                   Grupo Oficial do WhatsApp (Obrigatório)
                 </span>
                 <p className="text-[var(--fg)]">

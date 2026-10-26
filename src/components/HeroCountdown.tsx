@@ -51,12 +51,9 @@ export function HeroCountdown() {
       <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-[var(--e1)] via-[var(--e3)] to-[var(--e6)]" />
 
       <div className="flex items-center justify-between gap-2 mb-4">
-        <div className="flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-[var(--acento)] animate-pulse" />
-          <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
-            {alvo.titulo}
-          </span>
-        </div>
+        <span className="font-mono text-xs font-bold uppercase tracking-wider text-white/90">
+          {alvo.titulo}
+        </span>
         <Clock size={16} className="text-[var(--acento)]" />
       </div>
 
