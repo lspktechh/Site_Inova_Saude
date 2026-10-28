@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ExternalLink, Lightbulb, MapPin, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronUp, ExternalLink, Lightbulb, MapPin, Sparkles } from "lucide-react";
 import { bancoDesafios, type FonteBanco } from "@/lib/config";
 
 type Aba = "problemas" | "solucoes";
 
 const TODOS = "Todos";
+
+/** Quantos cards aparecem antes de clicar em "Ver todos". */
+const LIMITE_INICIAL = 6;
 
 /** Cor de destaque de cada aba. Tokens que o tema escuro já clareia, para manter o contraste dos links e selos. */
 const COR_ABA: Record<Aba, string> = {
@@ -113,6 +116,24 @@ export function BancoDesafiosSection() {
 
   const [aba, setAba] = useState<Aba>("problemas");
   const [curso, setCurso] = useState<string>(TODOS);
+  const [expandido, setExpandido] = useState(false);
+
+  // Cada nova aba ou filtro recomeça compacto.
+  const escolherAba = (id: Aba) => {
+    setAba(id);
+    setExpandido(false);
+  };
+  const escolherCurso = (c: string) => {
+    setCurso(c);
+    setExpandido(false);
+  };
+  const alternarExpansao = () => {
+    if (expandido) {
+      // ao recolher, volta ao topo do banco para o leitor não ficar perdido no fim da página
+      document.getElementById("banco-de-desafios")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+    setExpandido(!expandido);
+  };
 
   const itensDaAba: ComCursos[] = aba === "problemas" ? problemas : solucoes;
   const cursos = listarCursos(itensDaAba);
@@ -130,6 +151,10 @@ export function BancoDesafiosSection() {
   const total = aba === "problemas" ? problemas.length : solucoes.length;
   const visiveis = aba === "problemas" ? problemasVisiveis.length : solucoesVisiveis.length;
   const rotuloItem = aba === "problemas" ? "problemas" : "soluções";
+
+  const temMais = visiveis > LIMITE_INICIAL;
+  const problemasMostrados = expandido ? problemasVisiveis : problemasVisiveis.slice(0, LIMITE_INICIAL);
+  const solucoesMostradas = expandido ? solucoesVisiveis : solucoesVisiveis.slice(0, LIMITE_INICIAL);
 
   const classePilula = (selecionada: boolean) =>
     `flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold font-mono whitespace-nowrap transition-all cursor-pointer border ${
@@ -181,7 +206,7 @@ export function BancoDesafiosSection() {
               id={`aba-${id}`}
               aria-selected={selecionada}
               aria-controls="painel-banco"
-              onClick={() => setAba(id)}
+              onClick={() => escolherAba(id)}
               className={classePilula(selecionada)}
               style={selecionada ? { backgroundColor: COR_ABA[id], borderColor: COR_ABA[id] } : {}}
             >
@@ -206,7 +231,7 @@ export function BancoDesafiosSection() {
                 key={c}
                 type="button"
                 aria-pressed={selecionado}
-                onClick={() => setCurso(c)}
+                onClick={() => escolherCurso(c)}
                 className={classePilula(selecionado)}
                 style={estiloPilula(selecionado)}
               >
@@ -216,8 +241,9 @@ export function BancoDesafiosSection() {
           })}
         </div>
         <p className="text-xs text-[var(--fg-2)] text-left sm:text-center" aria-live="polite">
-          Mostrando {visiveis} de {total} {rotuloItem}
-          {cursoAtivo !== TODOS ? ` para ${cursoAtivo}` : ""}.
+          {cursoAtivo === TODOS
+            ? `${total} ${rotuloItem} no banco.`
+            : `${visiveis} de ${total} ${rotuloItem} para ${cursoAtivo}.`}
         </p>
       </div>
 
@@ -225,7 +251,7 @@ export function BancoDesafiosSection() {
       <div id="painel-banco" role="tabpanel" aria-labelledby={`aba-${aba}`}>
         {aba === "problemas" ? (
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {problemasVisiveis.map(({ p, numero }) => (
+            {problemasMostrados.map(({ p, numero }) => (
               <li
                 key={p.pergunta}
                 className="health-card p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden"
@@ -270,7 +296,7 @@ export function BancoDesafiosSection() {
           </ul>
         ) : (
           <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {solucoesVisiveis.map(({ s, numero }) => (
+            {solucoesMostradas.map(({ s, numero }) => (
               <li
                 key={s.nome}
                 className="health-card p-6 sm:p-7 flex flex-col justify-between relative overflow-hidden"
@@ -309,6 +335,21 @@ export function BancoDesafiosSection() {
               </li>
             ))}
           </ul>
+        )}
+
+        {temMais && (
+          <div className="flex justify-center pt-8">
+            <button
+              type="button"
+              aria-expanded={expandido}
+              aria-controls="painel-banco"
+              onClick={alternarExpansao}
+              className="inline-flex items-center gap-2 text-xs font-mono font-bold text-[var(--acao)] hover:underline bg-[var(--acao)]/10 px-5 py-2.5 rounded-xl border border-[var(--acao)]/20 cursor-pointer transition-all"
+            >
+              <span>{expandido ? "Ver menos" : `Ver todos (${visiveis})`}</span>
+              {expandido ? <ChevronUp size={14} aria-hidden="true" /> : <ChevronDown size={14} aria-hidden="true" />}
+            </button>
+          </div>
         )}
       </div>
 
