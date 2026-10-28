@@ -5,6 +5,7 @@ import formasPrototipoJson from "../config/formas-prototipo.json";
 import avaliacaoJson from "../config/avaliacao.json";
 import fichaSchemaJson from "../config/ficha-prototipo.schema.json";
 import odsJson from "../config/ods.json";
+import bancoDesafiosJson from "../config/banco-desafios.json";
 
 export const edicao = edicaoJson;
 export const formulario = formularioJson as any;
@@ -13,6 +14,36 @@ export const formasPrototipo = formasPrototipoJson as any;
 export const avaliacao = avaliacaoJson as any;
 export const fichaSchema = fichaSchemaJson as any;
 export const ods = odsJson as { titulo_secao: string; texto_secao: string; lista: Ods[] };
+
+export interface FonteBanco {
+  nome: string;
+  url: string;
+}
+
+export interface ProblemaBanco {
+  pergunta: string;
+  contexto: string;
+  cursos: string[];
+  eixo: string | null;
+  soma_com: string[];
+  fontes: FonteBanco[];
+}
+
+export interface SolucaoBanco {
+  nome: string;
+  onde: string;
+  tipo: string;
+  o_que_faz: string;
+  licao: string;
+  cursos: string[];
+  fontes: FonteBanco[];
+}
+
+export const bancoDesafios = bancoDesafiosJson as {
+  fontes_consultadas_em: string;
+  problemas: ProblemaBanco[];
+  solucoes_que_viraram_empresa: SolucaoBanco[];
+};
 
 export const BASE_PATH = process.env.NEXT_PUBLIC_BASE_PATH || "";
 
@@ -178,6 +209,17 @@ export function checkBedEnvelope(
     limites,
     violacoes,
   };
+}
+
+/** 1500 → "R$ 1.500" */
+export function reais(valor: number): string {
+  return `R$ ${valor.toLocaleString("pt-BR")}`;
+}
+
+/** ["A", "B", "C"] → "A, B e C" */
+export function listaComE(itens: string[]): string {
+  if (itens.length <= 1) return itens.join("");
+  return `${itens.slice(0, -1).join(", ")} e ${itens[itens.length - 1]}`;
 }
 
 /** "2026-10-23" → "23/10" */

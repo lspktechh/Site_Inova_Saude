@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { edicao, formulario, dataCurta } from "@/lib/config";
+import { edicao, formulario, dataCurta, bancoDesafios } from "@/lib/config";
 import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
 import { HeroVideo } from "@/components/HeroVideo";
 import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
@@ -138,6 +138,20 @@ export default function HomePage() {
 
       {/* ──── DESAFIOS DAS ÁREAS (Farmácia, Fisioterapia, Enfermagem) COM VÍDEOS E ÍCONES ──── */}
       <DesafiosAreasSection />
+
+      {/* ──── LINK PARA O BANCO DE DESAFIOS ──── */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 flex justify-center">
+        <Link
+          href="/desafios#banco-de-desafios"
+          className="inline-flex items-center gap-2 text-sm font-bold text-[var(--marca)] hover:underline"
+        >
+          <span>
+            Ver o banco de desafios: {bancoDesafios.problemas.length} problemas reais e{" "}
+            {bancoDesafios.solucoes_que_viraram_empresa.length} soluções, com filtro por curso
+          </span>
+          <ArrowRight size={16} />
+        </Link>
+      </section>
 
       {/* ──── TRÊS FORMAS DE PARTICIPAR (ESTILIZADAS E RESPONSIVAS) ──── */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 space-y-8">
