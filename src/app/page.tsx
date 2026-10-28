@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { edicao, formulario, dataCurta, bancoDesafios } from "@/lib/config";
+import { edicao, formulario, dataCurta, bancoDesafios, reais } from "@/lib/config";
 import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
 import { HeroVideo } from "@/components/HeroVideo";
 import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
+import { PremiacaoDestaque } from "@/components/PremiacaoDestaque";
 import { OdsSection } from "@/components/OdsSection";
 
 export default function HomePage() {
@@ -110,6 +111,21 @@ export default function HomePage() {
 
             {/* Pílulas de datas com ícones */}
             <div className="flex flex-wrap gap-2 pt-2">
+              {/* Premiação primeiro e em destaque: é o que mais chama quem chega na página */}
+              {edicao.premiacao.divulgar_valores ? (
+                <a
+                  href="#premiacao"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold bg-[var(--acento)] text-[#1e1708] border border-[var(--acento)] hover:brightness-105 transition-all"
+                >
+                  <Award size={13} />
+                  <span>Premiação de {reais(edicao.premiacao.total)}</span>
+                </a>
+              ) : (
+                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
+                  <Award size={13} className="text-[var(--acento)]" />
+                  <span>Com premiação (10 finalistas)</span>
+                </div>
+              )}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
                 <span>Inscrições até 02/11</span>
@@ -122,10 +138,6 @@ export default function HomePage() {
                 <CheckCircle2 size={13} className="text-[var(--acento)]" />
                 <span>Certificados de 8h e 16h</span>
               </div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
-                <Award size={13} className="text-[var(--acento)]" />
-                <span>Com premiação (10 finalistas)</span>
-              </div>
             </div>
           </div>
 
@@ -135,6 +147,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* ──── PREMIAÇÃO EM DESTAQUE, LOGO ABAIXO DA ABERTURA ──── */}
+      <PremiacaoDestaque />
 
       {/* ──── DESAFIOS DAS ÁREAS (Farmácia, Fisioterapia, Enfermagem) COM VÍDEOS E ÍCONES ──── */}
       <DesafiosAreasSection />
@@ -345,29 +360,6 @@ export default function HomePage() {
               <ArrowRight size={16} />
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* ──── BANNER DE PREMIAÇÃO OFICIAL ──── */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="bg-[var(--marca-fundo)] text-white rounded-3xl p-7 sm:p-10 flex flex-col md:flex-row items-center justify-between gap-8 shadow-xl border border-white/15 relative overflow-hidden">
-          <div className="flex items-center gap-5">
-            <div className="w-14 h-14 rounded-2xl bg-[var(--acento)] text-[#1e1708] flex items-center justify-center shrink-0 shadow-md">
-              <Award size={30} />
-            </div>
-            <div className="space-y-1">
-              <h4 className="text-xl sm:text-2xl font-extrabold text-white">Haverá premiação para as equipes finalistas</h4>
-              <p className="text-sm text-white/80 max-w-2xl leading-relaxed">
-                {edicao.premiacao.texto_site}
-              </p>
-            </div>
-          </div>
-          <Link
-            href="/regulamento"
-            className="shrink-0 bg-white/10 hover:bg-white/20 text-white font-mono text-xs uppercase tracking-wider px-5 py-3 rounded-xl border border-white/25 transition-all text-center"
-          >
-            Ver Rúbrica & Critérios
-          </Link>
         </div>
       </section>
     </div>
