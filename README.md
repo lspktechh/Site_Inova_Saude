@@ -40,6 +40,7 @@ Nenhum texto, peso da rúbrica, prazo, critério ou microcopy de campo é fixado
 - `competencias.json`: Matriz de competências e cálculo de lacunas.
 - `formas-prototipo.json`: Especificações das Formas A, B, C, D e trava sanitária.
 - `avaliacao.json`: Rúbrica de 3 lentes da inovação (50 pontos), escala com descritores, TRL (1 a 9) e 7 requisitos de idoneidade.
+- `banco-desafios.json`: Banco de desafios da página `/desafios` (problemas reais da saúde e soluções que viraram empresa, com fonte e curso). O site é estático e tudo que entra aqui vai para o JavaScript público: não colocar conteúdo ainda não confirmado, como os desafios dos apoiadores.
 - `ficha-prototipo.schema.json`: Contrato JSON da ficha estruturada.
 
 ---

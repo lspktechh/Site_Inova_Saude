@@ -1,0 +1,699 @@
+{
+  "_comentario": "Banco de desafios do INOVA SAÚDE 2026: problemas reais da saúde e soluções que viraram empresa, cada um com a fonte.",
+  "fontes_consultadas_em": "21/10/2026",
+  "problemas": [
+    {
+      "pergunta": "Por que tanta gente perde os dentes antes da velhice?",
+      "contexto": "Pela Pesquisa Nacional de Saúde do IBGE, 14 milhões de adultos não têm nenhum dente e outros 34 milhões já perderam 13 ou mais.",
+      "cursos": [
+        "Odontologia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Psicologia"
+      ],
+      "fontes": [
+        {
+          "nome": "Correio da Manhã, out/2025",
+          "url": "https://www.correiodamanha.com.br/nacional/2025/10/amp/229427-ibge-14-mi-de-adultos-vivem-sem-nenhum-dente.html"
+        }
+      ]
+    },
+    {
+      "pergunta": "Quanto tempo se espera por uma cirurgia oral no SUS?",
+      "contexto": "Em Jundiaí (SP), a fila do centro de especialidades odontológicas tinha 1.222 pessoas. Mutirões e um dentista na regulação baixaram para 382 em dezembro de 2025.",
+      "cursos": [
+        "Odontologia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Direito"
+      ],
+      "fontes": [
+        {
+          "nome": "Tribuna de Jundiaí, 2026",
+          "url": "https://tribunadejundiai.com.br/cidades/jundiai/mutiroes-reduzem-fila-cirurgia-oral-saude-bucal-jundiai/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Quem cuida de quem cuida?",
+      "contexto": "Audiência pública do Cofen em 2025 expôs sobrecarga de trabalho, adoecimento físico e mental e violência contra profissionais de enfermagem, uma categoria em que 85% são mulheres.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Psicologia",
+        "Direito",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Cofen, jun/2025",
+          "url": "https://www.cofen.gov.br/violencia-adoecimento-e-sobrecarga-enfermagem-expoe-falta-de-protecao-em-audiencia-publica-no-ms/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Dá para perceber a sepse antes que seja tarde?",
+      "contexto": "A reportagem estima cerca de 2,5 milhões de casos de sepse por ano no Brasil, apontada como a principal causa de morte em hospital.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Folha Vitória",
+          "url": "https://www.folhavitoria.com.br/geral/apos-perder-a-filha-pai-cria-robo-inteligente-que-detecta-infeccao-grave/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que a dengue volta todo verão no mesmo bairro?",
+      "contexto": "Em 2025 o Paraná teve 92.620 casos confirmados de dengue e 145 mortes. A regional de Londrina ficou entre as cinco com mais casos no estado.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": "Atenção primária",
+      "soma_com": [
+        "Biomedicina",
+        "Arquitetura",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Band Paraná, jan/2026",
+          "url": "https://www.band.com.br/band-parana/noticias/parana-registra-mais-de-92-mil-casos-de-dengue-e-145-mortes-em-2025-202601141335"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que o paciente para o remédio da tuberculose quando melhora?",
+      "contexto": "O tratamento dura cerca de seis meses e é gratuito no SUS, mas muita gente abandona no meio. Só Pernambuco registrou mais de 6 mil casos em 2025.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": "Atenção primária",
+      "soma_com": [
+        "Farmácia",
+        "Psicologia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Diario de Pernambuco, abr/2026",
+          "url": "https://www.diariodepernambuco.com.br/vida-urbana/2026/04/11711374-pernambuco-mantem-alta-de-casos-de-tuberculose-em-2025-com-mais-de-6-mil-notificacoes.html"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que 1 em cada 4 pessoas só descobre o HIV quando a imunidade já caiu?",
+      "contexto": "Entre 26% e 27% dos diagnósticos de HIV no Brasil são tardios. Quem descobre tarde tem 85% de chance de passar do primeiro ano; quem descobre cedo, 99%.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": "Atenção primária",
+      "soma_com": [
+        "Biomedicina",
+        "Psicologia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Portal Afya, jul/2026",
+          "url": "https://portal.afya.com.br/infectologia/mortalidade-por-hiv-no-brasil-cai-mas-diagnostico-tardio-ainda-preocupa"
+        }
+      ]
+    },
+    {
+      "pergunta": "Como achar a hanseníase antes da sequela?",
+      "contexto": "O Brasil registrou 22.129 casos novos de hanseníase em 2024. Só 13% foram achados examinando quem convive com o doente, e 2024 teve a maior proporção de recidivas da série.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": "Atenção primária",
+      "soma_com": [
+        "Biomedicina",
+        "Psicologia",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "SBT News, mar/2026",
+          "url": "https://sbtnews.sbt.com.br/noticia/saude/hanseniase-reconhecer-sintomas-ajuda-a-evitar-sequelas-e-reduzir-transmissao-diz-especialista"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que uma doença que tem vacina voltou?",
+      "contexto": "São Paulo confirmou 16 casos de sarampo em 2026, 10 deles em bebês de até um ano. No estado, a segunda dose da tríplice viral chegou a 65,5%, longe da meta de 95%.",
+      "cursos": [
+        "Enfermagem"
+      ],
+      "eixo": "Atenção primária",
+      "soma_com": [
+        "Psicologia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "O Povo, ago/2026",
+          "url": "https://www.opovo.com.br/noticias/saude/2026/08/03/amp/casos-de-sarampo-sobem-para-16-em-sao-paulo.html"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que quase todo mundo toma remédio por conta própria?",
+      "contexto": "Pesquisa ICTQ/Datafolha: 86% dos brasileiros se automedicam e 68% recorrem à internet para se orientar sobre saúde.",
+      "cursos": [
+        "Farmácia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Psicologia"
+      ],
+      "fontes": [
+        {
+          "nome": "Conselho Federal de Farmácia, abr/2024",
+          "url": "https://site.cff.org.br/noticia/Noticias-gerais/23/04/2024/pesquisa-revela-que-9-entre-10-brasileiros-se-automedicam"
+        }
+      ]
+    },
+    {
+      "pergunta": "Como um idoso lembra de cinco remédios em horários diferentes?",
+      "contexto": "Estudo com idosos de Belo Horizonte cita a estimativa de que 40% a 75% dos idosos com tratamento contínuo não seguem a prescrição corretamente.",
+      "cursos": [
+        "Farmácia",
+        "Enfermagem"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Estudo, Rev. Saúde Pública (PDF)",
+          "url": "https://www.saudedireta.com.br/docsupload/1340105340a25v55n4.pdf"
+        }
+      ]
+    },
+    {
+      "pergunta": "Quanto tempo alguém com dor espera pela fisioterapia?",
+      "contexto": "Em Três Lagoas (MS), a fila de fisioterapia do SUS passou de 637 para 1.302 pessoas e a espera chegou a 218 dias. O Ministério Público cobrou um plano da prefeitura.",
+      "cursos": [
+        "Fisioterapia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Direito"
+      ],
+      "fontes": [
+        {
+          "nome": "Campo Grande News, mai/2025",
+          "url": "https://www.campograndenews.com.br/cidades/interior/mp-recomenda-plano-urgente-contra-fila-de-fisioterapia-em-tres-lagoas"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que um tapete solto vira internação?",
+      "contexto": "Quedas causaram 194 mil internações de idosos no SUS em 2025, quase metade das internações por causas externas nessa idade. No Paraná foram 12 mil em 2024.",
+      "cursos": [
+        "Fisioterapia",
+        "Enfermagem",
+        "Arquitetura"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Eng. de Software",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "JB, out/2026",
+          "url": "https://www.jb.com.br/editorias/2026/10/12/quedas-idosos-prevencao-casa.html"
+        },
+        {
+          "nome": "AEN Paraná, jun/2025",
+          "url": "https://www.parana.pr.gov.br/aen/Noticia/Com-12-mil-casos-em-2024-Saude-reforca-orientacoes-para-evitar-quedas-de-idosos"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que o estoque de sangue cai toda vez que chega feriado?",
+      "contexto": "Em junho de 2026 o Hemepar pediu doadores O+ e O- com estoque em baixa. Ele abastece 384 hospitais e 96,6% dos leitos do SUS no Paraná. Só cerca de 1,6% dos brasileiros doam sangue; o ideal seria de 3% a 5%.",
+      "cursos": [
+        "Biomedicina"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Psicologia",
+        "Enfermagem"
+      ],
+      "fontes": [
+        {
+          "nome": "Saúde PR, jun/2026",
+          "url": "https://www.saude.pr.gov.br/Noticia/Com-estoques-O-e-O-em-baixa-Hemepar-Curitiba-atende-na-sexta-e-sabado-do-feriadao"
+        },
+        {
+          "nome": "Medicina S/A",
+          "url": "https://medicinasa.com.br/app-doe-se-etec/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Como saber, ainda na consulta, se é vírus ou bactéria?",
+      "contexto": "Cerca de 80% das receitas de antibiótico saem de consultórios, que não têm os programas de controle dos hospitais, e muitas vezes tratam infecção viral, onde antibiótico não funciona. Estudo da PUCPR viu a resistência subir de 4,7% em 2012 para 19% em 2019.",
+      "cursos": [
+        "Biomedicina",
+        "Farmácia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Futuro da Saúde",
+          "url": "https://futurodasaude.com.br/resistencia-a-antibioticos-dos-fatores-culturais-aos-biologicos/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Quanto tempo uma família leva para descobrir que a doença do filho é genética?",
+      "contexto": "O Brasil tem cerca de 342 geneticistas atuando, 80% no Sul e no Sudeste. Famílias passam anos por vários especialistas até o diagnóstico, e muitas recorrem à Justiça para conseguir os exames.",
+      "cursos": [
+        "Biomedicina"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Psicologia",
+        "Direito",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Agência Senado, nov/2023",
+          "url": "https://www12.senado.leg.br/noticias/materias/2023/11/14/brasil-precisa-investir-no-aconselhamento-genetico-aponta-audiencia"
+        }
+      ]
+    },
+    {
+      "pergunta": "Quem consegue pagar para ter um filho?",
+      "contexto": "Só 10 dos 197 centros de reprodução assistida do país atendem pelo SUS, e só 4 de graça. No particular, um ciclo de fertilização in vitro custa de R$ 25 mil a R$ 50 mil. Na rede pública, a espera chega a dois anos.",
+      "cursos": [
+        "Biomedicina"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Psicologia",
+        "Direito",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "ABC do ABC, mar/2024",
+          "url": "https://abcdoabc.com.br/sus-ainda-nao-oferta-fiv-a-casais-inferteis-quase-20-anos-apos-politica-de-reproducao-assistida/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Como o paciente sabe que o produto aplicado no rosto dele é original?",
+      "contexto": "Em 2025 a Anvisa mandou apreender lotes falsificados de toxina botulínica. Num estudo com 160 dermatologistas de 19 estados, cerca de 2 em cada 100 preenchimentos faciais tiveram alguma complicação.",
+      "cursos": [
+        "Biomedicina"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Farmácia",
+        "Direito",
+        "ADS",
+        "Psicologia"
+      ],
+      "fontes": [
+        {
+          "nome": "CFF, jun/2025",
+          "url": "https://site.cff.org.br/noticia/Noticias-gerais/02/06/2025/anvisa-suspende-e-alerta-sobre-lote-falsificado-de-toxina-botulinica"
+        },
+        {
+          "nome": "eCycle, estudo",
+          "url": "https://www.ecycle.com.br/no-brasil-procedimentos-de-estetica-facial-realizados-por-pessoas-sem-treinamento-medico-tem-mais-chances-de-gerar-complicacoes-mostra-estudo-feito-em-19-estados/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que a genética sabe tão pouco sobre o brasileiro?",
+      "contexto": "As referências genéticas usadas no mundo vêm, na maioria, de pessoas de origem europeia. O Genomas SUS quer sequenciar 80 mil genomas brasileiros em três anos, e cada genoma vira uma montanha de dados que alguém precisa analisar.",
+      "cursos": [
+        "Biomedicina"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Pesquisa FAPESP, jun/2025",
+          "url": "https://revistapesquisa.fapesp.br/diversidade-genomica-pode-ajudar-o-sus/"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que tanta gente está sendo afastada do trabalho pela saúde mental?",
+      "contexto": "Em 2025, o INSS concedeu 546 mil benefícios por transtornos mentais, recorde e 15% a mais que em 2024. Só 46% dos municípios têm política de atendimento em saúde mental.",
+      "cursos": [
+        "Psicologia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "Direito",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Humanista UFRGS",
+          "url": "https://www.ufrgs.br/humanista/?p=29512"
+        }
+      ]
+    },
+    {
+      "pergunta": "Por que 3 em cada 10 pacientes faltam à consulta marcada em Londrina?",
+      "contexto": "Mais de 8 mil pessoas esperavam cirurgia em Londrina, e as faltas em consultas e exames com especialista giravam em torno de 30%.",
+      "cursos": [
+        "Odontologia",
+        "Enfermagem",
+        "Farmácia",
+        "Fisioterapia",
+        "Biomedicina",
+        "Psicologia"
+      ],
+      "eixo": null,
+      "soma_com": [
+        "ADS",
+        "Eng. de Software",
+        "Direito"
+      ],
+      "fontes": [
+        {
+          "nome": "Bem Paraná, mai/2025",
+          "url": "https://www.bemparana.com.br/noticias/parana/cidadesdoparana/moradores-de-londrina-serao-operados-em-cidades-vizinhas-para-agilizar-filas-do-sus/"
+        }
+      ]
+    }
+  ],
+  "solucoes_que_viraram_empresa": [
+    {
+      "nome": "Hilab",
+      "onde": "Curitiba, PR",
+      "tipo": "Empresa",
+      "o_que_faz": "Laboratório portátil: exame com poucas gotas de sangue e laudo assinado por especialista no celular. Mais de 6 milhões de exames em 1,5 mil municípios.",
+      "licao": "Leva o exame até onde o laboratório não chega.",
+      "cursos": [
+        "Biomedicina",
+        "Farmácia",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Bem Paraná",
+          "url": "https://www.bemparana.com.br/tecnologia/startup-de-curitiba-ganha-dois-premios-no-oscar-do-design-mundial/"
+        }
+      ]
+    },
+    {
+      "nome": "Laura",
+      "onde": "Curitiba, PR",
+      "tipo": "Empresa",
+      "o_que_faz": "Inteligência artificial que cruza sinais vitais e exames de pacientes internados e alerta a equipe sobre risco de sepse.",
+      "licao": "Criada por um analista de sistemas, Jacson Fressatto, depois de perder a filha recém-nascida para a sepse.",
+      "cursos": [
+        "Enfermagem",
+        "Biomedicina",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Prefeitura de Curitiba",
+          "url": "https://www.curitiba.pr.gov.br/noticias/curitibana-laura-e-uma-das-startups-de-saude-mais-atraentes-do-pais/61155"
+        }
+      ]
+    },
+    {
+      "nome": "Memed",
+      "onde": "Avaré, SP",
+      "tipo": "Empresa",
+      "o_que_faz": "Receita digital gratuita para o médico, ligada às farmácias. Processa 6,2 milhões de prescrições por mês e integra 80 mil farmácias.",
+      "licao": "Resolve a letra ilegível e a receita falsa no balcão.",
+      "cursos": [
+        "Farmácia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Futuro da Saúde",
+          "url": "https://futurodasaude.com.br/?p=40575"
+        }
+      ]
+    },
+    {
+      "nome": "Cuco Health",
+      "onde": "Brasil",
+      "tipo": "Empresa",
+      "o_que_faz": "App que lembra o horário do remédio e avisa um familiar quando a dose é esquecida. Foi comprada pela Raia Drogasil.",
+      "licao": "Ataca a adesão ao tratamento, um problema que ninguém vê no consultório.",
+      "cursos": [
+        "Farmácia",
+        "Enfermagem",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "Mercado & Consumo",
+          "url": "https://mercadoeconsumo.com.br/?p=63299"
+        }
+      ]
+    },
+    {
+      "nome": "Vittude",
+      "onde": "São Paulo, SP",
+      "tipo": "Empresa",
+      "o_que_faz": "Conecta pessoas a psicólogos, online ou presencial. Virou benefício pago por empresas: captou R$ 35 milhões e atende 160 companhias.",
+      "licao": "Achou quem paga a conta: a empresa, não só o paciente.",
+      "cursos": [
+        "Psicologia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Baguete",
+          "url": "https://www.baguete.com.br/noticias/vittude-recebe-aporte-de-r-35-milhoes"
+        }
+      ]
+    },
+    {
+      "nome": "Clinicorp",
+      "onde": "Jaraguá do Sul, SC",
+      "tipo": "Empresa",
+      "o_que_faz": "Sistema de gestão para clínicas odontológicas: agenda, prontuário e cobrança. Já digitalizou 30 mil clínicas.",
+      "licao": "Partiu de uma dor do dentista: ele não é treinado para gestão.",
+      "cursos": [
+        "Odontologia",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "CB Insights",
+          "url": "https://www.cbinsights.com/company/clinicorp"
+        }
+      ]
+    },
+    {
+      "nome": "Portal Telemedicina",
+      "onde": "Brasil",
+      "tipo": "Empresa",
+      "o_que_faz": "Laudos a distância com apoio de IA. Conecta até aparelhos antigos à plataforma para especialistas laudarem de outra cidade.",
+      "licao": "Leva o especialista até a cidade que não tem especialista.",
+      "cursos": [
+        "Biomedicina",
+        "Eng. de Software",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "Site da empresa",
+          "url": "https://portaltelemedicina.com.br/portal-telemedicina-o-que-e-como-funciona-e-beneficios-da-solucao"
+        }
+      ]
+    },
+    {
+      "nome": "Hinge Health",
+      "onde": "Estados Unidos",
+      "tipo": "Empresa",
+      "o_que_faz": "Fisioterapia digital para dor nas costas e nas articulações, com sensor de movimento e acompanhamento a distância. Faturou US$ 390 milhões em 2024 e abriu capital em 2025.",
+      "licao": "O exercício em casa, que o paciente abandona, virou o produto.",
+      "cursos": [
+        "Fisioterapia",
+        "Eng. de Software",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "MedTech Dive",
+          "url": "https://www.medtechdive.com/news/hinge-health-ipo-digital-health-funding/742403/"
+        }
+      ]
+    },
+    {
+      "nome": "Zipline",
+      "onde": "EUA, operação em Ruanda",
+      "tipo": "Empresa",
+      "o_que_faz": "Drones levam bolsas de sangue a clínicas remotas em cerca de 30 minutos. O pedido é feito por mensagem de celular.",
+      "licao": "Logística também é solução de saúde, e o sangue chega antes de estragar.",
+      "cursos": [
+        "Biomedicina",
+        "Enfermagem",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "TecMundo",
+          "url": "https://www.tecmundo.com.br/saude/110652-ruanda-inaugura-primeiro-sistema-mundo-entrega-sangue-drones.htm"
+        }
+      ]
+    },
+    {
+      "nome": "Doe-se",
+      "onde": "São José do Rio Preto, SP",
+      "tipo": "Projeto de estudantes",
+      "o_que_faz": "App criado por alunos de uma Etec: mostra se a pessoa pode doar sangue e deixa o hemocentro avisar doadores do tipo que está em falta.",
+      "licao": "Seis estudantes de ensino técnico venceram uma competição de startups com essa ideia.",
+      "cursos": [
+        "Biomedicina",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Medicina S/A",
+          "url": "https://medicinasa.com.br/app-doe-se-etec/"
+        }
+      ]
+    },
+    {
+      "nome": "Mendelics",
+      "onde": "Brasil",
+      "tipo": "Empresa",
+      "o_que_faz": "Primeiro laboratório do Brasil a sequenciar exomas. Criou o teste da bochechinha, triagem genômica neonatal para cerca de 500 doenças, e recebeu R$ 48,2 milhões do BNDES para uma plataforma de análise genômica.",
+      "licao": "Criou um algoritmo próprio de IA para ler o DNA, premiado pelo MIT em 2014.",
+      "cursos": [
+        "Biomedicina",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Monitor Mercantil, abr/2026",
+          "url": "https://monitormercantil.com.br/bndes-investe-em-diagnostico-genomico/"
+        }
+      ]
+    },
+    {
+      "nome": "Genesis Genomics",
+      "onde": "São Paulo, SP",
+      "tipo": "Empresa",
+      "o_que_faz": "Empresa de genômica do Einstein com o Fleury. Mais de 400 testes genéticos, com a análise de dados feita na plataforma de bioinformática Varstation.",
+      "licao": "Tem biólogos, bioinformatas e cientistas de dados no mesmo time.",
+      "cursos": [
+        "Biomedicina",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Futuro da Saúde, nov/2025",
+          "url": "https://futurodasaude.com.br/?p=41008"
+        }
+      ]
+    },
+    {
+      "nome": "Genomas SUS",
+      "onde": "Ministério da Saúde",
+      "tipo": "Solução pública",
+      "o_que_faz": "Programa que sequencia genomas de brasileiros em nove centros pelo país, para saber quais variantes causam doença na nossa população.",
+      "licao": "Gera dado. Falta gente e ferramenta para transformar dado em diagnóstico.",
+      "cursos": [
+        "Biomedicina",
+        "ADS",
+        "Eng. de Software"
+      ],
+      "fontes": [
+        {
+          "nome": "Pesquisa FAPESP, jun/2025",
+          "url": "https://revistapesquisa.fapesp.br/diversidade-genomica-pode-ajudar-o-sus/"
+        }
+      ]
+    },
+    {
+      "nome": "Clica e Confirma",
+      "onde": "Prefeitura de Londrina",
+      "tipo": "Solução pública",
+      "o_que_faz": "O paciente vê a posição dele na fila de exames e consultas com especialista e confirma presença pelo celular.",
+      "licao": "Uma ferramenta simples contra os 30% de faltas.",
+      "cursos": [
+        "ADS",
+        "Eng. de Software",
+        "Direito"
+      ],
+      "fontes": [
+        {
+          "nome": "Bem Paraná",
+          "url": "https://www.bemparana.com.br/noticias/parana/cidadesdoparana/moradores-de-londrina-serao-operados-em-cidades-vizinhas-para-agilizar-filas-do-sus/"
+        }
+      ]
+    },
+    {
+      "nome": "Dentista na regulação",
+      "onde": "Prefeitura de Jundiaí, SP",
+      "tipo": "Solução pública",
+      "o_que_faz": "Colocou uma cirurgiã-dentista na regulação municipal e fez mutirões. A fila de cirurgia oral caiu mais de 62%.",
+      "licao": "Às vezes a inovação é de processo, não de aplicativo.",
+      "cursos": [
+        "Odontologia",
+        "ADS"
+      ],
+      "fontes": [
+        {
+          "nome": "Tribuna de Jundiaí",
+          "url": "https://tribunadejundiai.com.br/cidades/jundiai/mutiroes-reduzem-fila-cirurgia-oral-saude-bucal-jundiai/"
+        }
+      ]
+    }
+  ]
+}

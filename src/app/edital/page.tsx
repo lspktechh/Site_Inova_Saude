@@ -15,7 +15,7 @@ import {
   ShieldCheck,
   AlertTriangle,
 } from "lucide-react";
-import { edicao } from "@/lib/config";
+import { edicao, reais, listaComE } from "@/lib/config";
 
 export const metadata = {
   title: "Edital Oficial · INOVA SAÚDE 2026",
@@ -264,9 +264,43 @@ export default function EditalPage() {
           <p>
             As <strong>3 equipes mais bem classificadas</strong> no Demoday recebem premiação. O resultado oficial é anunciado ao fim do Demoday.
           </p>
-          <p className="text-sm text-[var(--fg-2)]">
-            Os prêmios serão divulgados nos próximos dias, pelos canais oficiais do evento.
-          </p>
+          {edicao.premiacao.divulgar_valores ? (
+            <>
+              <div className="overflow-x-auto rounded-2xl border border-[var(--borda)] shadow-xs">
+                <table className="w-full text-left text-xs sm:text-sm">
+                  <thead className="bg-[var(--surf-2)] border-b border-[var(--borda)] text-[var(--fg)] font-mono uppercase text-[11px]">
+                    <tr>
+                      <th className="p-3 sm:p-4">Colocação</th>
+                      <th className="p-3 sm:p-4 text-right">Prêmio</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[var(--borda)] bg-[var(--surf)]">
+                    {edicao.premiacao.colocacoes.map((c) => (
+                      <tr key={c.lugar} className="hover:bg-[var(--surf-2)]/50 transition-colors">
+                        <td className="p-3 sm:p-4 font-medium text-[var(--fg)]">{c.lugar}º lugar</td>
+                        <td className="p-3 sm:p-4 text-right font-mono font-bold text-[var(--marca)] text-base whitespace-nowrap">
+                          {reais(c.valor)}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="bg-[var(--surf-2)]/60">
+                      <td className="p-3 sm:p-4 font-bold text-[var(--fg)]">Total</td>
+                      <td className="p-3 sm:p-4 text-right font-mono font-black text-[var(--marca)] text-base whitespace-nowrap">
+                        {reais(edicao.premiacao.total)}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-sm text-[var(--fg-2)]">
+                Apoio da premiação: {listaComE(edicao.premiacao.apoio)}.
+              </p>
+            </>
+          ) : (
+            <p className="text-sm text-[var(--fg-2)]">
+              Os prêmios serão divulgados nos próximos dias, pelos canais oficiais do evento.
+            </p>
+          )}
         </section>
 
         {/* 8. Certificados */}

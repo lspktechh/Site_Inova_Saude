@@ -66,8 +66,15 @@
   },
   "premiacao": {
     "havera": true,
-    "divulgar_valores": false,
-    "texto_site": "As 3 equipes mais bem classificadas no Demoday recebem premiação. O resultado é anunciado ao fim do evento em 05/11. Os prêmios serão divulgados nos próximos dias pelos canais oficiais."
+    "divulgar_valores": true,
+    "colocacoes": [
+      { "lugar": 1, "valor": 700 },
+      { "lugar": 2, "valor": 450 },
+      { "lugar": 3, "valor": 350 }
+    ],
+    "total": 1500,
+    "apoio": ["3º COPOL", "X-Brain", "Smart Cortex"],
+    "texto_site": "As 3 equipes mais bem classificadas no Demoday recebem premiação: 1º lugar R$ 700, 2º lugar R$ 450 e 3º lugar R$ 350, num total de R$ 1.500. O resultado é anunciado ao fim do evento em 05/11. Apoio da premiação: 3º COPOL, X-Brain e Smart Cortex."
   },
   "certificado": {
     "horas": 16,

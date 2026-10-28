@@ -2,6 +2,7 @@ import Link from "next/link";
 import { edicao } from "@/lib/config";
 import { ArrowRight, Compass, ShieldCheck, Stethoscope, Activity, Cpu, Sparkles, MapPin } from "lucide-react";
 import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
+import { BancoDesafiosSection } from "@/components/BancoDesafiosSection";
 
 export default function DesafiosPage() {
   const eixos = [
@@ -96,6 +97,9 @@ export default function DesafiosPage() {
 
       {/* ──── VÍDEOS DOS DESAFIOS DAS ÁREAS ──── */}
       <DesafiosAreasSection />
+
+      {/* ──── BANCO DE DESAFIOS (PROBLEMAS REAIS + SOLUÇÕES) COM FILTRO POR CURSO ──── */}
+      <BancoDesafiosSection />
 
       {/* ──── LISTA DOS 5 EIXOS COM DESIGN HOSPITALAR/MAKER ──── */}
       <div className="space-y-8">

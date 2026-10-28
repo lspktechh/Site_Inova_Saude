@@ -22,7 +22,7 @@ export default function RegulamentoPage() {
     },
     {
       p: "A inscrição tem algum custo?",
-      r: "Não. A inscrição é 100% gratuita. Todo o evento, as mentorias e a premiação são financiados pelo Instituto Cruzeiro do Sul, Fundação Araucária e SETI.",
+      r: "Não. A inscrição é 100% gratuita. Todo o evento e as mentorias são financiados pelo Instituto Cruzeiro do Sul, Fundação Araucária e SETI. A premiação conta com o apoio do 3º COPOL, X-Brain e Smart Cortex.",
     },
     {
       p: "Posso usar inteligência artificial para gerar imagens e protótipos?",
