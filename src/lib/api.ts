@@ -244,6 +244,100 @@ export function getAllLocalInscriptions(): InscriptionResponse[] {
   }
 }
 
+/**
+ * Remove uma inscrição do armazenamento local do navegador
+ */
+export function removeLocalInscription(id: string) {
+  if (typeof window === "undefined") return;
+  try {
+    const all: InscriptionResponse[] = JSON.parse(
+      localStorage.getItem("inova_inscriptions") || "[]"
+    );
+    const updated = all.filter((i) => i.id !== id);
+    localStorage.setItem("inova_inscriptions", JSON.stringify(updated));
+    localStorage.removeItem(`inova_insc_${id}`);
+  } catch (e) {
+    console.error("Erro ao remover inscrição do localStorage:", e);
+  }
+}
+
+export interface TalentPoolTeam {
+  id: string;
+  nome: string;
+  ideia: string;
+  eixo: string;
+  vagasRestantes: number;
+  abertaANovos: boolean;
+  competenciasPresentes: string[];
+  faltaNaEquipe: string[];
+  liderContato: string;
+  totalMembros: number;
+  membros: string[];
+  createdAt: string;
+}
+
+export interface TalentPoolCandidate {
+  id: string;
+  nome: string;
+  email: string;
+  curso: string;
+  vinculo: string;
+  competencias: string[];
+  papel: string;
+  eixoInteresse: string;
+  bio: string;
+  createdAt: string;
+}
+
+export interface TalentPoolResponse {
+  eventId: string;
+  eventName: string;
+  equipes: TalentPoolTeam[];
+  candidatos: TalentPoolCandidate[];
+}
+
+/**
+ * Busca equipes com vagas e candidatos solo sincronizados diretamente do servidor
+ */
+export async function getTalentPool(slug: string = DEFAULT_EVENT_SLUG): Promise<TalentPoolResponse | null> {
+  try {
+    const res = await fetch(`${API_BASE_URL}/public/events/${slug}/talent-pool`, {
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const json = await res.json();
+    return json.success ? json.data : null;
+  } catch (err) {
+    console.warn("Aviso ao buscar Banco de Talentos central:", err);
+    return null;
+  }
+}
+
+/**
+ * Cancela/exclui uma inscrição criada por engano no servidor
+ */
+export async function cancelPublicInscription(
+  inscriptionId: string,
+  email: string,
+  slug: string = DEFAULT_EVENT_SLUG
+): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/inscriptions/${inscriptionId}/cancel`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const json = await res.json().catch(() => null);
+  if (!res.ok || !json?.success) {
+    throw new Error(
+      json?.message ||
+        "Não foi possível cancelar a inscrição. Verifique se o e-mail confere com o cadastro."
+    );
+  }
+  removeLocalInscription(inscriptionId);
+  return json.data;
+}
+
 export interface TrabalhoItem {
   tipo: "arquivo" | "link";
   titulo: string;
