@@ -22,6 +22,9 @@ import {
   RefreshCw,
   Settings,
   HelpCircle,
+  Copy,
+  ExternalLink,
+  Phone,
 } from "lucide-react";
 import {
   getAllLocalInscriptions,
@@ -42,6 +45,7 @@ interface Candidato {
   papel: string;
   eixoInteresse: string;
   email?: string;
+  telefone?: string;
   bio?: string;
 }
 
@@ -129,6 +133,45 @@ export default function BancoDeTalentosPage() {
     tipo: "equipe",
   });
 
+  // Modal de Convite via WhatsApp
+  const [modalWhatsApp, setModalWhatsApp] = useState<{
+    aberto: boolean;
+    candidato: Candidato | null;
+    equipeNome: string;
+    suaFuncao: string;
+    mensagemCopiada: boolean;
+  }>({
+    aberto: false,
+    candidato: null,
+    equipeNome: "",
+    suaFuncao: "",
+    mensagemCopiada: false,
+  });
+
+  const abrirModalWhatsApp = (cand: Candidato) => {
+    const salvo = typeof window !== "undefined" ? localStorage.getItem("inova_minha_equipe") || "" : "";
+    setModalWhatsApp({
+      aberto: true,
+      candidato: cand,
+      equipeNome: salvo,
+      suaFuncao: "",
+      mensagemCopiada: false,
+    });
+  };
+
+  const formatarMensagemConvite = (nomeCandidato: string, nomeEquipe: string, papel?: string, suaFuncao?: string) => {
+    const equipeFormatada = nomeEquipe.trim() ? `*${nomeEquipe.trim()}*` : "nossa equipe";
+    const papelFormatado = papel ? ` na área de *${papel}*` : "";
+    const remetente = suaFuncao?.trim() ? ` Sou ${suaFuncao.trim()} da equipe.` : "";
+
+    return (
+      `Olá, ${nomeCandidato}! Tudo bem?\n\n` +
+      `Sou da equipe ${equipeFormatada} do INOVA SAÚDE 2026.${remetente}\n\n` +
+      `Vimos seu perfil no Banco de Talentos${papelFormatado} e gostaríamos de convidar você para fazer parte do nosso time na maratona!\n\n` +
+      `Você ainda tem interesse em entrar em uma equipe? Podemos conversar por aqui?`
+    );
+  };
+
   // Modal de gerenciamento / cancelamento de inscrições por engano
   const [modalGerenciar, setModalGerenciar] = useState<boolean>(false);
   const [minhasInscricoes, setMinhasInscricoes] = useState<InscriptionResponse[]>([]);
@@ -174,6 +217,7 @@ export default function BancoDeTalentosPage() {
           id: insc.id,
           nome: insc.name,
           email: insc.email,
+          telefone: (insc as any).phone || (insc as any).telefone,
           curso: "Participante INOVA SAÚDE",
           vinculo: "Aluno / Profissional",
           competencias: fp?.competencias_equipe || [],
@@ -561,16 +605,24 @@ export default function BancoDeTalentosPage() {
                       </div>
                     </div>
 
-                    <div className="pt-5 mt-5 border-t border-[var(--borda)] flex items-center justify-between">
+                    <div className="pt-5 mt-5 border-t border-[var(--borda)] flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => abrirModalWhatsApp(cand)}
+                        className="inline-flex items-center gap-1.5 text-xs font-bold px-3.5 sm:px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white transition-all shadow-xs cursor-pointer"
+                      >
+                        <MessageSquare size={14} />
+                        <span>Convidar no WhatsApp</span>
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => abrirModal(cand.nome, cand.email || "contato@inova.com", "candidato")}
-                        className="inline-flex items-center gap-1.5 text-xs font-bold px-4 py-2.5 rounded-xl bg-[var(--acao)] text-white hover:brightness-105 transition-all cursor-pointer"
+                        title="Enviar E-mail"
+                        className="inline-flex items-center gap-1 text-xs font-medium px-3 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--surf-2)] text-[var(--fg-2)] hover:text-[var(--fg)] transition-all cursor-pointer"
                       >
-                        <UserPlus size={14} />
-                        <span>Convidar para Time</span>
+                        <Mail size={14} />
                       </button>
-                      <span className="text-[11px] text-[var(--fg-2)] font-mono">Disponível</span>
                     </div>
                   </div>
                 );
@@ -647,6 +699,181 @@ export default function BancoDeTalentosPage() {
                 <Send size={14} />
                 <span>Abrir e Enviar E-mail</span>
               </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ──── MODAL DE CONVITE WHATSAPP PARA PESSOAS DISPONÍVEIS ──── */}
+      {modalWhatsApp.aberto && modalWhatsApp.candidato && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-xs">
+          <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl max-w-lg w-full p-6 space-y-5 shadow-2xl relative max-h-[92vh] overflow-y-auto">
+            <button
+              type="button"
+              onClick={() => setModalWhatsApp((prev) => ({ ...prev, aberto: false }))}
+              className="absolute right-4 top-4 text-[var(--fg-2)] hover:text-[var(--fg)] p-1.5 rounded-lg cursor-pointer transition-colors"
+            >
+              <X size={20} />
+            </button>
+
+            {/* Cabeçalho */}
+            <div className="space-y-1">
+              <div className="flex items-center gap-2 text-emerald-500 font-mono text-xs font-bold uppercase tracking-wider">
+                <MessageSquare size={16} />
+                <span>Convite via WhatsApp</span>
+              </div>
+              <h3 className="text-xl font-bold text-[var(--fg)]">
+                Convidar {modalWhatsApp.candidato.nome}
+              </h3>
+              <p className="text-xs text-[var(--fg-2)] leading-relaxed">
+                Informe o nome da sua equipe para gerar um convite personalizado e iniciar a conversa no WhatsApp em 1 clique.
+              </p>
+            </div>
+
+            {/* Campo: Nome da Equipe */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[var(--fg)] flex items-center justify-between">
+                <span>Nome da sua Equipe: *</span>
+                <span className="text-[10px] text-[var(--fg-2)] font-mono">Salvo automaticamente</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: BioTech Inova, Equipe Cardio..."
+                value={modalWhatsApp.equipeNome}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setModalWhatsApp((prev) => ({ ...prev, equipeNome: val }));
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem("inova_minha_equipe", val);
+                  }
+                }}
+                className="w-full bg-[var(--bg)] border border-[var(--borda)] rounded-xl px-3.5 py-2.5 text-xs text-[var(--fg)] font-medium focus:border-emerald-500 focus:outline-hidden"
+              />
+            </div>
+
+            {/* Campo opcional: Seu nome ou função */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-[var(--fg)]">
+                Seu Nome / Função no Time (Opcional):
+              </label>
+              <input
+                type="text"
+                placeholder="Ex: Líder de tecnologia, Designer..."
+                value={modalWhatsApp.suaFuncao}
+                onChange={(e) => setModalWhatsApp((prev) => ({ ...prev, suaFuncao: e.target.value }))}
+                className="w-full bg-[var(--bg)] border border-[var(--borda)] rounded-xl px-3.5 py-2.5 text-xs text-[var(--fg)] font-medium focus:border-emerald-500 focus:outline-hidden"
+              />
+            </div>
+
+            {/* Pré-visualização do Convite */}
+            <div className="space-y-1.5">
+              <div className="flex items-center justify-between text-xs font-bold text-[var(--fg)]">
+                <span>Mensagem Pré-formatada:</span>
+                {modalWhatsApp.mensagemCopiada && (
+                  <span className="text-[11px] text-emerald-500 font-mono flex items-center gap-1">
+                    <Check size={12} /> Copiado!
+                  </span>
+                )}
+              </div>
+              <div className="relative">
+                <textarea
+                  readOnly
+                  rows={5}
+                  value={formatarMensagemConvite(
+                    modalWhatsApp.candidato.nome,
+                    modalWhatsApp.equipeNome,
+                    modalWhatsApp.candidato.papel,
+                    modalWhatsApp.suaFuncao
+                  )}
+                  className="w-full bg-[var(--bg)] border border-[var(--borda)] rounded-xl p-3 text-xs text-[var(--fg-2)] font-mono leading-relaxed"
+                />
+              </div>
+            </div>
+
+            {/* Telefone do candidato */}
+            {modalWhatsApp.candidato.telefone ? (
+              <div className="p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-xl flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400 font-medium">
+                  <Phone size={14} />
+                  <span>WhatsApp: <strong>{modalWhatsApp.candidato.telefone}</strong></span>
+                </div>
+                <span className="text-[11px] text-emerald-500 font-mono">Disponível</span>
+              </div>
+            ) : (
+              <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-700 dark:text-amber-300 space-y-1">
+                <div className="font-bold flex items-center gap-1.5">
+                  <AlertTriangle size={14} />
+                  <span>Telefone não cadastrado publicamente</span>
+                </div>
+                <p className="text-[11px] leading-relaxed">
+                  Você pode copiar o convite pré-formatado acima para enviar por e-mail ou rede social ao participante.
+                </p>
+              </div>
+            )}
+
+            {/* Botões de Ação */}
+            <div className="flex flex-wrap items-center justify-end gap-2.5 pt-2 border-t border-[var(--borda)]">
+              <button
+                type="button"
+                onClick={() => {
+                  const msg = formatarMensagemConvite(
+                    modalWhatsApp.candidato!.nome,
+                    modalWhatsApp.equipeNome,
+                    modalWhatsApp.candidato!.papel,
+                    modalWhatsApp.suaFuncao
+                  );
+                  navigator.clipboard.writeText(msg);
+                  setModalWhatsApp((prev) => ({ ...prev, mensagemCopiada: true }));
+                  setTimeout(() => setModalWhatsApp((prev) => ({ ...prev, mensagemCopiada: false })), 3000);
+                }}
+                className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--surf-2)] text-[var(--fg)] text-xs font-bold hover:bg-[var(--surf)] transition-colors cursor-pointer"
+              >
+                {modalWhatsApp.mensagemCopiada ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                <span>{modalWhatsApp.mensagemCopiada ? "Convite Copiado!" : "Copiar Convite"}</span>
+              </button>
+
+              {modalWhatsApp.candidato.telefone ? (
+                <a
+                  href={`https://wa.me/${
+                    modalWhatsApp.candidato.telefone.replace(/\D/g, "").startsWith("55")
+                      ? modalWhatsApp.candidato.telefone.replace(/\D/g, "")
+                      : `55${modalWhatsApp.candidato.telefone.replace(/\D/g, "")}`
+                  }?text=${encodeURIComponent(
+                    formatarMensagemConvite(
+                      modalWhatsApp.candidato.nome,
+                      modalWhatsApp.equipeNome,
+                      modalWhatsApp.candidato.papel,
+                      modalWhatsApp.suaFuncao
+                    )
+                  )}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setModalWhatsApp((prev) => ({ ...prev, aberto: false }))}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                >
+                  <MessageSquare size={14} />
+                  <span>Abrir no WhatsApp</span>
+                  <ExternalLink size={12} />
+                </a>
+              ) : (
+                <a
+                  href={`mailto:${modalWhatsApp.candidato.email || "contato@inova.com"}?subject=${encodeURIComponent(
+                    `Convite para Equipe ${modalWhatsApp.equipeNome || ""} - INOVA SAÚDE 2026`
+                  )}&body=${encodeURIComponent(
+                    formatarMensagemConvite(
+                      modalWhatsApp.candidato.nome,
+                      modalWhatsApp.equipeNome,
+                      modalWhatsApp.candidato.papel,
+                      modalWhatsApp.suaFuncao
+                    )
+                  )}`}
+                  onClick={() => setModalWhatsApp((prev) => ({ ...prev, aberto: false }))}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[var(--marca)] hover:bg-[var(--marca-2)] text-white text-xs font-bold transition-all shadow-md cursor-pointer"
+                >
+                  <Mail size={14} />
+                  <span>Enviar por E-mail</span>
+                </a>
+              )}
             </div>
           </div>
         </div>

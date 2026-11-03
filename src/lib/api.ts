@@ -280,6 +280,7 @@ export interface TalentPoolCandidate {
   id: string;
   nome: string;
   email: string;
+  telefone?: string;
   curso: string;
   vinculo: string;
   competencias: string[];
