@@ -39,7 +39,7 @@ export default function EnvioTrabalhoPage() {
   const [protocolo, setProtocolo] = useState("");
   const [emailLider, setEmailLider] = useState("");
   const [itens, setItens] = useState<TrabalhoItem[]>([
-    { tipo: "link", titulo: "Vídeo Demonstrativo do Protótipo (YouTube / Drive)", linkUrl: "" },
+    { tipo: "link", titulo: "", linkUrl: "" },
   ]);
   const [acessoLiberado, setAcessoLiberado] = useState(true);
   const [observacoes, setObservacoes] = useState("");
@@ -49,50 +49,24 @@ export default function EnvioTrabalhoPage() {
   const [historico, setHistorico] = useState<any[]>([]);
   const [copiado, setCopiado] = useState(false);
 
-  // Carregar dados salvos e histórico local com total resiliência
+  // Carregar histórico local de envios realizados neste navegador (sem pré-preencher os campos automaticamente)
   useEffect(() => {
     try {
-      // 1. Carrega histórico de envios anteriores
       const hist = getLocalTrabalhoHistorico();
       setHistorico(hist);
-
-      // 2. Se já houve envio antes, preenche com os últimos dados
-      const savedEnvio = localStorage.getItem("inova_envio_trabalho");
-      if (savedEnvio) {
-        const data = JSON.parse(savedEnvio);
-        if (data.equipeNome) setEquipeNome(data.equipeNome);
-        if (data.protocolo) setProtocolo(data.protocolo);
-        if (data.emailLider) setEmailLider(data.emailLider);
-        if (data.itens && Array.isArray(data.itens) && data.itens.length > 0) setItens(data.itens);
-        if (data.observacoes) setObservacoes(data.observacoes);
-      } else {
-        // 3. Fallback: Se não tem envio anterior, tenta puxar do rascunho de inscrição ou da inscrição concluída
-        const draftInscricao = localStorage.getItem("inova_form_draft");
-        if (draftInscricao) {
-          const draft = JSON.parse(draftInscricao);
-          if (draft.equipeNome) setEquipeNome(draft.equipeNome);
-          if (draft.membros && draft.membros[0]?.email) setEmailLider(draft.membros[0].email);
-          if (draft.videoUrl) {
-            setItens([
-              { tipo: "link", titulo: "Vídeo do Protótipo", linkUrl: draft.videoUrl },
-              ...(draft.prototipoUrl
-                ? [{ tipo: "link" as const, titulo: "Link do Protótipo", linkUrl: draft.prototipoUrl }]
-                : []),
-            ]);
-          }
-        }
-
-        const inscricoes = JSON.parse(localStorage.getItem("inova_inscriptions") || "[]");
-        if (inscricoes.length > 0) {
-          const ultima = inscricoes[inscricoes.length - 1];
-          if (ultima.id) setProtocolo(ultima.id);
-          if (ultima.email && !emailLider) setEmailLider(ultima.email);
-        }
-      }
     } catch (e) {
-      console.warn("Erro ao carregar dados locais de envio:", e);
+      console.warn("Erro ao carregar histórico local:", e);
     }
   }, []);
+
+  const handleLimparCampos = () => {
+    setEquipeNome("");
+    setProtocolo("");
+    setEmailLider("");
+    setItens([{ tipo: "link", titulo: "", linkUrl: "" }]);
+    setObservacoes("");
+    setAcessoLiberado(true);
+  };
 
   const handleAddItem = () => {
     if (itens.length >= 3) return;
@@ -446,15 +420,23 @@ export default function EnvioTrabalhoPage() {
       )}
 
       {/* ──── FORMULÁRIO DE ENVIO ──── */}
-      <form onSubmit={handleSubmit} className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
+      <form onSubmit={handleSubmit} autoComplete="off" className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-8 space-y-6 shadow-xs">
         <div className="border-b border-[var(--borda)] pb-4 space-y-1">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-[var(--fg)]">
               Identificação da Equipe
             </h2>
-            <span className="text-[10px] font-mono text-[var(--ok)] bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
-              Salvamento Contínuo Ativo
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleLimparCampos}
+                className="text-[11px] font-mono text-[var(--fg-2)] hover:text-[var(--erro)] inline-flex items-center gap-1 transition-colors px-2 py-1 rounded-md hover:bg-red-500/10 cursor-pointer"
+                title="Limpar todos os campos do formulário"
+              >
+                <RotateCcw size={12} />
+                <span>Limpar campos</span>
+              </button>
+            </div>
           </div>
           <p className="text-xs text-[var(--fg-2)]">
             Informe o nome da equipe e o e-mail do responsável cadastrado na inscrição.
@@ -467,6 +449,7 @@ export default function EnvioTrabalhoPage() {
             <input
               type="text"
               required
+              autoComplete="off"
               value={equipeNome}
               onChange={(e) => setEquipeNome(e.target.value)}
               placeholder="Ex: BioSync, HealTech, VitaCare..."
@@ -479,6 +462,7 @@ export default function EnvioTrabalhoPage() {
             <input
               type="email"
               required
+              autoComplete="off"
               value={emailLider}
               onChange={(e) => setEmailLider(e.target.value)}
               placeholder="email@exemplo.com"
@@ -493,6 +477,7 @@ export default function EnvioTrabalhoPage() {
             </label>
             <input
               type="text"
+              autoComplete="off"
               value={protocolo}
               onChange={(e) => setProtocolo(e.target.value)}
               placeholder="Ex: 5a1d733d-156e-4876-8542-cceb970c2929"
@@ -562,6 +547,7 @@ export default function EnvioTrabalhoPage() {
                     <input
                       type="text"
                       required
+                      autoComplete="off"
                       value={item.titulo}
                       onChange={(e) => handleUpdateItem(idx, "titulo", e.target.value)}
                       placeholder="Ex: Vídeo explicativo da solução (YouTube / 3 min)"
@@ -578,6 +564,7 @@ export default function EnvioTrabalhoPage() {
                       <input
                         type="url"
                         required
+                        autoComplete="off"
                         value={item.linkUrl || ""}
                         onChange={(e) => handleUpdateItem(idx, "linkUrl", e.target.value)}
                         placeholder="https://..."
@@ -619,6 +606,7 @@ export default function EnvioTrabalhoPage() {
           </label>
           <textarea
             rows={3}
+            autoComplete="off"
             value={observacoes}
             onChange={(e) => setObservacoes(e.target.value)}
             placeholder="Instruções de navegação, contexto do protótipo ou recomendação para a apresentação de 5 minutos..."
