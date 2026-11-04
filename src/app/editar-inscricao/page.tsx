@@ -23,6 +23,9 @@ import {
   RotateCcw,
   LogOut,
   Info,
+  Play,
+  FileText,
+  Globe,
 } from "lucide-react";
 import {
   checkLeaderLogin,
@@ -81,7 +84,28 @@ export default function EditarInscricaoPage() {
   const [prototipoUrl, setPrototipoUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [observacoesTrabalho, setObservacoesTrabalho] = useState("");
-  const [linksAdicionais, setLinksAdicionais] = useState<{ tipo: string; titulo: string; url: string }[]>([]);
+  const [linksAdicionais, setLinksAdicionais] = useState<Array<{ tipo: string; titulo: string; linkUrl?: string; url?: string; arquivoNome?: string }>>([]);
+  const [dataEnvioTrabalho, setDataEnvioTrabalho] = useState("");
+  const [codigoSubmissao, setCodigoSubmissao] = useState("");
+  const [novoArtefatoTipo, setNovoArtefatoTipo] = useState("Apresentação / Slides");
+  const [novoArtefatoTitulo, setNovoArtefatoTitulo] = useState("");
+  const [novoArtefatoUrl, setNovoArtefatoUrl] = useState("");
+
+  function handleAddArtefato() {
+    if (!novoArtefatoUrl.trim()) return;
+    const item = {
+      tipo: novoArtefatoTipo,
+      titulo: novoArtefatoTitulo.trim() || `Material (${novoArtefatoTipo})`,
+      linkUrl: novoArtefatoUrl.trim(),
+    };
+    setLinksAdicionais((prev) => [...prev, item]);
+    setNovoArtefatoTitulo("");
+    setNovoArtefatoUrl("");
+  }
+
+  function handleRemoveArtefato(index: number) {
+    setLinksAdicionais((prev) => prev.filter((_, i) => i !== index));
+  }
 
   // Histórico de auditoria da equipe
   const [historicoEdicoes, setHistoricoEdicoes] = useState<any[]>([]);
@@ -293,6 +317,8 @@ export default function EditarInscricaoPage() {
     setPrototipoUrl(trab.prototipo_url || "");
     setVideoUrl(trab.video_url || "");
     setObservacoesTrabalho(trab.observacoes || "");
+    setDataEnvioTrabalho(trab.enviado_em || "");
+    setCodigoSubmissao(trab.codigo_submissao || "");
     setLinksAdicionais(Array.isArray(trab.artefatos_adicionais) ? trab.artefatos_adicionais : []);
 
     setHistoricoEdicoes(Array.isArray(data.historico_edicoes) ? data.historico_edicoes : []);
@@ -998,42 +1024,227 @@ export default function EditarInscricaoPage() {
 
             {/* ──── ABA 5: ARTEFATOS & PROTÓTIPO ──── */}
             {activeTab === "artefatos" && (
-              <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-5">
+              <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-6">
                 <div>
                   <h2 className="text-lg font-bold text-[var(--fg)]">Artefatos e Trabalhos Entregues</h2>
-                  <p className="text-xs text-[var(--fg-2)]">Links diretos que serão avaliados pela banca e mentores.</p>
+                  <p className="text-xs text-[var(--fg-2)]">
+                    Links, arquivos e materiais que são avaliados pela banca examinadora no Demoday.
+                  </p>
                 </div>
 
-                <div className="space-y-4">
-                  <div>
-                    <label className="text-xs font-bold text-[var(--fg)]">Link do Protótipo / Apresentação (Canva / Figma / Drive / Web):</label>
+                {/* Banner de Status do Trabalho */}
+                {prototipoUrl || videoUrl || linksAdicionais.length > 0 ? (
+                  <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-start gap-3">
+                      <CheckCircle2 size={20} className="text-emerald-500 shrink-0 mt-0.5" />
+                      <div>
+                        <div className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                          <span>Trabalho Registrado para o Demoday</span>
+                          {codigoSubmissao && (
+                            <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[10px]">
+                              {codigoSubmissao}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[11px] text-[var(--fg-2)] mt-0.5">
+                          {dataEnvioTrabalho
+                            ? `Enviado/atualizado em: ${new Date(dataEnvioTrabalho).toLocaleString("pt-BR")}`
+                            : "Materiais salvos e disponíveis para a banca de avaliação."}
+                        </div>
+                      </div>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 dark:text-emerald-400">
+                      <Check size={14} /> Pronto para Avaliação
+                    </span>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-start gap-3">
+                    <AlertCircle size={20} className="text-amber-500 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-bold text-[var(--fg)]">Nenhum artefato registrado ainda</div>
+                      <div className="text-[11px] text-[var(--fg-2)] mt-0.5">
+                        Adicione o link do protótipo e/ou vídeo demonstrativo abaixo e clique em{" "}
+                        <strong>Salvar Todas as Informações</strong> para que a banca possa avaliar sua equipe.
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-5">
+                  {/* Protótipo / Aplicação */}
+                  <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                        <Globe size={15} className="text-[var(--marca)]" />
+                        <span>Link do Protótipo / Aplicação (Vercel / Figma / Canva / Web):</span>
+                      </label>
+                      {prototipoUrl && (
+                        <a
+                          href={prototipoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-[var(--marca)] hover:underline"
+                        >
+                          <ExternalLink size={12} />
+                          <span>Testar Protótipo</span>
+                        </a>
+                      )}
+                    </div>
                     <input
                       type="url"
                       value={prototipoUrl}
                       onChange={(e) => setPrototipoUrl(e.target.value)}
-                      placeholder="https://canva.link/... ou https://..."
-                      className="w-full mt-1 p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden font-mono"
+                      placeholder="https://ortho-track.vercel.app/ ou https://canva.com/..."
+                      className="w-full p-2.5 bg-[var(--surf)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden font-mono"
                     />
                   </div>
 
-                  <div>
-                    <label className="text-xs font-bold text-[var(--fg)]">Link do Vídeo Demonstrativo (YouTube / Google Drive):</label>
+                  {/* Vídeo Demonstrativo */}
+                  <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-2">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                        <Play size={15} className="text-red-500" />
+                        <span>Link do Vídeo Demonstrativo (YouTube / Google Drive):</span>
+                      </label>
+                      {videoUrl && (
+                        <a
+                          href={videoUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:underline"
+                        >
+                          <ExternalLink size={12} />
+                          <span>Assistir Vídeo</span>
+                        </a>
+                      )}
+                    </div>
                     <input
                       type="url"
                       value={videoUrl}
                       onChange={(e) => setVideoUrl(e.target.value)}
                       placeholder="https://youtube.com/watch?v=... ou link do Drive"
-                      className="w-full mt-1 p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden font-mono"
+                      className="w-full p-2.5 bg-[var(--surf)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden font-mono"
                     />
                   </div>
 
+                  {/* Materiais e Artefatos Adicionais (Slides em PDF, Pitch Deck, Figma) */}
+                  <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                        <FileText size={15} className="text-amber-500" />
+                        <span>Arquivos & Artefatos Adicionais (PDF, Pitch Deck, Repositório GitHub):</span>
+                      </label>
+                      <span className="text-[11px] text-[var(--fg-2)]">
+                        {linksAdicionais.length} {linksAdicionais.length === 1 ? "item" : "itens"}
+                      </span>
+                    </div>
+
+                    {/* Lista dos artefatos cadastrados */}
+                    {linksAdicionais.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        {linksAdicionais.map((art, idx) => {
+                          const artUrl = art.linkUrl || art.url || "";
+                          return (
+                            <div
+                              key={idx}
+                              className="flex items-center justify-between gap-3 p-2.5 rounded-lg border border-[var(--borda)] bg-[var(--surf)] text-xs"
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <span className="px-2 py-0.5 rounded-md bg-[var(--bg)] text-[10px] font-bold uppercase tracking-wider text-[var(--marca)] border border-[var(--borda)] shrink-0">
+                                  {art.tipo || "Artefato"}
+                                </span>
+                                <div className="truncate">
+                                  <div className="font-semibold text-[var(--fg)] truncate">
+                                    {art.titulo || art.arquivoNome || "Sem título"}
+                                  </div>
+                                  {artUrl && (
+                                    <div className="text-[10px] font-mono text-[var(--fg-2)] truncate">
+                                      {artUrl}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2 shrink-0">
+                                {artUrl && (
+                                  <a
+                                    href={artUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="p-1.5 rounded-lg bg-[var(--bg)] hover:bg-[var(--borda)] text-[var(--fg)] transition-colors"
+                                    title="Abrir / Baixar Artefato"
+                                  >
+                                    <ExternalLink size={14} />
+                                  </a>
+                                )}
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveArtefato(idx)}
+                                  className="p-1.5 rounded-lg bg-[var(--bg)] hover:bg-red-500/10 text-red-500 transition-colors"
+                                  title="Remover Artefato"
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+
+                    {/* Formulário para Adicionar Novo Artefato */}
+                    <div className="pt-2 border-t border-[var(--borda)] space-y-2">
+                      <div className="text-[11px] font-bold text-[var(--fg)]">+ Adicionar Novo Link ou Documento:</div>
+                      <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                        <select
+                          value={novoArtefatoTipo}
+                          onChange={(e) => setNovoArtefatoTipo(e.target.value)}
+                          className="sm:col-span-4 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs focus:border-[var(--acao)] focus:outline-hidden"
+                        >
+                          <option value="Apresentação / Slides">Apresentação / Slides</option>
+                          <option value="Documento PDF">Documento PDF</option>
+                          <option value="Figma / Design">Figma / Design</option>
+                          <option value="Repositório GitHub">Repositório GitHub</option>
+                          <option value="Outro Link">Outro Link</option>
+                        </select>
+                        <input
+                          type="text"
+                          value={novoArtefatoTitulo}
+                          onChange={(e) => setNovoArtefatoTitulo(e.target.value)}
+                          placeholder="Título (ex: Slides do Pitch)"
+                          className="sm:col-span-4 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs focus:border-[var(--acao)] focus:outline-hidden"
+                        />
+                        <input
+                          type="url"
+                          value={novoArtefatoUrl}
+                          onChange={(e) => setNovoArtefatoUrl(e.target.value)}
+                          placeholder="https://..."
+                          className="sm:col-span-4 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs focus:border-[var(--acao)] focus:outline-hidden font-mono"
+                        />
+                      </div>
+                      <div className="flex justify-end pt-1">
+                        <button
+                          type="button"
+                          onClick={handleAddArtefato}
+                          disabled={!novoArtefatoUrl.trim()}
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--marca)] text-white text-xs font-bold hover:brightness-110 disabled:opacity-50 transition-all cursor-pointer"
+                        >
+                          <Plus size={14} />
+                          <span>Adicionar à Lista</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Observações Técnicas */}
                   <div>
-                    <label className="text-xs font-bold text-[var(--fg)]">Observações sobre o Protótipo:</label>
+                    <label className="text-xs font-bold text-[var(--fg)]">
+                      Observações e Orientações para a Banca Examinadora:
+                    </label>
                     <textarea
-                      rows={2}
+                      rows={3}
                       value={observacoesTrabalho}
                       onChange={(e) => setObservacoesTrabalho(e.target.value)}
-                      placeholder="Notas adicionais sobre como testar ou visualizar o protótipo..."
+                      placeholder="Instruções para acesso (ex: login de teste no protótipo, detalhes da demonstração ou contexto técnico)..."
                       className="w-full mt-1 p-3 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden"
                     />
                   </div>
