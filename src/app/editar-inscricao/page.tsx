@@ -26,6 +26,9 @@ import {
   Play,
   FileText,
   Globe,
+  UploadCloud,
+  FileUp,
+  Loader2,
 } from "lucide-react";
 import {
   checkLeaderLogin,
@@ -35,6 +38,7 @@ import {
   setLeaderPassword,
   getLeaderTeamData,
   updateLeaderTeamData,
+  uploadLeaderWorkFile,
 } from "@/lib/api";
 
 export default function EditarInscricaoPage() {
@@ -84,7 +88,18 @@ export default function EditarInscricaoPage() {
   const [prototipoUrl, setPrototipoUrl] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [observacoesTrabalho, setObservacoesTrabalho] = useState("");
-  const [linksAdicionais, setLinksAdicionais] = useState<Array<{ tipo: string; titulo: string; linkUrl?: string; url?: string; arquivoNome?: string }>>([]);
+  const [linksAdicionais, setLinksAdicionais] = useState<
+    Array<{
+      tipo: string;
+      titulo: string;
+      linkUrl?: string;
+      url?: string;
+      arquivoNome?: string;
+      originalName?: string;
+      tamanhoBytes?: number;
+      enviadoEm?: string;
+    }>
+  >([]);
   const [dataEnvioTrabalho, setDataEnvioTrabalho] = useState("");
   const [codigoSubmissao, setCodigoSubmissao] = useState("");
   const [novoArtefatoTipo, setNovoArtefatoTipo] = useState("Apresentação / Slides");
@@ -105,6 +120,51 @@ export default function EditarInscricaoPage() {
 
   function handleRemoveArtefato(index: number) {
     setLinksAdicionais((prev) => prev.filter((_, i) => i !== index));
+  }
+
+  // Estados para Upload Direto de Arquivo (PDF ou DOCX até 10MB)
+  const [uploadingDoc, setUploadingDoc] = useState(false);
+  const [uploadDocError, setUploadDocError] = useState("");
+  const [uploadDocSuccess, setUploadDocSuccess] = useState("");
+
+  async function handleUploadDocumento(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadDocError("");
+    setUploadDocSuccess("");
+
+    const ext = file.name.toLowerCase().split(".").pop();
+    if (ext !== "pdf" && ext !== "docx") {
+      setUploadDocError("Formato não suportado. Por favor selecione um arquivo .pdf ou .docx.");
+      e.target.value = "";
+      return;
+    }
+
+    const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+    if (file.size > MAX_SIZE) {
+      setUploadDocError(
+        `O arquivo excede o limite máximo permitido de 10 MB (tamanho: ${(file.size / (1024 * 1024)).toFixed(2)} MB).`
+      );
+      e.target.value = "";
+      return;
+    }
+
+    setUploadingDoc(true);
+    try {
+      const res = await uploadLeaderWorkFile(email, sessionToken, file);
+      if (res.artefato) {
+        setLinksAdicionais((prev) => [res.artefato, ...prev]);
+        setUploadDocSuccess(`Arquivo "${file.name}" (${(file.size / (1024 * 1024)).toFixed(2)} MB) enviado e salvo com sucesso!`);
+      } else {
+        setUploadDocSuccess("Arquivo enviado com sucesso!");
+      }
+    } catch (err: any) {
+      setUploadDocError(err.message || "Erro ao realizar upload do arquivo.");
+    } finally {
+      setUploadingDoc(false);
+      e.target.value = "";
+    }
   }
 
   // Histórico de auditoria da equipe
@@ -1146,12 +1206,79 @@ export default function EditarInscricaoPage() {
                     />
                   </div>
 
+                  {/* UPLOAD DE ARQUIVO DO TRABALHO (PDF ou DOCX até 10MB) */}
+                  <div className="p-5 rounded-xl border-2 border-dashed border-[var(--marca)]/40 hover:border-[var(--marca)] bg-[var(--bg)] space-y-3 transition-colors">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                      <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                        <UploadCloud size={17} className="text-[var(--marca)]" />
+                        <span>Enviar Arquivo do Trabalho (PDF ou DOCX — máx. 10MB)</span>
+                      </label>
+                      <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] self-start sm:self-auto">
+                        PDF ou DOCX • Máx. 10 MB
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-[var(--fg-2)] leading-relaxed">
+                      Faça o upload do documento do trabalho da sua equipe (apresentação em slides, relatório descritivo, documentação técnica em formato <strong>PDF</strong> ou <strong>DOCX</strong>). O arquivo é salvo com segurança e fica disponível diretamente para os avaliadores.
+                    </p>
+
+                    <div className="relative rounded-xl border border-[var(--borda)] bg-[var(--surf)]/60 hover:bg-[var(--surf)] p-4 text-center transition-all cursor-pointer group">
+                      <input
+                        type="file"
+                        accept=".pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        disabled={uploadingDoc}
+                        onChange={handleUploadDocumento}
+                        className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed z-10"
+                        title="Selecione um arquivo PDF ou DOCX de até 10MB"
+                      />
+                      <div className="flex flex-col items-center justify-center gap-2 pointer-events-none py-2">
+                        {uploadingDoc ? (
+                          <>
+                            <Loader2 size={32} className="text-[var(--marca)] animate-spin" />
+                            <div className="text-xs font-bold text-[var(--fg)]">
+                              Enviando arquivo e processando com o servidor...
+                            </div>
+                            <div className="text-[11px] text-[var(--fg-2)]">
+                              Aguarde, gravando nos artefatos da equipe...
+                            </div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="p-3 rounded-full bg-[var(--marca)]/15 text-[var(--marca)] group-hover:scale-110 transition-transform">
+                              <FileUp size={24} />
+                            </div>
+                            <div className="text-xs font-bold text-[var(--fg)]">
+                              Clique para escolher o arquivo ou arraste para cá
+                            </div>
+                            <div className="text-[11px] text-[var(--fg-2)]">
+                              Apenas arquivos <strong>.pdf</strong> ou <strong>.docx</strong> de até <strong>10 MB</strong>
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {uploadDocError && (
+                      <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/25 flex items-center gap-2 text-xs text-red-600 dark:text-red-400">
+                        <AlertCircle size={16} className="shrink-0" />
+                        <span>{uploadDocError}</span>
+                      </div>
+                    )}
+
+                    {uploadDocSuccess && (
+                      <div className="p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/25 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
+                        <CheckCircle2 size={16} className="shrink-0" />
+                        <span>{uploadDocSuccess}</span>
+                      </div>
+                    )}
+                  </div>
+
                   {/* Materiais e Artefatos Adicionais (Slides em PDF, Pitch Deck, Figma) */}
                   <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
                     <div className="flex items-center justify-between">
                       <label className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
                         <FileText size={15} className="text-amber-500" />
-                        <span>Arquivos & Artefatos Adicionais (PDF, Pitch Deck, Repositório GitHub):</span>
+                        <span>Arquivos & Artefatos Cadastrados (PDFs, Documentos, Links):</span>
                       </label>
                       <span className="text-[11px] text-[var(--fg-2)]">
                         {linksAdicionais.length} {linksAdicionais.length === 1 ? "item" : "itens"}
@@ -1163,18 +1290,32 @@ export default function EditarInscricaoPage() {
                       <div className="space-y-2 pt-1">
                         {linksAdicionais.map((art, idx) => {
                           const artUrl = art.linkUrl || art.url || "";
+                          const tipoRaw = (art.tipo || "").toUpperCase();
+                          const isPdf = tipoRaw.includes("PDF") || (art.arquivoNome || "").toLowerCase().endsWith(".pdf") || artUrl.toLowerCase().endsWith(".pdf");
+                          const isDocx = tipoRaw.includes("DOCX") || (art.arquivoNome || "").toLowerCase().endsWith(".docx") || artUrl.toLowerCase().endsWith(".docx");
+                          const badgeColor = isPdf
+                            ? "bg-red-500/15 text-red-600 dark:text-red-400 border-red-500/30"
+                            : isDocx
+                            ? "bg-blue-500/15 text-blue-600 dark:text-blue-400 border-blue-500/30"
+                            : "bg-[var(--bg)] text-[var(--marca)] border-[var(--borda)]";
+                          const badgeLabel = isPdf ? "PDF" : isDocx ? "DOCX" : (art.tipo || "Artefato");
+                          const tamanho = art.tamanhoBytes
+                            ? ` • ${(art.tamanhoBytes / (1024 * 1024)).toFixed(2)} MB`
+                            : "";
+
                           return (
                             <div
                               key={idx}
                               className="flex items-center justify-between gap-3 p-2.5 rounded-lg border border-[var(--borda)] bg-[var(--surf)] text-xs"
                             >
                               <div className="flex items-center gap-2.5 min-w-0">
-                                <span className="px-2 py-0.5 rounded-md bg-[var(--bg)] text-[10px] font-bold uppercase tracking-wider text-[var(--marca)] border border-[var(--borda)] shrink-0">
-                                  {art.tipo || "Artefato"}
+                                <span className={`px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider border shrink-0 ${badgeColor}`}>
+                                  {badgeLabel}
                                 </span>
                                 <div className="truncate">
-                                  <div className="font-semibold text-[var(--fg)] truncate">
-                                    {art.titulo || art.arquivoNome || "Sem título"}
+                                  <div className="font-semibold text-[var(--fg)] truncate flex items-center gap-1.5">
+                                    <span>{art.titulo || art.originalName || art.arquivoNome || "Sem título"}</span>
+                                    {tamanho && <span className="text-[10px] text-[var(--fg-2)] font-mono font-normal">{tamanho}</span>}
                                   </div>
                                   {artUrl && (
                                     <div className="text-[10px] font-mono text-[var(--fg-2)] truncate">
@@ -1210,9 +1351,9 @@ export default function EditarInscricaoPage() {
                       </div>
                     )}
 
-                    {/* Formulário para Adicionar Novo Artefato */}
+                    {/* Formulário para Adicionar Novo Artefato via Link Externo */}
                     <div className="pt-2 border-t border-[var(--borda)] space-y-2">
-                      <div className="text-[11px] font-bold text-[var(--fg)]">+ Adicionar Novo Link ou Documento:</div>
+                      <div className="text-[11px] font-bold text-[var(--fg)]">+ Ou adicionar Link Externo (Figma, GitHub, Slides):</div>
                       <div className="grid grid-cols-1 sm:grid-cols-12 gap-2">
                         <select
                           value={novoArtefatoTipo}

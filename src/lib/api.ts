@@ -624,3 +624,55 @@ export async function updateLeaderTeamData(email: string, sessionToken: string, 
   }
   return json.data || json;
 }
+
+export async function uploadLeaderWorkFile(
+  email: string,
+  sessionToken: string,
+  file: File,
+  slug: string = DEFAULT_EVENT_SLUG
+) {
+  const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
+  if (file.size > MAX_SIZE) {
+    throw new Error(
+      `O arquivo excede o limite máximo permitido de 10 MB (tamanho: ${(file.size / (1024 * 1024)).toFixed(2)} MB).`
+    );
+  }
+
+  const ext = file.name.toLowerCase().split(".").pop();
+  if (ext !== "pdf" && ext !== "docx") {
+    throw new Error("Formato não suportado. Apenas arquivos PDF (.pdf) ou Word (.docx) são aceitos.");
+  }
+
+  const base64 = await fileToBase64(file);
+  const dataBase64 = base64.split(",")[1] || base64;
+
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/upload-work-file`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionToken}`,
+    },
+    body: JSON.stringify({
+      email,
+      sessionToken,
+      fileName: file.name,
+      dataBase64,
+    }),
+  });
+
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || json.error || "Erro ao realizar upload do arquivo.");
+  }
+
+  return json.data || json;
+}
+
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+}
