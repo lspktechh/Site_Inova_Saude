@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import {
   checkLeaderLogin,
+  requestLeaderMagicLink,
   loginWithPassword,
   verifyMagicLink,
   setLeaderPassword,
@@ -185,6 +186,22 @@ export default function EditarInscricaoPage() {
       }
     } catch (err: any) {
       setErrorMsg(err.message || "Senha incorreta.");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  // 3b. Esqueci minha senha -> Solicita novo link mágico
+  async function handleForgotPassword() {
+    setLoading(true);
+    setErrorMsg("");
+    setSuccessMsg("");
+    try {
+      const res = await requestLeaderMagicLink(email);
+      setAuthStep("magic_sent");
+      setSuccessMsg(res.message || "Enviamos um novo link de verificação para o seu e-mail.");
+    } catch (err: any) {
+      setErrorMsg(err.message || "Erro ao solicitar novo link.");
     } finally {
       setLoading(false);
     }
@@ -532,7 +549,7 @@ export default function EditarInscricaoPage() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => handleCheckEmail({ preventDefault: () => {} } as any)}
+                    onClick={handleForgotPassword}
                     className="text-[var(--marca)] font-bold hover:underline cursor-pointer"
                   >
                     Esqueci minha senha

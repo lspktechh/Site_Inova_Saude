@@ -538,6 +538,19 @@ export async function checkLeaderLogin(email: string, slug: string = DEFAULT_EVE
   return json.data || json;
 }
 
+export async function requestLeaderMagicLink(email: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/request-magic-link`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Erro ao solicitar link de acesso");
+  }
+  return json.data || json;
+}
+
 export async function loginWithPassword(email: string, password: string, slug: string = DEFAULT_EVENT_SLUG) {
   const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/login-password`, {
     method: "POST",
