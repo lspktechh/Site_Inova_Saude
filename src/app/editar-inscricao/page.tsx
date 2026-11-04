@@ -140,8 +140,10 @@ export default function EditarInscricaoPage() {
     try {
       const res = await verifyMagicLink(targetEmail, token);
       if (res.verified) {
+        if (res.teamName) setTeamName(res.teamName);
+        if (res.name) setLiderNome(res.name);
         setAuthStep("set_password");
-        setSuccessMsg("E-mail verificado com sucesso! Crie uma senha para proteger o acesso à sua equipe.");
+        setSuccessMsg("E-mail verificado com sucesso! Digite sua nova senha de acesso abaixo.");
       }
     } catch (err: any) {
       setErrorMsg(err.message || "Link inválido ou expirado. Solicite um novo acesso.");
@@ -585,14 +587,15 @@ export default function EditarInscricaoPage() {
             )}
 
             {/* Tela: Link de Verificação Enviado */}
+            {/* Tela: Link de Verificação Enviado */}
             {authStep === "magic_sent" && (
               <div className="space-y-4 text-center">
                 <div className="p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-800 dark:text-emerald-300 leading-relaxed text-left space-y-2">
                   <p>
-                    <strong>E-mail enviado!</strong> Um link exclusivo de confirmação foi encaminhado para <strong>{email}</strong>.
+                    <strong>E-mail enviado!</strong> Um link exclusivo de confirmação e redefinição foi encaminhado para <strong>{email}</strong>.
                   </p>
                   <p>
-                    Abra o seu e-mail e clique no botão <strong>"Acessar e Definir Minha Senha"</strong> para entrar e criar sua senha de proteção.
+                    Abra o seu e-mail e clique no botão <strong>"Cadastrar Nova Senha"</strong> para abrir a página e definir sua nova senha de acesso.
                   </p>
                 </div>
 
@@ -610,17 +613,33 @@ export default function EditarInscricaoPage() {
               </div>
             )}
 
-            {/* Formulário: Definir Senha Inicial */}
+            {/* Formulário: Cadastrar Nova Senha */}
             {authStep === "set_password" && (
               <form onSubmit={handleSetPassword} className="space-y-4">
-                <div className="p-3 rounded-xl bg-[var(--bg)] border border-[var(--borda)] text-xs space-y-1">
-                  <div><strong>Equipe:</strong> {teamName}</div>
-                  <div><strong>E-mail Verificado:</strong> {email}</div>
+                <div className="text-center pb-1">
+                  <div className="w-12 h-12 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] mx-auto flex items-center justify-center mb-2">
+                    <Key size={22} />
+                  </div>
+                  <h3 className="text-base font-bold text-[var(--fg)]">Cadastrar Nova Senha</h3>
+                  <p className="text-xs text-[var(--fg-2)] mt-0.5">
+                    Defina sua nova senha para gerenciar a equipe no INOVA SAÚDE 2026.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-xl bg-[var(--bg)] border border-[var(--borda)] text-xs space-y-1.5">
+                  <div className="flex justify-between">
+                    <span className="text-[var(--fg-2)]">Equipe:</span>
+                    <strong className="text-[var(--fg)]">{teamName || "Equipe Identificada"}</strong>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-[var(--fg-2)]">E-mail:</span>
+                    <strong className="text-[var(--fg)]">{email}</strong>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-[var(--fg)]">
-                    Criar Nova Senha (mínimo 6 caracteres):
+                    Nova Senha (mínimo 6 caracteres):
                   </label>
                   <input
                     type="password"
@@ -640,7 +659,7 @@ export default function EditarInscricaoPage() {
                     type="password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repita a senha digitada"
+                    placeholder="Repita a nova senha digitada"
                     required
                     className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
                   />
@@ -652,11 +671,11 @@ export default function EditarInscricaoPage() {
                   className="w-full py-2.5 px-4 rounded-xl bg-[var(--acao)] text-white font-bold text-sm hover:bg-[var(--acao-hover)] transition-colors cursor-pointer flex items-center justify-center gap-2 shadow-xs"
                 >
                   {loading ? (
-                    <span>Salvando...</span>
+                    <span>Salvando Nova Senha...</span>
                   ) : (
                     <>
                       <Check size={16} />
-                      <span>Cadastrar Senha e Acessar Equipe</span>
+                      <span>Salvar Nova Senha e Acessar Equipe</span>
                     </>
                   )}
                 </button>
