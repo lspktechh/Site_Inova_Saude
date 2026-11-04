@@ -520,3 +520,94 @@ export function getLocalTrabalhoHistorico(): any[] {
     return [];
   }
 }
+
+/* ==========================================================================
+   PORTAL DO LÍDER — EDIAÇÃO DE INFORMAÇÕES DA EQUIPE COM AUTENTICAÇÃO
+   ========================================================================== */
+
+export async function checkLeaderLogin(email: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/check-login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Erro ao verificar e-mail do líder");
+  }
+  return json.data || json;
+}
+
+export async function loginWithPassword(email: string, password: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/login-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Senha incorreta ou erro de acesso");
+  }
+  return json.data || json;
+}
+
+export async function verifyMagicLink(email: string, token: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/verify-magic-link`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, token }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Link inválido ou expirado");
+  }
+  return json.data || json;
+}
+
+export async function setLeaderPassword(email: string, token: string, password: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/set-password`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, token, password }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Erro ao cadastrar senha");
+  }
+  return json.data || json;
+}
+
+export async function getLeaderTeamData(email: string, sessionToken: string, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(
+    `${API_BASE_URL}/public/events/${slug}/leader/team-data?email=${encodeURIComponent(email)}&sessionToken=${encodeURIComponent(sessionToken)}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${sessionToken}`,
+      },
+      cache: "no-store",
+    }
+  );
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Sessão inválida ou expirada");
+  }
+  return json.data || json;
+}
+
+export async function updateLeaderTeamData(email: string, sessionToken: string, data: any, slug: string = DEFAULT_EVENT_SLUG) {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/leader/team-data`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${sessionToken}`,
+    },
+    body: JSON.stringify({ email, sessionToken, data }),
+  });
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || "Erro ao atualizar dados da equipe");
+  }
+  return json.data || json;
+}

@@ -17,6 +17,7 @@ export function Header() {
     { label: "Programação", href: "/programacao" },
     { label: "Regulamento", href: "/regulamento" },
     { label: "Edital", href: "/edital" },
+    { label: "Área da Equipe", href: "/editar-inscricao" },
     { label: "Envio", href: "/envio" },
   ];
 
