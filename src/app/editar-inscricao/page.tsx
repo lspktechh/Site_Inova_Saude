@@ -108,10 +108,14 @@ export default function EditarInscricaoPage() {
 
   function handleAddArtefato() {
     if (!novoArtefatoUrl.trim()) return;
+    const cleanUrl = /^https?:\/\//i.test(novoArtefatoUrl.trim())
+      ? novoArtefatoUrl.trim()
+      : `https://${novoArtefatoUrl.trim()}`;
     const item = {
       tipo: novoArtefatoTipo,
       titulo: novoArtefatoTitulo.trim() || `Material (${novoArtefatoTipo})`,
-      linkUrl: novoArtefatoUrl.trim(),
+      linkUrl: cleanUrl,
+      url: cleanUrl,
     };
     setLinksAdicionais((prev) => [...prev, item]);
     setNovoArtefatoTitulo("");
@@ -1290,6 +1294,13 @@ export default function EditarInscricaoPage() {
                       <div className="space-y-2 pt-1">
                         {linksAdicionais.map((art, idx) => {
                           const artUrl = art.linkUrl || art.url || "";
+                          const cleanArtUrl = artUrl
+                            ? artUrl.startsWith("/api/") || artUrl.startsWith("/inscriptions/")
+                              ? `https://137-131-233-254.sslip.io${artUrl}`
+                              : /^https?:\/\//i.test(artUrl)
+                              ? artUrl
+                              : `https://${artUrl}`
+                            : "";
                           const tipoRaw = (art.tipo || "").toUpperCase();
                           const isPdf = tipoRaw.includes("PDF") || (art.arquivoNome || "").toLowerCase().endsWith(".pdf") || artUrl.toLowerCase().endsWith(".pdf");
                           const isDocx = tipoRaw.includes("DOCX") || (art.arquivoNome || "").toLowerCase().endsWith(".docx") || artUrl.toLowerCase().endsWith(".docx");
@@ -1317,17 +1328,17 @@ export default function EditarInscricaoPage() {
                                     <span>{art.titulo || art.originalName || art.arquivoNome || "Sem título"}</span>
                                     {tamanho && <span className="text-[10px] text-[var(--fg-2)] font-mono font-normal">{tamanho}</span>}
                                   </div>
-                                  {artUrl && (
+                                  {cleanArtUrl && (
                                     <div className="text-[10px] font-mono text-[var(--fg-2)] truncate">
-                                      {artUrl}
+                                      {cleanArtUrl}
                                     </div>
                                   )}
                                 </div>
                               </div>
                               <div className="flex items-center gap-2 shrink-0">
-                                {artUrl && (
+                                {cleanArtUrl && (
                                   <a
-                                    href={artUrl}
+                                    href={cleanArtUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="p-1.5 rounded-lg bg-[var(--bg)] hover:bg-[var(--borda)] text-[var(--fg)] transition-colors"

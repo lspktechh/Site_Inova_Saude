@@ -8,7 +8,7 @@ const DEFAULT_EVENT_SLUG = edicao.credenciamento.slug_evento;
 export interface TrabalhoEntregue {
   video_url?: string;
   prototipo_url?: string;
-  artefatos_adicionais?: Array<{ tipo: string; titulo: string; url: string }>;
+  artefatos_adicionais?: Array<{ tipo: string; titulo: string; url: string; linkUrl?: string; arquivoNome?: string }>;
   acesso_liberado: boolean;
   observacoes?: string;
   enviado_em?: string;

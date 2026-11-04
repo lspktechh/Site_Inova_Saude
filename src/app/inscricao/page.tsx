@@ -697,12 +697,19 @@ function InscriptionContent() {
 
       // Se a equipe forneceu links do trabalho / protótipo já na inscrição
       const temTrabalho = Boolean(videoUrl.trim() || prototipoUrl.trim() || artefatoUrl.trim());
+      const formatLink = (l: string) => {
+        const tr = l.trim();
+        if (!tr) return undefined;
+        return /^https?:\/\//i.test(tr) ? tr : `https://${tr}`;
+      };
+
       if (temTrabalho) {
+        const cleanArtefato = formatLink(artefatoUrl);
         payload.trabalho_entregue = {
-          video_url: videoUrl.trim() || undefined,
-          prototipo_url: prototipoUrl.trim() || undefined,
-          artefatos_adicionais: artefatoUrl.trim()
-            ? [{ tipo: "link", titulo: "Artefato / Documento Complementar", url: artefatoUrl.trim() }]
+          video_url: formatLink(videoUrl),
+          prototipo_url: formatLink(prototipoUrl),
+          artefatos_adicionais: cleanArtefato
+            ? [{ tipo: "link", titulo: "Artefato / Documento Complementar", url: cleanArtefato, linkUrl: cleanArtefato }]
             : undefined,
           acesso_liberado: linksAcessoLiberado,
           observacoes: trabalhoObs.trim() || undefined,
