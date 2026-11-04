@@ -361,7 +361,7 @@ export default function BancoDeTalentosPage() {
 
         {/* Notificação amigável de sincronização com o banco central */}
         <div className="flex items-center gap-2 text-xs font-mono text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-3.5 py-2 rounded-xl">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="w-2 h-2 rounded-full bg-emerald-500" />
           <span>Sincronizado diretamente com a base oficial de credenciamento do INOVA SAÚDE.</span>
         </div>
       </div>
