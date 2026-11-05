@@ -32,6 +32,8 @@ import {
   Loader2,
   Layers,
   ShieldAlert,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { ods, edicao } from "@/lib/config";
 import {
@@ -50,8 +52,11 @@ export default function EditarInscricaoPage() {
   const [authStep, setAuthStep] = useState<"email" | "password" | "magic_sent" | "set_password" | "authenticated">("email");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [newPassword, setNewPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [magicToken, setMagicToken] = useState("");
   const [sessionToken, setSessionToken] = useState("");
   const [loading, setLoading] = useState(false);
@@ -699,16 +704,26 @@ export default function EditarInscricaoPage() {
                     Sua Senha de Acesso:
                   </label>
                   <div className="relative">
-                    <Key size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--fg-2)]" />
+                    <Key size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[var(--fg-2)] pointer-events-none" />
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Digite sua senha cadastrada"
                       required
                       autoFocus
-                      className="w-full pl-10 pr-4 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
+                      className="w-full pl-10 pr-10 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
                     />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
+                      tabIndex={-1}
+                      title={showPassword ? "Ocultar senha" : "Ver senha"}
+                      aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fg-2)] hover:text-[var(--fg)] p-1 rounded-md transition-colors cursor-pointer"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
                   </div>
                 </div>
 
@@ -804,28 +819,52 @@ export default function EditarInscricaoPage() {
                   <label className="text-xs font-bold text-[var(--fg)]">
                     Nova Senha (mínimo 6 caracteres):
                   </label>
-                  <input
-                    type="password"
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Digite sua nova senha"
-                    required
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showNewPassword ? "text" : "password"}
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      placeholder="Digite sua nova senha"
+                      required
+                      className="w-full pl-3.5 pr-10 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowNewPassword((prev) => !prev)}
+                      tabIndex={-1}
+                      title={showNewPassword ? "Ocultar senha" : "Ver senha"}
+                      aria-label={showNewPassword ? "Ocultar senha" : "Ver senha"}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fg-2)] hover:text-[var(--fg)] p-1 rounded-md transition-colors cursor-pointer"
+                    >
+                      {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="text-xs font-bold text-[var(--fg)]">
                     Confirme a Nova Senha:
                   </label>
-                  <input
-                    type="password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Repita a nova senha digitada"
-                    required
-                    className="w-full px-3.5 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
-                  />
+                  <div className="relative">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      placeholder="Repita a nova senha digitada"
+                      required
+                      className="w-full pl-3.5 pr-10 py-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-sm focus:border-[var(--acao)] focus:outline-hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword((prev) => !prev)}
+                      tabIndex={-1}
+                      title={showConfirmPassword ? "Ocultar senha" : "Ver senha"}
+                      aria-label={showConfirmPassword ? "Ocultar senha" : "Ver senha"}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--fg-2)] hover:text-[var(--fg)] p-1 rounded-md transition-colors cursor-pointer"
+                    >
+                      {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
 
                 <button
