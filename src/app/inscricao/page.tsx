@@ -885,7 +885,7 @@ function InscriptionContent() {
                   <strong className="text-emerald-700 dark:text-emerald-400">chat.whatsapp.com/IBDoKA6L0Sk9cpn0efoFWa</strong>. As mentorias e avisos da banca serão repassados por lá.
                 </p>
                 <p className="text-[var(--fg-2)] pt-0.5">
-                  Inscrições até 02/11 · Demoday em 05/11 · Consulte o{" "}
+                  Inscrições Abertas · Demoday em 05/11 · Consulte o{" "}
                   <Link href="/edital" target="_blank" className="text-[var(--acao)] underline font-bold">
                     Edital Oficial do INOVA SAÚDE 2026
                   </Link>.

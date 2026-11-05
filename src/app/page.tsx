@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { edicao, formulario, dataCurta, bancoDesafios, reais } from "@/lib/config";
+import { edicao, formulario, dataCurta, bancoDesafios, reais, encerramentoVisivel } from "@/lib/config";
 import { ArrowRight, Users, Sparkles, UserPlus, Calendar, Award, CheckCircle2, ShieldCheck, Cpu, Activity, Stethoscope, Compass } from "lucide-react";
 import { HeroVideo } from "@/components/HeroVideo";
 import { DesafiosAreasSection } from "@/components/DesafiosAreasSection";
@@ -128,7 +128,11 @@ export default function HomePage() {
               )}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Calendar size={13} className="text-[var(--acento)]" />
-                <span>Inscrições até 02/11</span>
+                <span>
+                  {encerramentoVisivel()
+                    ? `Inscrições até ${dataCurta(encerramentoVisivel()!)}`
+                    : "Inscrições Abertas"}
+                </span>
               </div>
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono bg-white/10 border border-white/20 text-white/90">
                 <Award size={13} className="text-[var(--acento)]" />

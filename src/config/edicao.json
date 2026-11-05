@@ -15,9 +15,9 @@
     },
     "inscricoes": {
       "abertura": "2026-10-20",
-      "encerramento": "2026-11-02",
-      "exibir_encerramento": true,
-      "_comentario": "Inscrições oficiais de 20/10 a 02/11/2026 às 23h59."
+      "encerramento": null,
+      "exibir_encerramento": false,
+      "_comentario": "Inscrições oficiais de 20/10 reabertas pela organização."
     },
     "mentorias": {
       "inicio": "2026-10-20",
