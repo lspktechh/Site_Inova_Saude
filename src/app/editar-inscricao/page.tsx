@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   ArrowRight,
   Save,
   Users,
@@ -29,7 +30,10 @@ import {
   UploadCloud,
   FileUp,
   Loader2,
+  Layers,
+  ShieldAlert,
 } from "lucide-react";
+import { ods, edicao } from "@/lib/config";
 import {
   checkLeaderLogin,
   requestLeaderMagicLink,
@@ -57,8 +61,9 @@ export default function EditarInscricaoPage() {
   // Dados da Equipe em Edição
   const [teamName, setTeamName] = useState("");
   const [liderNome, setLiderNome] = useState("");
+  const [trilha, setTrilha] = useState("equipe_com_ideia");
   const [membros, setMembros] = useState<any[]>([]);
-  const [activeTab, setActiveTab] = useState<"equipe" | "problema" | "solucao" | "metricas" | "artefatos" | "historico">("equipe");
+  const [activeTab, setActiveTab] = useState<"equipe" | "problema" | "solucao" | "prototipo" | "metricas" | "artefatos" | "historico">("equipe");
 
   // Campos Empatizar / Definir
   const [quemVive, setQuemVive] = useState("");
@@ -68,6 +73,10 @@ export default function EditarInscricaoPage() {
   const [comoResolvemHoje, setComoResolvemHoje] = useState("");
   const [porQueNaoResolve, setPorQueNaoResolve] = useState("");
   const [eixo, setEixo] = useState("");
+  const [fraseDefQuem, setFraseDefQuem] = useState("");
+  const [fraseDefOQue, setFraseDefOQue] = useState("");
+  const [fraseDefPorQue, setFraseDefPorQue] = useState("");
+  const [fraseDefObstaculo, setFraseDefObstaculo] = useState("");
 
   // Campos Idear / Escopo
   const [nomeSolucao, setNomeSolucao] = useState("");
@@ -75,14 +84,28 @@ export default function EditarInscricaoPage() {
   const [passo1, setPasso1] = useState("");
   const [passo2, setPasso2] = useState("");
   const [passo3, setPasso3] = useState("");
+  const [fraseIdeQuem, setFraseIdeQuem] = useState("");
+  const [fraseIdeNecessidade, setFraseIdeNecessidade] = useState("");
+  const [fraseIdeBeneficio, setFraseIdeBeneficio] = useState("");
+  const [fraseIdeAlternativa, setFraseIdeAlternativa] = useState("");
+  const [fraseIdeDiferencial, setFraseIdeDiferencial] = useState("");
   const [escopoE, setEscopoE] = useState("");
   const [escopoNaoE, setEscopoNaoE] = useState("");
   const [escopoFaz, setEscopoFaz] = useState("");
   const [escopoNaoFaz, setEscopoNaoFaz] = useState("");
 
-  // Campos Métricas / Fechamento
+  // Forma do Protótipo & Trava Sanitária
+  const [formas, setFormas] = useState<string[]>([]);
+  const [travaAcionada, setTravaAcionada] = useState(false);
+  const [travaMotivos, setTravaMotivos] = useState<string[]>([]);
+  const [camposForma, setCamposForma] = useState<any>({});
+
+  // Campos Métricas / ODS / Fechamento
   const [comoSaberemos, setComoSaberemos] = useState("");
   const [maiorDuvida, setMaiorDuvida] = useState("");
+  const [odsSelecionadas, setOdsSelecionadas] = useState<number[]>([]);
+  const [abertaANovos, setAbertaANovos] = useState(true);
+  const [aceites, setAceites] = useState<string[]>([]);
 
   // Artefatos
   const [prototipoUrl, setPrototipoUrl] = useState("");
@@ -178,6 +201,11 @@ export default function EditarInscricaoPage() {
   // 1. Checa se o usuário veio por Magic Link na URL (?token=...&email=...)
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    // Remove tokens permanentes do localStorage para corrigir o bug de sessao retida indefinidamente
+    localStorage.removeItem("inova_leader_session");
+    localStorage.removeItem("inova_leader_email");
+
     const params = new URLSearchParams(window.location.search);
     const tokenParam = params.get("token");
     const emailParam = params.get("email");
@@ -187,13 +215,25 @@ export default function EditarInscricaoPage() {
       setMagicToken(tokenParam);
       validarMagicLinkUrl(emailParam, tokenParam);
     } else {
-      // Tenta recuperar sessão existente no localStorage
-      const savedSession = localStorage.getItem("inova_leader_session");
-      const savedEmail = localStorage.getItem("inova_leader_email");
-      if (savedSession && savedEmail) {
+      // Sessão temporária ativa apenas durante a aba do navegador com tempo limite de 1 hora
+      const savedSession = sessionStorage.getItem("inova_leader_session");
+      const savedEmail = sessionStorage.getItem("inova_leader_email");
+      const sessionTime = sessionStorage.getItem("inova_leader_login_time");
+      const SESSION_TTL_MS = 60 * 60 * 1000; // 1 hora de validade
+
+      if (
+        savedSession &&
+        savedEmail &&
+        sessionTime &&
+        Date.now() - Number(sessionTime) < SESSION_TTL_MS
+      ) {
         setEmail(savedEmail);
         setSessionToken(savedSession);
         carregarDadosEquipe(savedEmail, savedSession);
+      } else {
+        sessionStorage.removeItem("inova_leader_session");
+        sessionStorage.removeItem("inova_leader_email");
+        sessionStorage.removeItem("inova_leader_login_time");
       }
     }
   }, []);
@@ -268,8 +308,9 @@ export default function EditarInscricaoPage() {
       const res = await loginWithPassword(email, password);
       if (res.sessionToken) {
         setSessionToken(res.sessionToken);
-        localStorage.setItem("inova_leader_session", res.sessionToken);
-        localStorage.setItem("inova_leader_email", email);
+        sessionStorage.setItem("inova_leader_session", res.sessionToken);
+        sessionStorage.setItem("inova_leader_email", email);
+        sessionStorage.setItem("inova_leader_login_time", Date.now().toString());
         carregarDadosCompletosNoEstado(res.data);
         setAuthStep("authenticated");
         setSuccessMsg("Login realizado com sucesso! Você já pode editar as informações da equipe.");
@@ -315,8 +356,9 @@ export default function EditarInscricaoPage() {
       const res = await setLeaderPassword(email, magicToken, newPassword);
       if (res.sessionToken) {
         setSessionToken(res.sessionToken);
-        localStorage.setItem("inova_leader_session", res.sessionToken);
-        localStorage.setItem("inova_leader_email", email);
+        sessionStorage.setItem("inova_leader_session", res.sessionToken);
+        sessionStorage.setItem("inova_leader_email", email);
+        sessionStorage.setItem("inova_leader_login_time", Date.now().toString());
         carregarDadosCompletosNoEstado(res.data);
         setAuthStep("authenticated");
         setSuccessMsg("Senha cadastrada com sucesso! Bem-vindo ao painel da sua equipe.");
@@ -337,7 +379,11 @@ export default function EditarInscricaoPage() {
       setAuthStep("authenticated");
     } catch (err) {
       // Sessão expirou
+      sessionStorage.removeItem("inova_leader_session");
+      sessionStorage.removeItem("inova_leader_email");
+      sessionStorage.removeItem("inova_leader_login_time");
       localStorage.removeItem("inova_leader_session");
+      localStorage.removeItem("inova_leader_email");
       setAuthStep("email");
     } finally {
       setLoading(false);
@@ -348,6 +394,7 @@ export default function EditarInscricaoPage() {
     if (!data) return;
     setTeamName(data.teamName || "");
     setLiderNome(data.liderNome || "");
+    setTrilha(data.trilha || "equipe_com_ideia");
     setMembros(Array.isArray(data.membros) ? data.membros : []);
 
     const emp = data.empatizar || {};
@@ -360,6 +407,11 @@ export default function EditarInscricaoPage() {
     setComoResolvemHoje(defn.como_resolvem_hoje || "");
     setPorQueNaoResolve(defn.por_que_nao_resolve || "");
     setEixo(defn.eixo || "");
+    const fDef = defn.frase || {};
+    setFraseDefQuem(fDef.quem || "");
+    setFraseDefOQue(fDef.o_que || "");
+    setFraseDefPorQue(fDef.por_que || "");
+    setFraseDefObstaculo(fDef.o_que_atrapalha || "");
 
     const ide = data.idear || {};
     setNomeSolucao(ide.nome_solucao || "");
@@ -368,6 +420,12 @@ export default function EditarInscricaoPage() {
     setPasso1(passos[0] || "");
     setPasso2(passos[1] || "");
     setPasso3(passos[2] || "");
+    const fIde = ide.frase || {};
+    setFraseIdeQuem(fIde.quem || "");
+    setFraseIdeNecessidade(fIde.necessidade || "");
+    setFraseIdeBeneficio(fIde.beneficio || "");
+    setFraseIdeAlternativa(fIde.alternativa || "");
+    setFraseIdeDiferencial(fIde.diferencial || "");
 
     const esc = data.escopo || {};
     setEscopoE(esc.e || "");
@@ -375,9 +433,21 @@ export default function EditarInscricaoPage() {
     setEscopoFaz(Array.isArray(esc.faz) ? esc.faz.join("\n") : esc.faz || "");
     setEscopoNaoFaz(Array.isArray(esc.nao_faz) ? esc.nao_faz.join("\n") : esc.nao_faz || "");
 
+    const frm = data.forma || {};
+    setFormas(Array.isArray(frm.formas) ? frm.formas : []);
+    const ts = frm.trava_sanitaria || {};
+    setTravaAcionada(Boolean(ts.acionada));
+    setTravaMotivos(Array.isArray(ts.motivos) ? ts.motivos : []);
+    setCamposForma(frm.campos_forma || {});
+
     const fech = data.fechamento || {};
     setComoSaberemos(fech.como_saberemos || "");
     setMaiorDuvida(fech.maior_duvida || "");
+    setOdsSelecionadas(Array.isArray(fech.ods) ? fech.ods : []);
+    if (typeof fech.aberta_a_novos === "boolean") {
+      setAbertaANovos(fech.aberta_a_novos);
+    }
+    setAceites(Array.isArray(fech.aceites) ? fech.aceites : []);
 
     const trab = data.trabalho_entregue || {};
     setPrototipoUrl(trab.prototipo_url || "");
@@ -391,6 +461,9 @@ export default function EditarInscricaoPage() {
   }
 
   function handleLogout() {
+    sessionStorage.removeItem("inova_leader_session");
+    sessionStorage.removeItem("inova_leader_email");
+    sessionStorage.removeItem("inova_leader_login_time");
     localStorage.removeItem("inova_leader_session");
     localStorage.removeItem("inova_leader_email");
     setSessionToken("");
@@ -416,12 +489,27 @@ export default function EditarInscricaoPage() {
         como_sabe: comoSabe,
       },
       definir: {
+        frase: {
+          quem: fraseDefQuem,
+          o_que: fraseDefOQue,
+          por_que: fraseDefPorQue,
+          o_que_atrapalha: fraseDefObstaculo,
+        },
         frequencia,
         como_resolvem_hoje: comoResolvemHoje,
         por_que_nao_resolve: porQueNaoResolve,
         eixo,
       },
       idear: {
+        frase: {
+          quem: fraseIdeQuem,
+          necessidade: fraseIdeNecessidade,
+          nome: nomeSolucao,
+          categoria,
+          beneficio: fraseIdeBeneficio,
+          alternativa: fraseIdeAlternativa,
+          diferencial: fraseIdeDiferencial,
+        },
         nome_solucao: nomeSolucao,
         categoria,
         tres_passos: [passo1, passo2, passo3].filter(Boolean),
@@ -432,9 +520,20 @@ export default function EditarInscricaoPage() {
         faz: escopoFaz.split("\n").map((s) => s.trim()).filter(Boolean),
         nao_faz: escopoNaoFaz.split("\n").map((s) => s.trim()).filter(Boolean),
       },
+      forma: {
+        formas,
+        campos_forma: camposForma,
+        trava_sanitaria: {
+          acionada: travaAcionada,
+          motivos: travaMotivos,
+        },
+      },
       fechamento: {
         como_saberemos: comoSaberemos,
         maior_duvida: maiorDuvida,
+        ods: odsSelecionadas,
+        aberta_a_novos: abertaANovos,
+        aceites,
       },
       trabalho_entregue: {
         prototipo_url: prototipoUrl,
@@ -790,7 +889,8 @@ export default function EditarInscricaoPage() {
                 { id: "equipe", label: "Integrantes", icon: Users },
                 { id: "problema", label: "Problema & Dor", icon: FileEdit },
                 { id: "solucao", label: "Solução & Escopo", icon: Sparkles },
-                { id: "metricas", label: "Métricas de Sucesso", icon: CheckCircle2 },
+                { id: "prototipo", label: "Protótipo & Trava Sanitária", icon: Layers },
+                { id: "metricas", label: "Métricas & ODS", icon: CheckCircle2 },
                 { id: "artefatos", label: "Artefatos & Links", icon: ExternalLink },
                 { id: "historico", label: "Histórico de Edições", icon: History },
               ].map((tab) => {
@@ -817,10 +917,38 @@ export default function EditarInscricaoPage() {
             {/* ──── ABA 1: INTEGRANTES DA EQUIPE ──── */}
             {activeTab === "equipe" && (
               <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-6">
+                {/* Trilha e Banco de Talentos */}
+                <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <div className="text-xs font-bold text-[var(--fg)] flex items-center gap-2">
+                      <span>Trilha da Inscrição:</span>
+                      <span className="px-2 py-0.5 rounded-full bg-[var(--marca)]/10 text-[var(--marca)] font-mono text-[11px] font-bold">
+                        {trilha === "sem_ideia"
+                          ? "Banco de Talentos"
+                          : trilha === "ideia_sem_equipe"
+                          ? "Ideia sem Equipe"
+                          : "Equipe com Ideia"}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[var(--fg-2)] mt-0.5">
+                      Equipes devem ter entre 3 e 6 integrantes pelo regulamento oficial.
+                    </p>
+                  </div>
+                  <label className="inline-flex items-center gap-2 text-xs font-semibold cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={abertaANovos}
+                      onChange={(e) => setAbertaANovos(e.target.checked)}
+                      className="rounded border-[var(--borda)] text-[var(--marca)]"
+                    />
+                    <span>Aberta a novos integrantes do Banco de Talentos</span>
+                  </label>
+                </div>
+
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-lg font-bold text-[var(--fg)]">Membros da Equipe (3 a 6 pessoas)</h2>
-                    <p className="text-xs text-[var(--fg-2)]">Mantenha a equipe com divisão de papéis e cursos atualizados.</p>
+                    <h2 className="text-lg font-bold text-[var(--fg)]">Membros da Equipe ({membros.length}/6 pessoas)</h2>
+                    <p className="text-xs text-[var(--fg-2)]">Mantenha a equipe com dados, vínculos institucionais e cursos atualizados.</p>
                   </div>
                   {membros.length < 6 && (
                     <button
@@ -838,7 +966,9 @@ export default function EditarInscricaoPage() {
                   {membros.map((m, idx) => (
                     <div key={m.id || idx} className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
                       <div className="flex items-center justify-between text-xs font-bold text-[var(--fg-2)]">
-                        <span>{idx === 0 ? "★ Líder da Equipe" : `Integrante #${idx + 1}`}</span>
+                        <span className={idx === 0 ? "text-[var(--marca)] font-bold flex items-center gap-1.5" : ""}>
+                          {idx === 0 ? "★ Líder da Equipe (Pessoa de Contato)" : `Integrante #${idx + 1}`}
+                        </span>
                         {idx > 0 && (
                           <button
                             type="button"
@@ -850,9 +980,9 @@ export default function EditarInscricaoPage() {
                         )}
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                         <div>
-                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Nome Completo:</label>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Nome Completo *:</label>
                           <input
                             type="text"
                             value={m.nome || ""}
@@ -861,7 +991,7 @@ export default function EditarInscricaoPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[11px] font-bold text-[var(--fg-2)]">E-mail:</label>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">E-mail *:</label>
                           <input
                             type="email"
                             value={m.email || ""}
@@ -870,7 +1000,7 @@ export default function EditarInscricaoPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Telefone / WhatsApp:</label>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Telefone / WhatsApp *:</label>
                           <input
                             type="text"
                             value={m.telefone || ""}
@@ -879,16 +1009,57 @@ export default function EditarInscricaoPage() {
                           />
                         </div>
                         <div>
-                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Curso / Formação:</label>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Vínculo Institucional *:</label>
+                          <select
+                            value={m.vinculo || "Aluno de graduacao"}
+                            onChange={(e) => handleUpdateMembro(idx, "vinculo", e.target.value)}
+                            className="w-full mt-1 px-3 py-1.5 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                          >
+                            <option value="Aluno de graduacao">Aluno de graduação</option>
+                            <option value="Aluno de pos">Aluno de pós</option>
+                            <option value="Docente">Docente</option>
+                            <option value="Colaborador tecnico-administrativo">Colaborador técnico-administrativo</option>
+                            <option value="Comunidade externa">Comunidade externa</option>
+                            <option value="Profissional de saude">Profissional de saúde</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Curso ou Instituição *:</label>
                           <input
                             type="text"
                             value={m.curso || ""}
                             onChange={(e) => handleUpdateMembro(idx, "curso", e.target.value)}
-                            placeholder="Ex: Odontologia, Software..."
+                            placeholder="Ex: Odontologia, Software, Medicina..."
                             className="w-full mt-1 px-3 py-1.5 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
                           />
                         </div>
+                        <div>
+                          <label className="text-[11px] font-bold text-[var(--fg-2)]">Papel na Equipe:</label>
+                          <select
+                            value={m.papel || (idx === 0 ? "Coordenar a equipe" : "Construir a solucao")}
+                            onChange={(e) => handleUpdateMembro(idx, "papel", e.target.value)}
+                            className="w-full mt-1 px-3 py-1.5 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                          >
+                            <option value="Coordenar a equipe">Coordenar a equipe</option>
+                            <option value="Construir a solucao">Construir a solução</option>
+                            <option value="Pesquisar o problema">Pesquisar o problema</option>
+                            <option value="Desenhar a experiencia">Desenhar a experiência</option>
+                            <option value="Apresentar o pitch">Apresentar o pitch</option>
+                            <option value="Ainda nao sei">Ainda não sei</option>
+                          </select>
+                        </div>
                       </div>
+
+                      {Array.isArray(m.competencias) && m.competencias.length > 0 && (
+                        <div className="pt-1 flex flex-wrap gap-1.5 items-center">
+                          <span className="text-[10px] font-bold text-[var(--fg-2)] uppercase">Habilidades:</span>
+                          {m.competencias.map((comp: string, cIdx: number) => (
+                            <span key={cIdx} className="px-2 py-0.5 rounded-md bg-[var(--borda)]/60 text-[var(--fg)] text-[10px] font-mono">
+                              {comp}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -926,26 +1097,78 @@ export default function EditarInscricaoPage() {
                     />
                   </div>
 
+                  {/* Como sabe do problema */}
+                  <div>
+                    <label className="text-xs font-bold text-[var(--fg)]">Como a equipe constatou essa necessidade:</label>
+                    <p className="text-[11px] text-[var(--fg-2)] mb-2">Marque tudo que se aplica à validação da sua ideia.</p>
+                    <div className="flex flex-wrap gap-2">
+                      {[
+                        "Vivi na pele",
+                        "Conversei com quem vive",
+                        "Vi acontecer",
+                        "Li ou estudei",
+                        "Ouvi de um professor",
+                        "Ainda nao verifiquei",
+                      ].map((item) => {
+                        const isChecked = comoSabe.includes(item);
+                        return (
+                          <button
+                            key={item}
+                            type="button"
+                            onClick={() => {
+                              if (isChecked) {
+                                setComoSabe(comoSabe.filter((c) => c !== item));
+                              } else {
+                                setComoSabe([...comoSabe, item]);
+                              }
+                            }}
+                            className={`px-3 py-1.5 rounded-xl text-xs font-medium border transition-all cursor-pointer ${
+                              isChecked
+                                ? "bg-[var(--marca)] text-white border-[var(--marca)] shadow-xs"
+                                : "bg-[var(--bg)] text-[var(--fg-2)] border-[var(--borda)] hover:border-[var(--marca)]"
+                            }`}
+                          >
+                            {isChecked ? "✓ " : "+ "}
+                            {item}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="text-xs font-bold text-[var(--fg)]">Frequência do Problema:</label>
-                      <input
-                        type="text"
-                        value={frequencia}
+                      <select
+                        value={frequencia || "Diariamente"}
                         onChange={(e) => setFrequencia(e.target.value)}
-                        placeholder="Ex: Diariamente, Em todo atendimento..."
                         className="w-full mt-1 p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden"
-                      />
+                      >
+                        <option value="Varias vezes por dia">Várias vezes por dia</option>
+                        <option value="Diariamente">Diariamente</option>
+                        <option value="Semanalmente">Semanalmente</option>
+                        <option value="Ocasionalmente">Ocasionalmente</option>
+                      </select>
                     </div>
                     <div>
-                      <label className="text-xs font-bold text-[var(--fg)]">Eixo Temático:</label>
-                      <input
-                        type="text"
-                        value={eixo}
+                      <label className="text-xs font-bold text-[var(--fg)]">Eixo Temático da Saúde:</label>
+                      <select
+                        value={eixo || (edicao?.eixos_tematicos?.[0] ?? "Infraestrutura em Saude Digital")}
                         onChange={(e) => setEixo(e.target.value)}
-                        placeholder="Ex: Logística e Gestão de Serviços de Saúde..."
                         className="w-full mt-1 p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden"
-                      />
+                      >
+                        {(edicao?.eixos_tematicos || [
+                          "Infraestrutura em Saude Digital",
+                          "Saude Mental e Bem-Estar",
+                          "Logistica e Gestao de Servicos de Saude",
+                          "Capacitacao e Formacao Profissional",
+                          "Sustentabilidade e Responsabilidade Digital",
+                        ]).map((eix: string) => (
+                          <option key={eix} value={eix}>
+                            {eix}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
@@ -970,6 +1193,55 @@ export default function EditarInscricaoPage() {
                       className="w-full mt-1 p-3 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden"
                     />
                   </div>
+
+                  {/* A Frase do Problema */}
+                  <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
+                    <span className="text-xs font-bold text-[var(--marca)] uppercase tracking-wide font-mono block">
+                      A Frase Estruturada do Problema (Definição Guiada)
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      <div>
+                        <label className="font-bold text-[var(--fg-2)]">1. Quem precisa:</label>
+                        <input
+                          type="text"
+                          value={fraseDefQuem}
+                          onChange={(e) => setFraseDefQuem(e.target.value)}
+                          placeholder="Ex: O cirurgião-dentista na clínica..."
+                          className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-bold text-[var(--fg-2)]">2. Precisa de:</label>
+                        <input
+                          type="text"
+                          value={fraseDefOQue}
+                          onChange={(e) => setFraseDefOQue(e.target.value)}
+                          placeholder="Ex: De um dosador preciso e esterilizável..."
+                          className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-bold text-[var(--fg-2)]">3. Porque (a razão):</label>
+                        <input
+                          type="text"
+                          value={fraseDefPorQue}
+                          onChange={(e) => setFraseDefPorQue(e.target.value)}
+                          placeholder="Ex: O desperdício de silicone encarece o atendimento..."
+                          className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="font-bold text-[var(--fg-2)]">4. Mas hoje (o obstáculo):</label>
+                        <input
+                          type="text"
+                          value={fraseDefObstaculo}
+                          onChange={(e) => setFraseDefObstaculo(e.target.value)}
+                          placeholder="Ex: As cânulas plásticas de uso único entopem..."
+                          className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
@@ -979,7 +1251,7 @@ export default function EditarInscricaoPage() {
               <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-5">
                 <div>
                   <h2 className="text-lg font-bold text-[var(--fg)]">Solução & Delimitação de Escopo</h2>
-                  <p className="text-xs text-[var(--fg-2)]">O que a solução faz e deliberadamente deixa de fazer.</p>
+                  <p className="text-xs text-[var(--fg-2)]">O que a solução faz, como funciona e deliberadamente deixa de fazer.</p>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -994,13 +1266,18 @@ export default function EditarInscricaoPage() {
                   </div>
                   <div>
                     <label className="text-xs font-bold text-[var(--fg)]">Categoria:</label>
-                    <input
-                      type="text"
-                      value={categoria}
+                    <select
+                      value={categoria || "Aplicativo"}
                       onChange={(e) => setCategoria(e.target.value)}
-                      placeholder="Ex: Dispositivo físico, Software, Processo..."
                       className="w-full mt-1 p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs"
-                    />
+                    >
+                      <option value="Aplicativo móvel">Aplicativo móvel</option>
+                      <option value="Site ou sistema web">Site ou sistema web</option>
+                      <option value="Dispositivo físico">Dispositivo físico / Peça 3D</option>
+                      <option value="Processo ou protocolo clínico">Processo ou protocolo clínico</option>
+                      <option value="Equipamento / Hardware">Equipamento / Hardware</option>
+                      <option value="Outro">Outro</option>
+                    </select>
                   </div>
                 </div>
 
@@ -1028,6 +1305,65 @@ export default function EditarInscricaoPage() {
                     placeholder="Passo 3: Como conclui e entrega o benefício..."
                     className="w-full p-2.5 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs"
                   />
+                </div>
+
+                {/* Frase da Solução (Elevator Pitch) */}
+                <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
+                  <span className="text-xs font-bold text-[var(--marca)] uppercase tracking-wide font-mono block">
+                    Frase da Solução (Elevator Pitch)
+                  </span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                    <div>
+                      <label className="font-bold text-[var(--fg-2)]">Para (Público-alvo):</label>
+                      <input
+                        type="text"
+                        value={fraseIdeQuem}
+                        onChange={(e) => setFraseIdeQuem(e.target.value)}
+                        placeholder="Ex: Cirurgiões-dentistas e auxiliares..."
+                        className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-[var(--fg-2)]">Que precisa de (Necessidade):</label>
+                      <input
+                        type="text"
+                        value={fraseIdeNecessidade}
+                        onChange={(e) => setFraseIdeNecessidade(e.target.value)}
+                        placeholder="Ex: Agilidade na moldagem e dosagem..."
+                        className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-[var(--fg-2)]">Entrega (Benefício principal):</label>
+                      <input
+                        type="text"
+                        value={fraseIdeBeneficio}
+                        onChange={(e) => setFraseIdeBeneficio(e.target.value)}
+                        placeholder="Ex: Mistura perfeita e economia de insumos..."
+                        className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-bold text-[var(--fg-2)]">Diferente de (Alternativa atual):</label>
+                      <input
+                        type="text"
+                        value={fraseIdeAlternativa}
+                        onChange={(e) => setFraseIdeAlternativa(e.target.value)}
+                        placeholder="Ex: Mistura manual em placa de vidro..."
+                        className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                      />
+                    </div>
+                    <div className="sm:col-span-2">
+                      <label className="font-bold text-[var(--fg-2)]">Nosso diferencial único:</label>
+                      <input
+                        type="text"
+                        value={fraseIdeDiferencial}
+                        onChange={(e) => setFraseIdeDiferencial(e.target.value)}
+                        placeholder="Ex: Ponteira autoclavável com travas ergonômicas..."
+                        className="w-full mt-1 p-2 bg-[var(--surf)] border border-[var(--borda)] rounded-lg text-xs"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Lean Inception: É / NÃO É / FAZ / NÃO FAZ */}
@@ -1072,12 +1408,145 @@ export default function EditarInscricaoPage() {
               </div>
             )}
 
-            {/* ──── ABA 4: MÉTRICAS DE SUCESSO ──── */}
-            {activeTab === "metricas" && (
-              <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-5">
+            {/* ──── ABA 4: PROTÓTIPO & TRAVA SANITÁRIA ──── */}
+            {activeTab === "prototipo" && (
+              <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-6">
                 <div>
-                  <h2 className="text-lg font-bold text-[var(--fg)]">Métricas e Validação</h2>
-                  <p className="text-xs text-[var(--fg-2)]">Como saberemos que a solução deu certo e quais as dúvidas em aberto.</p>
+                  <h2 className="text-lg font-bold text-[var(--fg)]">Formas do Protótipo & Trava Sanitária</h2>
+                  <p className="text-xs text-[var(--fg-2)]">
+                    Parâmetros técnicos do protótipo e segurança sanitária conforme o Edital Oficial.
+                  </p>
+                </div>
+
+                {/* Trava Sanitária Banner */}
+                {travaAcionada ? (
+                  <div className="p-4 rounded-xl border border-amber-500/30 bg-amber-500/10 space-y-2">
+                    <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 font-bold text-sm">
+                      <AlertTriangle size={18} />
+                      <span>Trava Sanitária Acionada</span>
+                    </div>
+                    <p className="text-xs text-[var(--fg-2)]">
+                      Motivos informados: <strong>{travaMotivos.join(", ") || "Em avaliação"}</strong>.
+                    </p>
+                    <p className="text-[11px] text-[var(--fg-2)] leading-relaxed">
+                      A comissão avaliadora acompanha a exequibilidade prática e direciona a prototipagem como maquete de demonstração ou sob protocolos de biossegurança no Demoday.
+                    </p>
+                  </div>
+                ) : (
+                  <div className="p-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-start gap-3">
+                    <CheckCircle2 size={18} className="text-emerald-500 shrink-0 mt-0.5" />
+                    <div className="space-y-1">
+                      <div className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        Trava Sanitária Liberada
+                      </div>
+                      <p className="text-[11px] text-[var(--fg-2)]">
+                        O protótipo não possui contato invasivo direto com fluidos, mucosas ou feridas abertas.
+                      </p>
+                    </div>
+                  </div>
+                )}
+
+                {/* Formas do Protótipo */}
+                <div className="space-y-3">
+                  <label className="text-xs font-bold text-[var(--fg)]">
+                    Formas Selecionadas para o Protótipo:
+                  </label>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[
+                      { id: "forma_a", rotulo: "Forma A · Software / App", desc: "Aplicativo móvel, site web, painel de controle ou rotina digital" },
+                      { id: "forma_b", rotulo: "Forma B · Peça Física 3D", desc: "Suporte, encaixe ou adaptador impresso em 3D" },
+                      { id: "forma_c", rotulo: "Forma C · Dispositivo / Hardware", desc: "Equipamento eletrônico, sensores ou acionamento" },
+                      { id: "forma_d", rotulo: "Forma D · Processo / Protocolo", desc: "Fluxo assistencial, checklist clínico ou treinamento" },
+                    ].map((f) => {
+                      const isSel = formas.includes(f.id);
+                      return (
+                        <div
+                          key={f.id}
+                          onClick={() => {
+                            if (isSel) {
+                              setFormas(formas.filter((x) => x !== f.id));
+                            } else {
+                              setFormas([...formas, f.id]);
+                            }
+                          }}
+                          className={`p-3.5 rounded-xl border transition-all cursor-pointer ${
+                            isSel
+                              ? "bg-[var(--marca)]/10 border-[var(--marca)]"
+                              : "bg-[var(--bg)] border-[var(--borda)] hover:border-[var(--marca)]/50"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              checked={isSel}
+                              readOnly
+                              className="rounded border-[var(--borda)] text-[var(--marca)]"
+                            />
+                            <span className="text-xs font-bold text-[var(--fg)]">{f.rotulo}</span>
+                          </div>
+                          <p className="text-[11px] text-[var(--fg-2)] mt-1 ml-6">{f.desc}</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {/* Detalhes Técnicos Registrados */}
+                {camposForma && Object.keys(camposForma).length > 0 && (
+                  <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)] space-y-3">
+                    <span className="text-xs font-bold text-[var(--marca)] uppercase tracking-wide font-mono block">
+                      Especificações Técnicas Registradas no Cadastro
+                    </span>
+                    {Array.isArray(camposForma.software) && camposForma.software.length > 0 && (
+                      <div className="text-xs space-y-1.5">
+                        <span className="font-bold text-[var(--fg)]">Telas do Software Planejadas:</span>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                          {camposForma.software.map((t: any, i: number) => (
+                            <div key={i} className="p-2.5 rounded-lg bg-[var(--surf)] border border-[var(--borda)]">
+                              <div className="font-semibold text-[var(--fg)] text-[11px]">
+                                Tela {i + 1}: {t.nome || "Não nomeada"}
+                              </div>
+                              <div className="text-[10px] text-[var(--fg-2)] mt-0.5">
+                                Ação: {t.acao || "Não descrita"}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {camposForma.peca_3d && (
+                      <div className="text-xs grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2">
+                        {camposForma.peca_3d.pecaEncaixaEm && (
+                          <div className="p-2.5 rounded-lg bg-[var(--surf)] border border-[var(--borda)]">
+                            <span className="text-[10px] text-[var(--fg-2)] block uppercase font-mono">Encaixa em:</span>
+                            <span className="font-bold text-[var(--fg)]">{camposForma.peca_3d.pecaEncaixaEm}</span>
+                          </div>
+                        )}
+                        {camposForma.peca_3d.pecaMaterial && (
+                          <div className="p-2.5 rounded-lg bg-[var(--surf)] border border-[var(--borda)]">
+                            <span className="text-[10px] text-[var(--fg-2)] block uppercase font-mono">Material:</span>
+                            <span className="font-bold text-[var(--fg)]">{camposForma.peca_3d.pecaMaterial}</span>
+                          </div>
+                        )}
+                        {Array.isArray(camposForma.peca_3d.pecaEnvelope) && (
+                          <div className="p-2.5 rounded-lg bg-[var(--surf)] border border-[var(--borda)]">
+                            <span className="text-[10px] text-[var(--fg-2)] block uppercase font-mono">Envelope Máximo:</span>
+                            <span className="font-bold text-[var(--fg)]">{camposForma.peca_3d.pecaEnvelope.join(" × ")} mm</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* ──── ABA 5: MÉTRICAS DE SUCESSO & ODS ──── */}
+            {activeTab === "metricas" && (
+              <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 space-y-6">
+                <div>
+                  <h2 className="text-lg font-bold text-[var(--fg)]">Métricas, ODS e Validação</h2>
+                  <p className="text-xs text-[var(--fg-2)]">Como saberemos que a solução deu certo e quais ODS da ONU ela impacta.</p>
                 </div>
 
                 <div className="space-y-4">
@@ -1101,6 +1570,72 @@ export default function EditarInscricaoPage() {
                       className="w-full mt-1 p-3 bg-[var(--bg)] border border-[var(--borda)] rounded-xl text-xs focus:border-[var(--acao)] focus:outline-hidden"
                     />
                   </div>
+
+                  {/* ODS da ONU */}
+                  <div className="pt-2 space-y-2">
+                    <label className="text-xs font-bold text-[var(--fg)]">
+                      Objetivos de Desenvolvimento Sustentável (ODS ONU):
+                    </label>
+                    <p className="text-[11px] text-[var(--fg-2)]">
+                      Selecione os objetivos da ONU que sua solução em saúde aborda diretamente:
+                    </p>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 pt-1">
+                      {(ods?.lista || [
+                        { numero: 3, nome: "Saúde e Bem-Estar", cor: "#4C9F38" },
+                        { numero: 4, nome: "Educação de Qualidade", cor: "#C5192D" },
+                        { numero: 5, nome: "Igualdade de Gênero", cor: "#FF3A21" },
+                        { numero: 8, nome: "Trabalho Decente", cor: "#A21942" },
+                        { numero: 9, nome: "Indústria e Inovação", cor: "#FD6925" },
+                        { numero: 10, nome: "Redução das Desigualdades", cor: "#DD1367" },
+                        { numero: 11, nome: "Cidades Sustentáveis", cor: "#FD9D24" },
+                        { numero: 12, nome: "Consumo Responsável", cor: "#BF8B2E" },
+                      ]).map((item: any) => {
+                        const isSelected = odsSelecionadas.includes(item.numero);
+                        return (
+                          <button
+                            key={item.numero}
+                            type="button"
+                            onClick={() => {
+                              if (isSelected) {
+                                setOdsSelecionadas(odsSelecionadas.filter((n) => n !== item.numero));
+                              } else {
+                                setOdsSelecionadas([...odsSelecionadas, item.numero]);
+                              }
+                            }}
+                            className={`p-2.5 rounded-xl border text-left flex items-start gap-2 transition-all cursor-pointer ${
+                              isSelected
+                                ? "border-transparent text-white shadow-xs"
+                                : "bg-[var(--bg)] border-[var(--borda)] text-[var(--fg-2)] hover:border-[var(--marca)]"
+                            }`}
+                            style={isSelected ? { backgroundColor: item.cor || "#2DD4BF" } : {}}
+                          >
+                            <span className="font-black text-xs font-mono">{item.numero}</span>
+                            <span className="text-[11px] font-bold leading-tight">{item.nome}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Termos e LGPD */}
+                  {aceites && aceites.length > 0 && (
+                    <div className="p-4 rounded-xl border border-[var(--borda)] bg-[var(--bg)]">
+                      <span className="text-[10px] font-mono font-bold uppercase text-[var(--fg-2)] block mb-1">
+                        Termos e Aceites Registrados:
+                      </span>
+                      <div className="flex flex-wrap gap-2">
+                        {aceites.map((t, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[var(--surf)] border border-[var(--borda)] text-[11px] text-[var(--fg)]"
+                          >
+                            <Check size={12} className="text-emerald-500" />
+                            {t}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
             )}
