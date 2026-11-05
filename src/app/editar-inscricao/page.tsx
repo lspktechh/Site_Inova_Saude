@@ -884,7 +884,7 @@ export default function EditarInscricaoPage() {
             </div>
 
             {/* Barra de Abas */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-[var(--borda)]">
+            <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-[var(--borda)]">
               {[
                 { id: "equipe", label: "Integrantes", icon: Users },
                 { id: "problema", label: "Problema & Dor", icon: FileEdit },
@@ -901,13 +901,13 @@ export default function EditarInscricaoPage() {
                     key={tab.id}
                     type="button"
                     onClick={() => setActiveTab(tab.id as any)}
-                    className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    className={`inline-flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition-all cursor-pointer ${
                       isActive
                         ? "bg-[var(--marca)] text-white shadow-xs"
-                        : "bg-[var(--surf)] text-[var(--fg-2)] hover:text-[var(--fg)] border border-[var(--borda)]"
+                        : "bg-[var(--surf)] text-[var(--fg-2)] hover:text-[var(--fg)] hover:bg-[var(--bg)] border border-[var(--borda)]"
                     }`}
                   >
-                    <Icon size={16} />
+                    <Icon size={16} className="shrink-0" />
                     <span>{tab.label}</span>
                   </button>
                 );
