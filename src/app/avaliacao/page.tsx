@@ -19,8 +19,6 @@ import {
   Star,
   Compass,
 } from "lucide-react";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
 import { submitEventEvaluation, EvaluationPayload } from "@/lib/api";
 
 const AJUDOU_OPCOES = [
@@ -236,10 +234,7 @@ export default function AvaliacaoPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg)] text-[var(--fg)] flex flex-col">
-      <Header />
-
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 sm:py-12">
+    <div className="w-full max-w-4xl min-w-0 mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {sucesso ? (
           /* Card de Confirmação de Sucesso */
           <div className="bg-[var(--surf)] border border-[var(--borda)] rounded-2xl p-6 sm:p-10 shadow-lg text-center space-y-6">
@@ -967,9 +962,6 @@ export default function AvaliacaoPage() {
           </form>
         </div>
       )}
-    </main>
-
-    <Footer />
-  </div>
-);
+    </div>
+  );
 }
