@@ -662,16 +662,26 @@ export default function AdminEvaluationsPage() {
                               {item.horasCertificado}h
                             </span>
                           </td>
-                          <td className="py-3 px-4 text-right space-x-1">
+                          <td className="py-3 px-4 text-right space-x-1 whitespace-nowrap">
+                            <a
+                              href={`https://lspkeventos.com.br/?email=${encodeURIComponent(item.email)}&evento=inova-saude-2026&certificado=1`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[rgba(11,66,121,0.1)] hover:bg-[rgba(11,66,121,0.2)] text-[var(--marca)] font-bold text-[11px] transition-all cursor-pointer"
+                              title="Abrir no portal LSPK Eventos"
+                            >
+                              <ExternalLink size={12} />
+                              <span>LSPK Eventos</span>
+                            </a>
                             <button
                               onClick={() => setItemSelecionado(item)}
-                              className="px-2.5 py-1 rounded-lg bg-[var(--surf-2)] hover:bg-[var(--borda)] text-[var(--fg)] font-semibold text-[11px]"
+                              className="px-2.5 py-1 rounded-lg bg-[var(--surf-2)] hover:bg-[var(--borda)] text-[var(--fg)] font-semibold text-[11px] cursor-pointer"
                             >
                               Ver Ficha
                             </button>
                             <button
                               onClick={() => handleDelete(item.id)}
-                              className="p-1 rounded-lg hover:bg-[rgba(179,48,31,0.1)] text-[var(--erro)]"
+                              className="p-1 rounded-lg hover:bg-[rgba(179,48,31,0.1)] text-[var(--erro)] cursor-pointer"
                               title="Excluir avaliação"
                             >
                               <Trash2 size={13} />
@@ -1079,10 +1089,19 @@ export default function AdminEvaluationsPage() {
               )}
             </div>
 
-            <div className="pt-3 border-t border-[var(--borda)] flex justify-end">
+            <div className="pt-3 border-t border-[var(--borda)] flex items-center justify-between">
+              <a
+                href={`https://lspkeventos.com.br/?email=${encodeURIComponent(itemSelecionado.email)}&evento=inova-saude-2026&certificado=1`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[var(--marca)] text-white font-bold text-xs hover:brightness-110 shadow-xs cursor-pointer"
+              >
+                <ExternalLink size={14} />
+                <span>Abrir no LSPK Eventos</span>
+              </a>
               <button
                 onClick={() => setItemSelecionado(null)}
-                className="px-4 py-2 rounded-xl bg-[var(--marca)] text-white font-bold text-xs hover:brightness-110"
+                className="px-4 py-2 rounded-xl bg-[var(--surf-2)] text-[var(--fg)] font-bold text-xs hover:bg-[var(--borda)] cursor-pointer"
               >
                 Fechar Ficha
               </button>

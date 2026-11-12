@@ -18,6 +18,7 @@ import {
   MessageSquareQuote,
   Star,
   Compass,
+  ExternalLink,
 } from "lucide-react";
 import { submitEventEvaluation, EvaluationPayload } from "@/lib/api";
 
@@ -273,9 +274,26 @@ export default function AvaliacaoPage() {
                   <strong>Modalidade:</strong> {sucesso.esteveDemoday ? "Etapa Online + Demoday Presencial (16 horas)" : "Etapa Online (8 horas)"}
                 </p>
                 <p>
-                  <strong>E-mail de envio:</strong> {sucesso.email}
+                  <strong>E-mail vinculado:</strong> {sucesso.email}
                 </p>
               </div>
+            </div>
+
+            {/* Acesso ao Portal LSPK Eventos */}
+            <div className="max-w-md mx-auto space-y-3 pt-2">
+              <a
+                href={`https://lspkeventos.com.br/?email=${encodeURIComponent(sucesso.email)}&evento=inova-saude-2026&certificado=1`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-[var(--marca)] text-white font-bold text-sm sm:text-base hover:brightness-110 transition-all shadow-md cursor-pointer"
+              >
+                <span>Acessar LSPK Eventos para Baixar Certificado</span>
+                <ExternalLink size={18} />
+              </a>
+
+              <p className="text-xs text-[var(--fg-2)] text-center leading-relaxed">
+                Seu certificado oficial com código de validação e QR Code é emitido e autenticado pela plataforma <strong>LSPK Eventos</strong>. Ao clicar no botão, seu e-mail e o evento INOVA SAÚDE 2026 já estarão selecionados para você acessar seus documentos.
+              </p>
             </div>
 
             <div className="pt-4 flex flex-wrap items-center justify-center gap-4">
