@@ -362,7 +362,7 @@ export default function AvaliacaoPage() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} autoComplete="off" className="space-y-8">
               {/* ========================================================= */}
               {/* SEÇÃO 1: IDENTIFICAÇÃO                                   */}
               {/* ========================================================= */}
@@ -406,6 +406,7 @@ export default function AvaliacaoPage() {
                     <input
                       type="email"
                       required
+                      autoComplete="off"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="exemplo@posilondrina.com.br"

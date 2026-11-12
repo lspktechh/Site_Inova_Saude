@@ -38,11 +38,9 @@ import {
   EvaluationItem,
 } from "@/lib/api";
 
-const ADMIN_EMAIL_DEFAULT = "admin@inova.com.br";
-
 export default function AdminEvaluationsPage() {
   const [token, setToken] = useState<string>("");
-  const [emailInput, setEmailInput] = useState<string>(ADMIN_EMAIL_DEFAULT);
+  const [emailInput, setEmailInput] = useState<string>("");
   const [passwordInput, setPasswordInput] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [loginError, setLoginError] = useState<string>("");
@@ -270,7 +268,7 @@ export default function AdminEvaluationsPage() {
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} autoComplete="off" className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase font-mono text-[var(--fg)] mb-1">
                 E-mail institucional
@@ -279,6 +277,7 @@ export default function AdminEvaluationsPage() {
                 <input
                   type="email"
                   required
+                  autoComplete="off"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
                   placeholder="admin@inova.com.br"
