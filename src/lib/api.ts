@@ -676,3 +676,166 @@ function fileToBase64(file: File): Promise<string> {
     reader.onerror = (error) => reject(error);
   });
 }
+
+// ==========================================
+// AVALIAÇÃO OFICIAL INOVA SAÚDE 2026
+// ==========================================
+
+export interface EvaluationPayload {
+  nome: string;
+  email: string;
+  cursoPeriodo: string;
+  nps: number;
+  oQueAjudou: string[];
+  mentoriaNota: string;
+  aprendizado: string;
+  mudancas?: string;
+  continuarEcohub: string;
+  depoimento: string;
+  autorizaDepoimento: string;
+  esteveDemoday: boolean;
+  papelDemoday?: string;
+  demodayOrganizacao?: number;
+  demodayHorario?: number;
+  demodayFeedbackBanca?: number;
+  demodayApresentacao?: string;
+  demodayGravarVideo?: string;
+}
+
+export interface EvaluationItem extends EvaluationPayload {
+  id: string;
+  horasCertificado: number;
+  createdAt: string;
+}
+
+export interface EvaluationReport {
+  evento: {
+    id: string;
+    nome: string;
+    slug: string;
+  };
+  metricas: {
+    total: number;
+    npsMedio: number;
+    npsScore: number;
+    npsDistribuicao: {
+      promotores: number;
+      neutros: number;
+      detratores: number;
+    };
+    horasCertificados: {
+      horas8h: number;
+      horas16h: number;
+    };
+    demoday: {
+      totalPresentes: number;
+      mediaOrganizacao: number | null;
+      mediaHorario: number | null;
+      mediaFeedbackBanca: number | null;
+      gravarVideoSim: number;
+      gravarVideoNao: number;
+    };
+    continuarEcohub: {
+      preIncubadora: number;
+      espacoMaker: number;
+      naoAgora: number;
+    };
+    oQueAjudouRanking: Array<{ opcao: string; contagem: number }>;
+  };
+  itens: EvaluationItem[];
+}
+
+export async function submitEventEvaluation(
+  data: EvaluationPayload,
+  slug: string = DEFAULT_EVENT_SLUG
+): Promise<{ id: string; nome: string; email: string; horasCertificado: number; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/avaliacao`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || json.error || "Erro ao registrar avaliação.");
+  }
+
+  // Backup seguro no localStorage do navegador
+  try {
+    const existing = JSON.parse(localStorage.getItem("inova_saude_avaliacoes_locais") || "[]");
+    existing.unshift({
+      ...data,
+      id: json.data?.id || `local-${Date.now()}`,
+      horasCertificado: json.data?.horasCertificado || (data.esteveDemoday ? 16 : 8),
+      createdAt: new Date().toISOString(),
+    });
+    localStorage.setItem("inova_saude_avaliacoes_locais", JSON.stringify(existing.slice(0, 100)));
+  } catch {}
+
+  return json.data || json;
+}
+
+export async function adminLoginEvaluation(
+  email: string,
+  password: string,
+  slug: string = DEFAULT_EVENT_SLUG
+): Promise<{ token: string; email: string; role: string; expiresAt?: string }> {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/avaliacao/admin-login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, password }),
+  });
+
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || json.error || "Credenciais de administrador inválidas.");
+  }
+
+  return json.data || json;
+}
+
+export async function getEventEvaluations(
+  token: string,
+  slug: string = DEFAULT_EVENT_SLUG
+): Promise<EvaluationReport> {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/avaliacao`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    cache: "no-store",
+  });
+
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || json.error || "Erro ao carregar relatório de avaliações.");
+  }
+
+  return json.data || json;
+}
+
+export async function deleteEventEvaluation(
+  id: string,
+  token: string,
+  slug: string = DEFAULT_EVENT_SLUG
+): Promise<{ success: boolean; message: string }> {
+  const res = await fetch(`${API_BASE_URL}/public/events/${slug}/avaliacao/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  const json = await res.json();
+  if (!res.ok || json.error) {
+    throw new Error(json.message || json.error || "Erro ao excluir avaliação.");
+  }
+
+  return json.data || json;
+}

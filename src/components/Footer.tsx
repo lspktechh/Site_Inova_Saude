@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { edicao, asset } from "@/lib/config";
 
 export function Footer() {
@@ -45,10 +46,25 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-[rgba(255,255,255,0.2)] pt-6 space-y-3">
+        <div className="border-t border-[rgba(255,255,255,0.2)] pt-6 space-y-4">
           <p className="text-sm text-[rgba(255,255,255,0.88)] leading-relaxed max-w-4xl">
             {marcas.frase_apoio}
           </p>
+
+          <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-[rgba(255,255,255,0.8)] pt-1">
+            <Link href="/avaliacao" className="hover:text-[var(--acento)] underline">
+              Avaliação & Certificado
+            </Link>
+            <span>·</span>
+            <Link href="/admin" className="hover:text-[var(--acento)] underline">
+              Painel Admin (Avaliações)
+            </Link>
+            <span>·</span>
+            <Link href="/editar-inscricao" className="hover:text-[var(--acento)] underline">
+              Área da Equipe
+            </Link>
+          </div>
+
           <div className="flex flex-wrap items-center justify-between gap-3 text-xs text-[rgba(255,255,255,0.65)] font-mono">
             <span className="break-all">Contato: <a href={`mailto:${contato.email_evento}`} className="text-[var(--acento)] underline">{contato.email_evento}</a></span>
             <span>{contato.responsavel_comissao}</span>

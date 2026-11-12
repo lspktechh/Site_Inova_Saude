@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { Menu, X, ShieldCheck, Sparkles, UploadCloud } from "lucide-react";
+import { Menu, X, ShieldCheck, Sparkles, UploadCloud, Award } from "lucide-react";
 import { asset } from "@/lib/config";
 
 export function Header() {
@@ -12,6 +12,7 @@ export function Header() {
 
   // Páginas institucionais organizadas por relevância na reta final do evento
   const navItems = [
+    { label: "Avaliação & Certificado", href: "/avaliacao", icon: Award },
     { label: "Programação", href: "/programacao" },
     { label: "Desafios", href: "/desafios" },
     { label: "Banco de Talentos", href: "/banco-de-talentos" },
