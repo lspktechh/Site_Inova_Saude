@@ -280,7 +280,7 @@ export default function AdminEvaluationsPage() {
                   autoComplete="off"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="admin@inova.com.br"
+                  placeholder="Digite seu e-mail"
                   className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-[var(--borda)] bg-[var(--bg)] text-[var(--fg)] text-sm focus:outline-hidden focus:ring-2 focus:ring-[var(--marca)]"
                 />
                 <Mail size={16} className="absolute left-3.5 top-3 text-[var(--fg-2)]" />
