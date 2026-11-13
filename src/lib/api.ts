@@ -90,6 +90,33 @@ export interface InscriptionResponse {
 /**
  * Busca o evento cadastrado no sistema de credenciamento pelo slug
  */
+/**
+ * Erro legível a partir da resposta da API. O backend responde
+ * { success: false, error: { code, message } }: usar `json.error` direto como
+ * mensagem virava "[object Object]" na tela. O status HTTP vai junto (401 =
+ * sessão expirada) para a tela decidir, por exemplo, voltar ao login.
+ */
+export class ApiError extends Error {
+  status: number;
+  code?: string;
+  constructor(message: string, status: number, code?: string) {
+    super(message);
+    this.name = "ApiError";
+    this.status = status;
+    this.code = code;
+  }
+}
+
+function apiError(res: Response, json: any, fallback: string): ApiError {
+  const err = json?.error;
+  const message =
+    (err && typeof err === "object" && typeof err.message === "string" && err.message) ||
+    (typeof err === "string" && err) ||
+    (typeof json?.message === "string" && json.message) ||
+    fallback;
+  return new ApiError(message, res.status, err && typeof err === "object" ? err.code : undefined);
+}
+
 export async function getEventBySlug(slug: string = DEFAULT_EVENT_SLUG) {
   try {
     const res = await fetch(`${API_BASE_URL}/public/events/${slug}`, {
@@ -533,7 +560,7 @@ export async function checkLeaderLogin(email: string, slug: string = DEFAULT_EVE
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Erro ao verificar e-mail do líder");
+    throw apiError(res, json, "Erro ao verificar e-mail do líder");
   }
   return json.data || json;
 }
@@ -546,7 +573,7 @@ export async function requestLeaderMagicLink(email: string, slug: string = DEFAU
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Erro ao solicitar link de acesso");
+    throw apiError(res, json, "Erro ao solicitar link de acesso");
   }
   return json.data || json;
 }
@@ -559,7 +586,7 @@ export async function loginWithPassword(email: string, password: string, slug: s
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Senha incorreta ou erro de acesso");
+    throw apiError(res, json, "Senha incorreta ou erro de acesso");
   }
   return json.data || json;
 }
@@ -572,7 +599,7 @@ export async function verifyMagicLink(email: string, token: string, slug: string
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Link inválido ou expirado");
+    throw apiError(res, json, "Link inválido ou expirado");
   }
   return json.data || json;
 }
@@ -585,7 +612,7 @@ export async function setLeaderPassword(email: string, token: string, password: 
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Erro ao cadastrar senha");
+    throw apiError(res, json, "Erro ao cadastrar senha");
   }
   return json.data || json;
 }
@@ -604,7 +631,7 @@ export async function getLeaderTeamData(email: string, sessionToken: string, slu
   );
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Sessão inválida ou expirada");
+    throw apiError(res, json, "Sessão inválida ou expirada");
   }
   return json.data || json;
 }
@@ -620,7 +647,7 @@ export async function updateLeaderTeamData(email: string, sessionToken: string, 
   });
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || "Erro ao atualizar dados da equipe");
+    throw apiError(res, json, "Erro ao atualizar dados da equipe");
   }
   return json.data || json;
 }
@@ -662,7 +689,7 @@ export async function uploadLeaderWorkFile(
 
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || json.error || "Erro ao realizar upload do arquivo.");
+    throw apiError(res, json, "Erro ao realizar upload do arquivo.");
   }
 
   return json.data || json;
@@ -759,7 +786,7 @@ export async function submitEventEvaluation(
 
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || json.error || "Erro ao registrar avaliação.");
+    throw apiError(res, json, "Erro ao registrar avaliação.");
   }
 
   // Backup seguro no localStorage do navegador
@@ -792,7 +819,7 @@ export async function adminLoginEvaluation(
 
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || json.error || "Credenciais de administrador inválidas.");
+    throw apiError(res, json, "Credenciais de administrador inválidas.");
   }
 
   return json.data || json;
@@ -813,7 +840,7 @@ export async function getEventEvaluations(
 
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || json.error || "Erro ao carregar relatório de avaliações.");
+    throw apiError(res, json, "Erro ao carregar relatório de avaliações.");
   }
 
   return json.data || json;
@@ -834,7 +861,7 @@ export async function deleteEventEvaluation(
 
   const json = await res.json();
   if (!res.ok || json.error) {
-    throw new Error(json.message || json.error || "Erro ao excluir avaliação.");
+    throw apiError(res, json, "Erro ao excluir avaliação.");
   }
 
   return json.data || json;

@@ -107,9 +107,13 @@ export default function AdminEvaluationsPage() {
       const data = await getEventEvaluations(activeToken);
       setReport(data);
     } catch (err: any) {
-      setErroCarregamento(err.message || "Erro ao carregar dados.");
-      if (err.message?.includes("não autorizado") || err.message?.includes("Sessão")) {
+      // Sessão expirada (ex.: o servidor reiniciou num deploy): volta para o login
+      // com um aviso claro, em vez de deixar o painel vazio com um erro.
+      if (err?.status === 401 || err?.status === 403 || err.message?.includes("não autorizado")) {
         handleLogout();
+        setLoginError("Sua sessão expirou. Entre novamente para ver as avaliações.");
+      } else {
+        setErroCarregamento(err.message || "Erro ao carregar dados.");
       }
     } finally {
       setCarregando(false);
