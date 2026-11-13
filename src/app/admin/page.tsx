@@ -41,6 +41,9 @@ import {
 /** Assinatura usada no mural para quem autorizou o depoimento sem o nome. */
 const AUTOR_ANONIMO = "Participante do INOVA SAÚDE 2026";
 
+/** O que vai no lugar do depoimento de quem não autorizou a divulgação. */
+const DEPOIMENTO_NAO_AUTORIZADO = "(não autorizado para divulgação)";
+
 /**
  * O que o participante autorizou no formulário ("Sim, com meu nome e curso" /
  * "Sim, sem meu nome" / "Não"). Na dúvida, trata como NÃO autorizado: expor um
@@ -220,7 +223,12 @@ export default function AdminEvaluationsPage() {
       `"${(i.aprendizado || "").replace(/"/g, '""')}"`,
       `"${(i.mudancas || "").replace(/"/g, '""')}"`,
       `"${i.continuarEcohub.replace(/"/g, '""')}"`,
-      `"${(i.depoimento || "").replace(/"/g, '""')}"`,
+      // Depoimento de quem NÃO autorizou a divulgação não sai no arquivo:
+      // planilha exportada costuma ser repassada.
+      `"${(autorizacaoDepoimento(i.autorizaDepoimento) === "nao"
+        ? DEPOIMENTO_NAO_AUTORIZADO
+        : i.depoimento || ""
+      ).replace(/"/g, '""')}"`,
       `"${i.autorizaDepoimento.replace(/"/g, '""')}"`,
       i.esteveDemoday ? "Sim" : "Não",
       `"${(i.papelDemoday || "").replace(/"/g, '""')}"`,
@@ -232,13 +240,12 @@ export default function AdminEvaluationsPage() {
       i.horasCertificado,
     ]);
 
-    const csvContent =
-      "data:text/csv;charset=utf-8,\uFEFF" +
-      [headers.join(";"), ...rows.map((r) => r.join(";"))].join("\n");
-
-    const encodedUri = encodeURI(csvContent);
+    // Blob em vez de data: URI com encodeURI — um "#" em qualquer resposta
+    // cortava o arquivo dali para frente.
+    const csvText = "\uFEFF" + [headers.join(";"), ...rows.map((r) => r.join(";"))].join("\n");
+    const blobUrl = URL.createObjectURL(new Blob([csvText], { type: "text/csv;charset=utf-8" }));
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", blobUrl);
     link.setAttribute(
       "download",
       `avaliacoes-inova-saude-2026-${new Date().toISOString().slice(0, 10)}.csv`
@@ -246,6 +253,7 @@ export default function AdminEvaluationsPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 10000);
   }
 
   // Listas de e-mails para certificados
@@ -1086,9 +1094,15 @@ export default function AdminEvaluationsPage() {
 
               <div>
                 <strong className="text-[var(--fg)] block mb-1">Depoimento do participante:</strong>
-                <p className="p-3 rounded-xl bg-[var(--bg)] border border-[var(--borda)] text-[var(--fg)] italic leading-relaxed">
-                  &quot;{itemSelecionado.depoimento}&quot;
-                </p>
+                {autorizacaoDepoimento(itemSelecionado.autorizaDepoimento) === "nao" ? (
+                  <p className="p-3 rounded-xl bg-[var(--bg)] border border-[var(--borda)] text-[var(--fg-2)] leading-relaxed">
+                    O participante não autorizou a divulgação do depoimento, então ele não é exibido.
+                  </p>
+                ) : (
+                  <p className="p-3 rounded-xl bg-[var(--bg)] border border-[var(--borda)] text-[var(--fg)] italic leading-relaxed">
+                    &quot;{itemSelecionado.depoimento}&quot;
+                  </p>
+                )}
                 <span className="text-[11px] text-[var(--fg-2)] mt-1 block">
                   Autorização: {itemSelecionado.autorizaDepoimento}
                 </span>
