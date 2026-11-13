@@ -7,7 +7,8 @@ export function Footer() {
 
   return (
     <footer className="bg-[var(--marca-fundo)] text-white mt-auto border-t border-[rgba(255,255,255,0.15)]">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-10 sm:py-14 space-y-8">
+      {/* pb extra no celular: a barra fixa "Inscrever Agora" (MobileQuickBar) cobriria a assinatura */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-[calc(7rem+env(safe-area-inset-bottom,0px))] md:pb-14 space-y-8">
         <div>
           <p className="font-mono text-xs uppercase tracking-wider text-[rgba(255,255,255,0.7)] mb-4">
             Realização e Apoio Institucional (Art. 11 · Edital nº 4/2026)
@@ -70,6 +71,30 @@ export function Footer() {
             <span>{contato.responsavel_comissao}</span>
             <span className="text-[var(--acento)]">Art. 11 e 12 cumpridos</span>
           </div>
+        </div>
+
+        {/* Desenvolvido por LSPK Tech */}
+        <div className="border-t border-[rgba(255,255,255,0.2)] pt-6 flex flex-col items-center gap-2">
+          <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-[rgba(255,255,255,0.6)]">
+            Desenvolvido por
+          </span>
+          <a
+            href="https://www.instagram.com/lspktech"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="LSPK Tech no Instagram"
+            aria-label="Desenvolvido por LSPK Tech — abrir Instagram"
+            className="group inline-flex rounded-md focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--acento)]"
+          >
+            <img
+              src={asset("/logos/lspk-logo.svg")}
+              alt="LSPK Tech"
+              width={420}
+              height={104}
+              loading="lazy"
+              className="h-8 sm:h-9 w-auto opacity-90 transition duration-300 group-hover:opacity-100 group-hover:-translate-y-0.5 group-hover:scale-105 group-hover:drop-shadow-[0_4px_14px_rgba(59,91,255,0.45)]"
+            />
+          </a>
         </div>
       </div>
     </footer>
