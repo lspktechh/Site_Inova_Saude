@@ -38,6 +38,22 @@ import {
   EvaluationItem,
 } from "@/lib/api";
 
+/** Assinatura usada no mural para quem autorizou o depoimento sem o nome. */
+const AUTOR_ANONIMO = "Participante do INOVA SAÚDE 2026";
+
+/**
+ * O que o participante autorizou no formulário ("Sim, com meu nome e curso" /
+ * "Sim, sem meu nome" / "Não"). Na dúvida, trata como NÃO autorizado: expor um
+ * depoimento sem permissão é pior do que deixar um de fora.
+ */
+function autorizacaoDepoimento(valor: string | null | undefined): "com-nome" | "anonimo" | "nao" {
+  const v = (valor || "").trim().toLowerCase();
+  if (!v.startsWith("sim")) return "nao";
+  if (v.includes("sem meu nome")) return "anonimo";
+  if (v.includes("com meu nome")) return "com-nome";
+  return "anonimo";
+}
+
 export default function AdminEvaluationsPage() {
   const [token, setToken] = useState<string>("");
   const [emailInput, setEmailInput] = useState<string>("");
@@ -847,13 +863,28 @@ export default function AdminEvaluationsPage() {
         {tabAtiva === "depoimentos" && report && (
           <div className="space-y-4">
             <div className="p-4 rounded-xl bg-[var(--surf)] border border-[var(--borda)] text-xs text-[var(--fg-2)]">
-              Use estes depoimentos para a divulgação oficial da edição de 2027. O status de autorização indica se o participante permitiu o uso do nome e curso.
+              Use estes depoimentos para a divulgação oficial da edição de 2027. Só aparecem aqui os participantes que
+              autorizaram o uso; quem escolheu &quot;sem meu nome&quot; aparece como anônimo, sem nome nem curso.
+              {(() => {
+                const ocultos = report.itens.filter(
+                  (i) => i.depoimento && i.depoimento.trim() && autorizacaoDepoimento(i.autorizaDepoimento) === "nao"
+                ).length;
+                return ocultos > 0 ? (
+                  <span className="block mt-1">
+                    {ocultos} depoimento{ocultos > 1 ? "s" : ""} sem autorização {ocultos > 1 ? "ficaram" : "ficou"} fora do mural.
+                  </span>
+                ) : null;
+              })()}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {report.itens
                 .filter((i) => i.depoimento && i.depoimento.trim())
-                .map((item) => (
+                .filter((i) => autorizacaoDepoimento(i.autorizaDepoimento) !== "nao")
+                .map((item) => {
+                  const anonimo = autorizacaoDepoimento(item.autorizaDepoimento) === "anonimo";
+                  const assinatura = anonimo ? AUTOR_ANONIMO : `${item.nome}, ${item.cursoPeriodo}`;
+                  return (
                   <div
                     key={item.id}
                     className="p-5 rounded-2xl bg-[var(--surf)] border border-[var(--borda)] shadow-xs space-y-3 flex flex-col justify-between"
@@ -883,15 +914,18 @@ export default function AdminEvaluationsPage() {
 
                     <div className="border-t border-[var(--borda)] pt-3 flex items-center justify-between text-xs">
                       <div>
-                        <strong className="text-[var(--fg)] block">{item.nome}</strong>
-                        <span className="text-[var(--fg-2)] text-[11px]">{item.cursoPeriodo}</span>
+                        {anonimo ? (
+                          <strong className="text-[var(--fg)] block">{AUTOR_ANONIMO}</strong>
+                        ) : (
+                          <>
+                            <strong className="text-[var(--fg)] block">{item.nome}</strong>
+                            <span className="text-[var(--fg-2)] text-[11px]">{item.cursoPeriodo}</span>
+                          </>
+                        )}
                       </div>
                       <button
                         onClick={() =>
-                          copiarParaTransferencia(
-                            `"${item.depoimento}" — ${item.nome}, ${item.cursoPeriodo}`,
-                            "Depoimento"
-                          )
+                          copiarParaTransferencia(`"${item.depoimento}" — ${assinatura}`, "Depoimento")
                         }
                         className="px-2.5 py-1 rounded-lg border border-[var(--borda)] hover:bg-[var(--bg)] text-xs font-semibold flex items-center gap-1"
                       >
@@ -900,7 +934,8 @@ export default function AdminEvaluationsPage() {
                       </button>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
             </div>
           </div>
         )}
